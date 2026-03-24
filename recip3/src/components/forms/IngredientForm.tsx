@@ -19,10 +19,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { FormDescription } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload, X } from "lucide-react";
+
+const SKINCARE_PRIORITIES = [
+  "Anti-aging",
+  "Brightening",
+  "Hydration",
+  "Calming",
+  "Clarifying",
+  "Repair",
+];
 
 const ingredientSchema = z.object({
   name: z.string().min(1, "Ingredient name is required"),
@@ -38,6 +49,7 @@ const ingredientSchema = z.object({
   amount_in_stock: z.coerce.number().optional().nullable(),
   quantity_unit: z.string().optional().or(z.literal("")),
   comments: z.string().optional().or(z.literal("")),
+  skincare_priorities: z.array(z.string()).optional(),
 });
 
 type IngredientFormData = z.infer<typeof ingredientSchema>;
@@ -71,6 +83,7 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
       amount_in_stock: initialData?.amount_in_stock ?? undefined,
       quantity_unit: initialData?.quantity_unit || "",
       comments: initialData?.comments || "",
+      skincare_priorities: initialData?.skincare_priorities || [],
     },
   });
 
@@ -151,6 +164,7 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
         amount_in_stock: data.amount_in_stock || null,
         quantity_unit: data.quantity_unit || null,
         comments: data.comments || null,
+        skincare_priorities: data.skincare_priorities || [],
         image_url: imageUrl || undefined,
       };
       await onSubmit(cleanedData);
@@ -240,6 +254,41 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
               </FormItem>
             )}
           />
+
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="skincare_priorities"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Skincare Priorities</FormLabel>
+                  <FormDescription>Which skincare priorities does this ingredient serve?</FormDescription>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {SKINCARE_PRIORITIES.map((priority) => {
+                      const selected = (field.value || []).includes(priority);
+                      return (
+                        <Badge
+                          key={priority}
+                          variant={selected ? "default" : "outline"}
+                          className="cursor-pointer select-none"
+                          onClick={() => {
+                            const current = field.value || [];
+                            const updated = selected
+                              ? current.filter((p: string) => p !== priority)
+                              : [...current, priority];
+                            field.onChange(updated);
+                          }}
+                        >
+                          {priority}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
