@@ -12,6 +12,9 @@ supabase/.temp
 database.json
 kyrill-invoice.xlsx
 scratch.md
+migration.sql
+fix-migration.sql
+generate-migration.js
 
 # Lock files (each sub-project has its own)
 app/package-lock.json
