@@ -1,0 +1,19 @@
+node_modules
+dist
+.env
+.env.*
+.env.local
+*.local
+_temp
+.superpowers
+supabase/.temp
+
+# Sensitive files
+database.json
+kyrill-invoice.xlsx
+scratch.md
+
+# Lock files (each sub-project has its own)
+app/package-lock.json
+recip3/package-lock.json
+recip3-test/package-lock.json

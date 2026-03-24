@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matching Engine V1 — How It Works</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 {
+    font-size: 28px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 48px;
+  }
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Arrow connector */
+  .arrow {
+    width: 2px;
+    height: 32px;
+    background: #444;
+    position: relative;
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #444;
+  }
+  .arrow.short { height: 20px; }
+
+  /* Boxes */
+  .box {
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px 28px;
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+  }
+  .box-start {
+    background: #1a1a2e;
+    border-color: #3a3a5e;
+    text-align: center;
+  }
+  .box-gate {
+    background: #1a1a1a;
+    border-color: #555;
+  }
+  .box-decision {
+    background: #1c1c14;
+    border-color: #665;
+    border-style: dashed;
+  }
+  .box-result {
+    background: #0d1f0d;
+    border-color: #2a5a2a;
+    text-align: center;
+  }
+  .box-gap {
+    background: #1f0d0d;
+    border-color: #5a2a2a;
+    text-align: center;
+  }
+
+  .box-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .box-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .box-desc {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+
+  /* Gate number badge */
+  .gate-badge {
+    display: inline-block;
+    background: #333;
+    color: #ccc;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .gate-badge.g1 { background: #1a3a5a; color: #6ab4f7; }
+  .gate-badge.g2 { background: #5a1a1a; color: #f76a6a; }
+  .gate-badge.g3 { background: #1a5a3a; color: #6af7a0; }
+
+  /* Question tag */
+  .qtag {
+    display: inline-block;
+    background: #222;
+    border: 1px solid #444;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 2px;
+    color: #ccc;
+  }
+
+  /* Tables inside boxes */
+  .mini-table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .mini-table th {
+    text-align: left;
+    color: #888;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-bottom: 1px solid #333;
+  }
+  .mini-table td {
+    padding: 4px 8px;
+    color: #ccc;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .mini-table .removed { color: #f76a6a; text-decoration: line-through; }
+  .mini-table .pass { color: #6af7a0; }
+  .mini-table .winner { color: #f7d06a; font-weight: 700; }
+
+  /* Split outcomes */
+  .outcomes {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .outcomes .box { flex: 1; }
+
+  /* Branch arrows */
+  .branch {
+    display: flex;
+    width: 100%;
+    max-width: 700px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    height: 40px;
+  }
+  .branch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - 170px);
+    width: 340px;
+    height: 2px;
+    background: #444;
+  }
+  .branch-left, .branch-center, .branch-right {
+    position: absolute;
+    width: 2px;
+    height: 40px;
+    background: #444;
+  }
+  .branch-left { left: calc(50% - 170px); }
+  .branch-center { left: 50%; }
+  .branch-right { left: calc(50% + 170px); }
+  .branch-left::after, .branch-center::after, .branch-right::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #444;
+  }
+
+  /* Example section */
+  .example-section {
+    margin-top: 60px;
+    border-top: 1px solid #222;
+    padding-top: 40px;
+  }
+  .example-title {
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 32px;
+    color: #fff;
+  }
+
+  /* Scoring detail */
+  .score-breakdown {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .score-pill {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  .score-pill.high { border-color: #6af7a0; color: #6af7a0; }
+  .score-pill.medium { border-color: #f7d06a; color: #f7d06a; }
+  .score-pill.low { border-color: #666; color: #888; }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #888;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .legend-dot.blue { background: #1a3a5a; border: 1px solid #6ab4f7; }
+  .legend-dot.red { background: #5a1a1a; border: 1px solid #f76a6a; }
+  .legend-dot.green { background: #1a5a3a; border: 1px solid #6af7a0; }
+  .legend-dot.yellow { background: #3a3a1a; border: 1px solid #f7d06a; }
+
+  .note {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .outcomes { flex-direction: column; }
+    .branch { display: none; }
+    body { padding: 20px 12px; }
+    .box { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Matching Engine V1</h1>
+<p class="subtitle">How the quiz selects the right serum for each customer</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot blue"></div>Gate 1 — Skin Type</div>
+  <div class="legend-item"><div class="legend-dot red"></div>Gate 2 — Safety</div>
+  <div class="legend-item"><div class="legend-dot green"></div>Gate 3 — Scoring</div>
+  <div class="legend-item"><div class="legend-dot yellow"></div>Result</div>
+</div>
+
+<div class="flow">
+
+  <!-- START -->
+  <div class="box box-start">
+    <div class="box-title">Customer Completes Quiz</div>
+    <div class="box-desc">30 questions answered. Answers saved.</div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- GATE 1 -->
+  <div class="box box-gate">
+    <span class="gate-badge g1">GATE 1</span>
+    <div class="box-title">Skin Type Filter</div>
+    <div class="box-desc">
+      Uses <span class="qtag">Q11 — What is your skin type?</span>
+    </div>
+    <table class="mini-table">
+      <tr><th>Customer says</th><th>Products that pass</th><th>Products removed</th></tr>
+      <tr><td>"Oily"</td><td class="pass">SO1, SO2, SO3, SO4, SO5</td><td class="removed">All dry/combo/sensitive serums</td></tr>
+      <tr><td>"Dry"</td><td class="pass">SD2, SD3, SD4, SD9, SD10, SD12, LF SD12</td><td class="removed">All oily/combo/sensitive serums</td></tr>
+      <tr><td>"Combination"</td><td>SC1-SC6 (if they exist)</td><td class="removed">All others</td></tr>
+      <tr><td>"Sensitive"</td><td>SS1-SS6 (if they exist)</td><td class="removed">All others</td></tr>
+    </table>
+    <p class="note">Hard filter — wrong skin type products are permanently eliminated</p>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- GATE 2 -->
+  <div class="box box-gate">
+    <span class="gate-badge g2">GATE 2</span>
+    <div class="box-title">Safety Exclusions</div>
+    <div class="box-desc">
+      Uses <span class="qtag">Q10 — Pregnant?</span>
+      <span class="qtag">Q16 — Skin conditions</span>
+      <span class="qtag">Q29 — Ingredient exclusions</span>
+    </div>
+    <table class="mini-table">
+      <tr><th>Trigger</th><th>What gets removed</th></tr>
+      <tr><td>Pregnant = Yes</td><td class="removed">Products with Retinol</td></tr>
+      <tr><td>Has Rosacea</td><td class="removed">Products with BHA (exfoliating acids)</td></tr>
+      <tr><td>Has Eczema</td><td class="removed">Products with Fragrance</td></tr>
+      <tr><td>Excludes Retinol (Q29)</td><td class="removed">Products with Retinol</td></tr>
+      <tr><td>Excludes BHA (Q29)</td><td class="removed">Products with BHA</td></tr>
+      <tr><td>Excludes PEGs (Q29)</td><td class="removed">Products with PEGs</td></tr>
+    </table>
+    <p class="note">Non-negotiable — unsafe products are permanently removed</p>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- DECISION -->
+  <div class="box box-decision">
+    <div class="box-title">How many products remain?</div>
+  </div>
+
+  <!-- THREE BRANCHES -->
+  <div class="branch">
+    <div class="branch-left"></div>
+    <div class="branch-center"></div>
+    <div class="branch-right"></div>
+  </div>
+
+  <div class="outcomes">
+    <div class="box box-gap">
+      <div class="box-label">0 Products</div>
+      <div class="box-title">Gap</div>
+      <div class="box-desc">No product matches. Show message and flag for product team.</div>
+    </div>
+    <div class="box box-result">
+      <div class="box-label">1 Product</div>
+      <div class="box-title">Done</div>
+      <div class="box-desc">Only one option. Recommend it directly.</div>
+    </div>
+    <div class="box box-gate" style="border-color: #6af7a0;">
+      <div class="box-label">2+ Products</div>
+      <div class="box-title">Go to Gate 3</div>
+      <div class="box-desc">Multiple options. Need scoring to pick the best.</div>
+    </div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- GATE 3 -->
+  <div class="box box-gate">
+    <span class="gate-badge g3">GATE 3</span>
+    <div class="box-title">Scoring — Pick the Best Product</div>
+    <div class="box-desc">
+      Uses <span class="qtag">Q12 — Skin concerns</span>
+      <span class="qtag">Q24 — Priority ranking</span>
+      <span class="qtag">Product concern tags OR ingredients</span>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div style="font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 8px;">Step A: What does the customer need?</div>
+      <div class="box-desc">
+        Read Q12 answers. Customer selected: "Breakouts or blemishes", "Oiliness or excess shine"
+      </div>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div style="font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 8px;">Step B: What does each product treat? (Layer 2)</div>
+      <div class="box-desc">
+        The engine needs to know what each product is good for. It checks two sources:<br><br>
+        <strong>Source 1 — Concern tags (if filled in by Kyrill in the ERP):</strong><br>
+        Product is tagged with "Breakouts or blemishes" in the ERP → direct match. No translation needed.<br><br>
+        <strong>Source 2 — Ingredient lookup (fallback if no concern tags):</strong><br>
+        Product has Salicylic Acid → Layer 2 ingredient map says "Salicylic Acid = breakouts" → match.<br>
+        This is a hardcoded reference table in the code — not AI. It maps ingredient names to what they treat.
+      </div>
+      <table class="mini-table" style="margin-top: 12px;">
+        <tr><th colspan="3" style="color: #f7d06a;">Layer 2 — Ingredient Map (reference table in code)</th></tr>
+        <tr><th>Ingredient</th><th>→</th><th>What it treats</th></tr>
+        <tr><td>Salicylic Acid</td><td>→</td><td>Breakouts or blemishes, Oiliness or excess shine</td></tr>
+        <tr><td>Zinc PCA</td><td>→</td><td>Breakouts or blemishes, Oiliness or excess shine</td></tr>
+        <tr><td>Tranexamic Acid</td><td>→</td><td>Uneven skin tone or dark spots, Dullness or tired-looking skin</td></tr>
+        <tr><td>Niacinamide</td><td>→</td><td>Dullness or tired-looking skin, Oiliness or excess shine</td></tr>
+        <tr><td>Retinol</td><td>→</td><td>Fine lines or wrinkles</td></tr>
+        <tr><td>Matrixyl 3000</td><td>→</td><td>Fine lines or wrinkles</td></tr>
+        <tr><td>Bakuchiol</td><td>→</td><td>Fine lines or wrinkles (gentle), Redness or irritation</td></tr>
+        <tr><td>Ectoin</td><td>→</td><td>Redness or irritation</td></tr>
+        <tr><td>Bisabolol</td><td>→</td><td>Redness or irritation</td></tr>
+        <tr><td>Hyaluronic Acid</td><td>→</td><td>Dryness or dehydration</td></tr>
+        <tr><td>Vitamin C</td><td>→</td><td>Dullness or tired-looking skin</td></tr>
+        <tr><td>Betaglucano</td><td>→</td><td>Texture irregularities</td></tr>
+        <tr><td>Panthenol</td><td>→</td><td>Dryness or dehydration, Texture irregularities</td></tr>
+      </table>
+      <p class="note">Layer 2 is only used when a product has no concern tags. Once Kyrill tags products in the ERP, Layer 2 is skipped.</p>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div style="font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 8px;">Step C: Apply priority multipliers from Q24</div>
+      <table class="mini-table">
+        <tr><th>Priority Rank</th><th>Multiplier</th><th>Example</th></tr>
+        <tr><td>#1 Priority</td><td class="winner">3x points</td><td>Clarifying ranked #1 → breakout matches worth 3x</td></tr>
+        <tr><td>#2 Priority</td><td>2x points</td><td></td></tr>
+        <tr><td>#3 Priority</td><td>1.5x points</td><td></td></tr>
+        <tr><td>#4, #5, #6</td><td>1x points</td><td></td></tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div style="font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 8px;">Step D: Highest score wins</div>
+      <div class="box-desc">Product with the most matching concerns × priority multipliers = winner. If tied, product with more active ingredients wins.</div>
+    </div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <!-- RESULT -->
+  <div class="box box-result">
+    <div class="box-label">Result</div>
+    <div class="box-title">Recommended Serum</div>
+    <div class="box-desc">Show product name, key ingredients, and "why we picked this" reasons.<br>Customer chooses fragrance: No fragrance / Blend 1 / Blend 2</div>
+  </div>
+
+</div>
+
+<!-- EXAMPLE WALKTHROUGH -->
+<div class="example-section">
+  <div class="example-title">Example: Oily Skin Customer with Breakout Concerns</div>
+
+  <div class="flow">
+    <div class="box box-start">
+      <div class="box-desc">
+        <strong>Customer answers:</strong><br>
+        Q11: Oily skin<br>
+        Q12: "Breakouts or blemishes" + "Oiliness or excess shine"<br>
+        Q10: Not pregnant<br>
+        Q16: No conditions<br>
+        Q24: #1 Clarifying, #2 Anti-aging, #3 Brightening<br>
+        Q29: No exclusions
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g1">GATE 1</span>
+      <div class="box-desc">Oily skin → <strong>5 serums remain:</strong> SO1, SO2, SO3, SO4, SO5</div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g2">GATE 2</span>
+      <div class="box-desc">Not pregnant, no conditions, no exclusions → <strong>All 5 pass</strong></div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g3">GATE 3 — SCORING</span>
+      <table class="mini-table">
+        <tr><th>Product</th><th>Matches "Breakouts"?</th><th>Matches "Oiliness"?</th><th>Priority boost</th><th>Score</th></tr>
+        <tr class="winner">
+          <td class="winner">SO1</td>
+          <td class="pass">Yes (Salicylic Acid, Zinc PCA)</td>
+          <td class="pass">Yes (Zinc PCA, Niacinamide)</td>
+          <td>Clarifying = #1 → 3x</td>
+          <td class="winner">44</td>
+        </tr>
+        <tr>
+          <td>SO2</td>
+          <td>No</td>
+          <td>Partial</td>
+          <td>—</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>SO3</td>
+          <td>No</td>
+          <td>Partial</td>
+          <td>—</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>SO4</td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td>SO5</td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>4</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-result">
+      <div class="box-label">Winner</div>
+      <div class="box-title" style="color: #f7d06a;">SO1 — Score: 44</div>
+      <div class="box-desc">
+        "Formulated for breakouts & blemishes, oil control.<br>
+        Matched to your top priority."
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECOND EXAMPLE -->
+<div class="example-section">
+  <div class="example-title">Example: Dry Skin + Rosacea + Calming Priority</div>
+
+  <div class="flow">
+    <div class="box box-start">
+      <div class="box-desc">
+        <strong>Customer answers:</strong><br>
+        Q11: Dry skin<br>
+        Q12: "Redness or irritation" + "Sensitivity or reactivity"<br>
+        Q10: Not pregnant<br>
+        Q16: Rosacea<br>
+        Q24: #1 Calming<br>
+        Q29: No exclusions
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g1">GATE 1</span>
+      <div class="box-desc">Dry skin → <strong>7 serums remain:</strong> SD2, SD3, SD4, SD9, SD10, SD12, LF SD12</div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g2">GATE 2</span>
+      <div class="box-desc">
+        Rosacea → remove products with BHA<br>
+        <strong>No dry serums contain BHA → All 7 pass</strong>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g3">GATE 3 — SCORING</span>
+      <table class="mini-table">
+        <tr><th>Product</th><th>Matches "Calming"?</th><th>Priority boost</th><th>Score</th></tr>
+        <tr class="winner">
+          <td class="winner">SD2</td>
+          <td class="pass">Yes — Ectoin + Bisabolol</td>
+          <td>Calming = #1 → 3x</td>
+          <td class="winner">34</td>
+        </tr>
+        <tr><td>SD3</td><td>No</td><td>—</td><td>4</td></tr>
+        <tr><td>SD4</td><td>No</td><td>—</td><td>4</td></tr>
+        <tr><td>SD9</td><td>No</td><td>—</td><td>6</td></tr>
+        <tr><td>SD10</td><td>No</td><td>—</td><td>4</td></tr>
+        <tr><td>SD12</td><td>No</td><td>—</td><td>4</td></tr>
+        <tr><td>LF SD12</td><td>No</td><td>—</td><td>4</td></tr>
+      </table>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-result">
+      <div class="box-label">Winner</div>
+      <div class="box-title" style="color: #f7d06a;">SD2 — Score: 34</div>
+      <div class="box-desc">
+        "Formulated for redness & sensitivity.<br>
+        Matched to your top priority."
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAP EXAMPLE -->
+<div class="example-section">
+  <div class="example-title">Example: Gap — Oily Skin + Eczema</div>
+
+  <div class="flow">
+    <div class="box box-start">
+      <div class="box-desc">
+        <strong>Customer answers:</strong><br>
+        Q11: Oily skin<br>
+        Q16: Eczema<br>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g1">GATE 1</span>
+      <div class="box-desc">Oily skin → 5 serums: SO1, SO2, SO3, SO4, SO5</div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gate">
+      <span class="gate-badge g2">GATE 2</span>
+      <div class="box-desc">
+        Eczema → remove products with Fragrance<br>
+        <span class="removed">SO1 — has Parfum — removed</span><br>
+        <span class="removed">SO2 — has Parfum — removed</span><br>
+        <span class="removed">SO3 — has Parfum — removed</span><br>
+        <span class="removed">SO4 — has Parfum — removed</span><br>
+        <span class="removed">SO5 — has Parfum — removed</span><br>
+        <strong>0 products remain</strong>
+      </div>
+    </div>
+
+    <div class="arrow"></div>
+
+    <div class="box box-gap">
+      <div class="box-label">Gap Identified</div>
+      <div class="box-title" style="color: #f76a6a;">No Product Available</div>
+      <div class="box-desc">
+        All oily-skin serums contain fragrance.<br>
+        Need to add fragrance-free (F0) oily serums to the catalog.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 60px; padding: 20px; color: #555; font-size: 12px;">
+  Matching Engine V1 — Atelier Rusalka — March 2026
+</div>
+
+</div>
+</body>
+</html>

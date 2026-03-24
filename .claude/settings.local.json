@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.prose.com)",
+      "WebSearch",
+      "Bash(firecrawl:*)",
+      "Bash(jq:*)",
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm install:*)",
+      "Bash(npm:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx next:*)",
+      "Bash(timeout 5)",
+      "Read(//c/Users/Egofoxxx/AppData/Local/Temp/claude/C--Users-Egofoxxx-Documents-Development-Area-Web-Development-Kyrill/tasks/**)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(cd \"C:\\\\Users\\\\Egofoxxx\\\\Documents\\\\Development Area\\\\Web Development Kyrill\\\\recip3\" && gh auth status 2>&1)",
+      "Bash(which git:*)",
+      "Bash(cd \"C:\\\\Users\\\\Egofoxxx\\\\Documents\\\\Development Area\\\\Web Development Kyrill\\\\recip3\" && vercel login 2>&1)",
+      "Bash(npx supabase:*)",
+      "Bash(cd:*)",
+      "Bash(bash \"C:\\\\Users\\\\Egofoxxx\\\\.claude-personal\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.2\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\Egofoxxx\\\\Documents\\\\Development Area\\\\Web Development Kyrill\" 2>&1)",
+      "Bash(curl:*)"
+    ]
+  }
+}
