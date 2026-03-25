@@ -4,18 +4,20 @@ import type {
   ProductWithIngredients,
   Recommendation,
   Product,
+  ProductCategory,
   ProductIngredient,
   Ingredient,
+  ScoredProduct,
 } from "./types";
 import { extractSkinType, extractExclusions, filterProducts } from "./filters";
 import { extractConcerns, rankProducts } from "./scoring";
 
-async function fetchSerumProducts(): Promise<ProductWithIngredients[]> {
+async function fetchAllProducts(): Promise<ProductWithIngredients[]> {
   const { data: products, error: prodError } = await supabase
     .from("products")
-    .select("id, name, category, skin_type, product_level, concern_tags")
-    .eq("category", "Serum")
-    .eq("product_level", "End Product");
+    .select("id, name, category, skin_type, product_level, concern_tags, safe_for_pregnancy, safe_for_rosacea, safe_for_eczema, contains_retinol, contains_bha, contains_pegs, contains_fragrance")
+    .eq("product_level", "End Product")
+    .in("category", ["Serum", "Cleanser", "Moisturizer"]);
 
   if (prodError || !products) return [];
 
@@ -28,7 +30,7 @@ async function fetchSerumProducts(): Promise<ProductWithIngredients[]> {
       .in("product_id", productIds),
     supabase
       .from("ingredients")
-      .select("id, name, function, scientific_name, type"),
+      .select("id, name, function, scientific_name, type, skincare_priorities"),
   ]);
 
   const piRows = piResult.data as ProductIngredient[] | null;
@@ -58,31 +60,50 @@ async function fetchSerumProducts(): Promise<ProductWithIngredients[]> {
   });
 }
 
+function pickBest(
+  allProducts: ProductWithIngredients[],
+  skinType: string,
+  exclusions: string[],
+  answers: QuizAnswers,
+  category: ProductCategory
+): { product: ScoredProduct | null; hasGap: boolean; gapMessage?: string } {
+  const candidates = filterProducts(allProducts, skinType as "oily" | "dry" | "combination" | "sensitive", exclusions, answers, category);
+
+  if (candidates.length === 0) {
+    return {
+      product: null,
+      hasGap: true,
+      gapMessage: `No ${category.toLowerCase()} available for your ${skinType} skin with those exclusions.`,
+    };
+  }
+
+  const ranked = rankProducts(candidates, answers);
+  return { product: ranked[0], hasGap: false };
+}
+
 export async function recommend(answers: QuizAnswers): Promise<Recommendation> {
   const skinType = extractSkinType(answers);
   const exclusions = extractExclusions(answers);
   const concerns = extractConcerns(answers);
 
-  const allProducts = await fetchSerumProducts();
-  const candidates = filterProducts(allProducts, skinType, exclusions);
+  const allProducts = await fetchAllProducts();
+  const gaps: string[] = [];
 
-  // Scenario 1: No matches — gap
-  if (candidates.length === 0) {
-    return {
-      serum: null,
-      skinType,
-      concerns,
-      hasGap: true,
-      gapMessage: `We don't yet have a serum for your ${skinType} skin with those specific exclusions. New formulations are in development, so check back soon.`,
-    };
-  }
+  const serumResult = pickBest(allProducts, skinType, exclusions, answers, "Serum");
+  if (serumResult.hasGap && serumResult.gapMessage) gaps.push(serumResult.gapMessage);
 
-  // Score and pick best candidate
-  const ranked = rankProducts(candidates, answers);
+  const cleanserResult = pickBest(allProducts, skinType, exclusions, answers, "Cleanser");
+  if (cleanserResult.hasGap && cleanserResult.gapMessage) gaps.push(cleanserResult.gapMessage);
+
+  const moisturizerResult = pickBest(allProducts, skinType, exclusions, answers, "Moisturizer");
+  if (moisturizerResult.hasGap && moisturizerResult.gapMessage) gaps.push(moisturizerResult.gapMessage);
+
   return {
-    serum: ranked[0],
+    serum: serumResult.product,
+    cleanser: cleanserResult.product,
+    moisturizer: moisturizerResult.product,
     skinType,
     concerns,
-    hasGap: false,
+    gaps,
   };
 }

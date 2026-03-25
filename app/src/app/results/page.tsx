@@ -7,13 +7,11 @@ import type { AnswerValue } from "@/data/quizQuestions";
 import SerumCard from "@/components/results/SerumCard";
 
 function getDefaultFragrance(answers: Record<number, AnswerValue>): FragranceOption {
-  // Q25: "Fragrance-free" in ingredient philosophies
   const q25 = answers[25] as string[] | undefined;
   if (q25 && Array.isArray(q25) && q25.includes("Fragrance-free")) {
     return "F0";
   }
 
-  // Q29: "Fragrance / essential oils" in avoidance list
   const q29 = answers[29] as string[] | undefined;
   if (q29 && Array.isArray(q29) && q29.includes("Fragrance / essential oils")) {
     return "F0";
@@ -89,12 +87,13 @@ export default function ResultsPage() {
   if (!recommendation) return null;
 
   const skinTypeLabel = recommendation.skinType.charAt(0).toUpperCase() + recommendation.skinType.slice(1);
+  const hasAnyProduct = recommendation.serum || recommendation.cleanser || recommendation.moisturizer;
 
   return (
     <div className="results-container">
       <div className="results-header">
         <span className="results-label">Selected For You</span>
-        <h1 className="results-title">Your Serum Match</h1>
+        <h1 className="results-title">Your Personalised Regimen</h1>
         <p className="results-subtitle">
           Based on your {skinTypeLabel} skin profile
           {recommendation.concerns.length > 0 &&
@@ -102,22 +101,43 @@ export default function ResultsPage() {
         </p>
       </div>
 
-      {recommendation.hasGap ? (
+      {hasAnyProduct ? (
+        <div className="results-grid-3">
+          {recommendation.cleanser && (
+            <SerumCard
+              result={recommendation.cleanser}
+              fragranceOption={fragranceOption}
+              onFragranceChange={setFragranceOption}
+            />
+          )}
+          {recommendation.serum && (
+            <SerumCard
+              result={recommendation.serum}
+              fragranceOption={fragranceOption}
+              onFragranceChange={setFragranceOption}
+            />
+          )}
+          {recommendation.moisturizer && (
+            <SerumCard
+              result={recommendation.moisturizer}
+              fragranceOption={fragranceOption}
+              onFragranceChange={setFragranceOption}
+            />
+          )}
+        </div>
+      ) : (
         <div className="results-gap">
-          <p>{recommendation.gapMessage}</p>
-          <button onClick={() => router.push("/")} className="results-btn">
-            Return Home
-          </button>
+          <p>We don't have products matching your profile yet. New formulations are in development.</p>
         </div>
-      ) : recommendation.serum ? (
-        <div className="results-grid">
-          <SerumCard
-            result={recommendation.serum}
-            fragranceOption={fragranceOption}
-            onFragranceChange={setFragranceOption}
-          />
+      )}
+
+      {recommendation.gaps.length > 0 && (
+        <div className="results-gaps">
+          {recommendation.gaps.map((gap, i) => (
+            <p key={i} className="results-gap-item">{gap}</p>
+          ))}
         </div>
-      ) : null}
+      )}
 
       <div className="results-actions">
         <button onClick={() => router.push("/quiz")} className="results-btn-secondary">

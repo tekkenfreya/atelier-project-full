@@ -3,9 +3,21 @@ import type {
   QuizAnswers,
   Concern,
   ScoredProduct,
+  SkincarePriority,
 } from "./types";
 import { getProductConcerns } from "./ingredient-map";
 
+// Skincare priority → internal concern code (for fallback when no concern tags)
+const PRIORITY_TO_CONCERN: Record<string, Concern> = {
+  "Anti-aging": "anti-aging",
+  "Brightening": "brightening",
+  "Hydration": "hydration",
+  "Calming": "calming",
+  "Clarifying": "acne",
+  "Repair": "repair",
+};
+
+// Q12 concern options → internal concern codes (for concern tag matching)
 const QUIZ_CONCERN_MAP: Record<string, Concern> = {
   "Breakouts or blemishes": "acne",
   "Dryness or dehydration": "hydration",
@@ -21,6 +33,17 @@ const QUIZ_CONCERN_MAP: Record<string, Concern> = {
   "Texture irregularities": "repair",
 };
 
+// Q24 priority options → SkincarePriority strings (match DB values)
+const Q24_PRIORITY_MAP: Record<string, SkincarePriority> = {
+  "Anti-aging (wrinkles, firmness, elasticity)": "Anti-aging",
+  "Brightening (even tone, radiance)": "Brightening",
+  "Hydration (plump, dewy, moisturised)": "Hydration",
+  "Calming (reduce redness, soothe irritation)": "Calming",
+  "Clarifying (control oil, minimise breakouts)": "Clarifying",
+  "Repair (strengthen barrier, heal damage)": "Repair",
+};
+
+// Q24 priority options → internal concern codes (for concern tag matching)
 const PRIORITY_CONCERN_MAP: Record<string, Concern> = {
   "Anti-aging (wrinkles, firmness, elasticity)": "anti-aging",
   "Brightening (even tone, radiance)": "brightening",
@@ -30,34 +53,7 @@ const PRIORITY_CONCERN_MAP: Record<string, Concern> = {
   "Repair (strengthen barrier, heal damage)": "repair",
 };
 
-export function extractConcerns(answers: QuizAnswers): Concern[] {
-  const concerns = new Set<Concern>();
-
-  // Q12: Skin concerns (multi-select)
-  const q12 = answers[12] as string[] | undefined;
-  if (q12 && Array.isArray(q12)) {
-    for (const item of q12) {
-      const concern = QUIZ_CONCERN_MAP[item];
-      if (concern) concerns.add(concern);
-    }
-  }
-
-  return Array.from(concerns);
-}
-
-export function extractPriorityRanking(answers: QuizAnswers): Concern[] {
-  // Q24: Drag-rank priority (array of strings in order)
-  const q24 = answers[24] as string[] | undefined;
-  if (!q24 || !Array.isArray(q24)) return [];
-
-  const ranked: Concern[] = [];
-  for (const item of q24) {
-    const concern = PRIORITY_CONCERN_MAP[item];
-    if (concern) ranked.push(concern);
-  }
-  return ranked;
-}
-
+// Concern tag strings → internal concern codes
 const CONCERN_TAG_MAP: Record<string, Concern> = {
   "Breakouts or blemishes": "acne",
   "Dryness or dehydration": "hydration",
@@ -73,6 +69,40 @@ const CONCERN_TAG_MAP: Record<string, Concern> = {
   "Texture irregularities": "repair",
 };
 
+export function extractConcerns(answers: QuizAnswers): Concern[] {
+  const concerns = new Set<Concern>();
+  const q12 = answers[12] as string[] | undefined;
+  if (q12 && Array.isArray(q12)) {
+    for (const item of q12) {
+      const concern = QUIZ_CONCERN_MAP[item];
+      if (concern) concerns.add(concern);
+    }
+  }
+  return Array.from(concerns);
+}
+
+export function extractPriorityRanking(answers: QuizAnswers): Concern[] {
+  const q24 = answers[24] as string[] | undefined;
+  if (!q24 || !Array.isArray(q24)) return [];
+  const ranked: Concern[] = [];
+  for (const item of q24) {
+    const concern = PRIORITY_CONCERN_MAP[item];
+    if (concern) ranked.push(concern);
+  }
+  return ranked;
+}
+
+function extractSkincarePriorities(answers: QuizAnswers): SkincarePriority[] {
+  const q24 = answers[24] as string[] | undefined;
+  if (!q24 || !Array.isArray(q24)) return [];
+  const ranked: SkincarePriority[] = [];
+  for (const item of q24) {
+    const priority = Q24_PRIORITY_MAP[item];
+    if (priority) ranked.push(priority);
+  }
+  return ranked;
+}
+
 function getProductConcernsFromTags(tags: string[]): Concern[] {
   const concerns = new Set<Concern>();
   for (const tag of tags) {
@@ -82,24 +112,58 @@ function getProductConcernsFromTags(tags: string[]): Concern[] {
   return Array.from(concerns);
 }
 
+function getProductConcernsFromIngredientPriorities(product: ProductWithIngredients): Concern[] {
+  const concerns = new Set<Concern>();
+  for (const ingredient of product.ingredients) {
+    if (ingredient.skincare_priorities && ingredient.skincare_priorities.length > 0) {
+      for (const p of ingredient.skincare_priorities) {
+        const concern = PRIORITY_TO_CONCERN[p];
+        if (concern) concerns.add(concern);
+      }
+    }
+  }
+  return Array.from(concerns);
+}
+
+function getProductPrioritiesFromIngredients(product: ProductWithIngredients): SkincarePriority[] {
+  const priorities = new Set<SkincarePriority>();
+  for (const ingredient of product.ingredients) {
+    if (ingredient.skincare_priorities && ingredient.skincare_priorities.length > 0) {
+      for (const p of ingredient.skincare_priorities) {
+        priorities.add(p as SkincarePriority);
+      }
+    }
+  }
+  return Array.from(priorities);
+}
+
 export function scoreProduct(
   product: ProductWithIngredients,
   concerns: Concern[],
-  priorityRanking: Concern[]
+  priorityRanking: Concern[],
+  skincarePriorities: SkincarePriority[]
 ): ScoredProduct {
-  const hasConcernTags = product.concern_tags && product.concern_tags.length > 0;
-  const productConcerns = hasConcernTags
-    ? getProductConcernsFromTags(product.concern_tags!)
-    : getProductConcerns(product.ingredients.map((i) => i.name));
-
   let score = 0;
   const matchedConcerns: Concern[] = [];
   const reasons: string[] = [];
 
-  // Score concern overlap
+  // --- SCORING LAYER 1: Product concern tags (Q12 matching) ---
+  // Determine product concerns — 2 sources in priority order:
+  // 1. Product concern_tags (explicit, set by Kyrill in ERP)
+  // 2. Ingredient skincare_priorities from DB (data-driven)
+  // 3. Hardcoded ingredient map — DISABLED, kept for future use
+  const hasConcernTags = product.concern_tags && product.concern_tags.length > 0;
+  let productConcerns: Concern[];
+  if (hasConcernTags) {
+    productConcerns = getProductConcernsFromTags(product.concern_tags!);
+  } else {
+    productConcerns = getProductConcernsFromIngredientPriorities(product);
+    // const fromHardcoded = getProductConcerns(product.ingredients.map((i) => i.name));
+    // productConcerns = fromHardcoded; // DISABLED — use only when concern_tags and skincare_priorities are both empty
+  }
+
   for (const concern of concerns) {
     if (productConcerns.includes(concern)) {
-      // Check priority ranking for multiplier
       const rankIndex = priorityRanking.indexOf(concern);
       let multiplier = 1;
       if (rankIndex === 0) multiplier = 3;
@@ -111,18 +175,37 @@ export function scoreProduct(
     }
   }
 
-  // Generate reasons
   if (matchedConcerns.length > 0) {
     const concernLabels = matchedConcerns.map(formatConcern);
     reasons.push(`Formulated for ${concernLabels.join(", ")}`);
   }
 
-  // Bonus for matching top priority
   if (priorityRanking.length > 0 && productConcerns.includes(priorityRanking[0])) {
-    reasons.push(`Matched to your top priority`);
+    reasons.push("Matched to your top priority");
   }
 
-  // Bonus for number of active ingredients
+  // --- SCORING LAYER 2: Ingredient skincare priorities (Q24 matching) ---
+  const productPriorities = getProductPrioritiesFromIngredients(product);
+
+  if (productPriorities.length > 0 && skincarePriorities.length > 0) {
+    for (let i = 0; i < skincarePriorities.length; i++) {
+      const customerPriority = skincarePriorities[i];
+      if (productPriorities.includes(customerPriority)) {
+        let multiplier = 1;
+        if (i === 0) multiplier = 3;
+        else if (i === 1) multiplier = 2;
+        else if (i === 2) multiplier = 1.5;
+
+        score += 5 * multiplier;
+
+        if (i === 0) {
+          reasons.push(`Ingredients aligned with your #1 priority: ${customerPriority}`);
+        }
+      }
+    }
+  }
+
+  // --- BONUS: Active ingredient count ---
   const activeCount = product.ingredients.filter(
     (i) => i.function?.includes("Active") || i.function?.includes("Phase-Shot")
   ).length;
@@ -153,8 +236,9 @@ export function rankProducts(
 ): ScoredProduct[] {
   const concerns = extractConcerns(answers);
   const priorityRanking = extractPriorityRanking(answers);
+  const skincarePriorities = extractSkincarePriorities(answers);
 
   return products
-    .map((p) => scoreProduct(p, concerns, priorityRanking))
+    .map((p) => scoreProduct(p, concerns, priorityRanking, skincarePriorities))
     .sort((a, b) => b.score - a.score);
 }

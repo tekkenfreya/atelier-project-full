@@ -1,4 +1,4 @@
-import type { ProductWithIngredients, QuizAnswers, SkinType } from "./types";
+import type { ProductWithIngredients, ProductCategory, QuizAnswers, SkinType } from "./types";
 import { getProductExcludables } from "./ingredient-map";
 
 export function normalizeSkinType(raw: string): SkinType {
@@ -59,22 +59,71 @@ export function extractExclusions(answers: QuizAnswers): string[] {
   return exclusions;
 }
 
+export function extractSafetyContext(answers: QuizAnswers): {
+  isPregnant: boolean;
+  hasRosacea: boolean;
+  hasEczema: boolean;
+} {
+  const q10 = answers[10] as string | undefined;
+  const isPregnant = q10 === "Yes";
+
+  const q16 = answers[16] as string[] | undefined;
+  let hasRosacea = false;
+  let hasEczema = false;
+  if (q16 && Array.isArray(q16)) {
+    hasRosacea = q16.includes("Rosacea or redness-prone skin");
+    hasEczema = q16.includes("Eczema or atopic dermatitis");
+  }
+
+  return { isPregnant, hasRosacea, hasEczema };
+}
+
+function isExcludedByFlags(
+  product: ProductWithIngredients,
+  safety: { isPregnant: boolean; hasRosacea: boolean; hasEczema: boolean },
+  ingredientExclusions: string[]
+): boolean {
+  // Check product-level safety flags (from database)
+  if (safety.isPregnant && product.safe_for_pregnancy === false) return true;
+  if (safety.hasRosacea && product.safe_for_rosacea === false) return true;
+  if (safety.hasEczema && product.safe_for_eczema === false) return true;
+
+  // Check product-level content flags against Q29 exclusions
+  if (product.contains_retinol && ingredientExclusions.includes("Retinol / retinoids")) return true;
+  if (product.contains_bha && ingredientExclusions.includes("Exfoliating acids (AHA, BHA)")) return true;
+  if (product.contains_pegs && ingredientExclusions.includes("PEGs")) return true;
+  if (product.contains_fragrance && safety.hasEczema) return true;
+
+  // Check pregnancy against content flags
+  if (safety.isPregnant && product.contains_retinol) return true;
+
+  return false;
+}
+
 export function filterProducts(
   products: ProductWithIngredients[],
   skinType: SkinType,
-  exclusions: string[]
+  exclusions: string[],
+  answers: QuizAnswers,
+  category: ProductCategory = "Serum"
 ): ProductWithIngredients[] {
+  const safety = extractSafetyContext(answers);
+  const ingredientExclusions = exclusions.filter(e => e !== "Fragrance / essential oils");
+
   return products.filter((product) => {
     // Must be End Product
     if (product.product_level !== "End Product") return false;
 
-    // Must be Serum
-    if (product.category !== "Serum") return false;
+    // Must match category
+    if (product.category !== category) return false;
 
     // Must match skin type
     if (normalizeSkinType(product.skin_type) !== skinType) return false;
 
-    // Must not contain excluded ingredients
+    // Check 1: Product-level safety flags (from database)
+    if (isExcludedByFlags(product, safety, ingredientExclusions)) return false;
+
+    // Check 2: Ingredient-level exclusions (fallback for untagged products)
     if (exclusions.length > 0) {
       const ingredientNames = product.ingredients.map((i) => i.name);
       const productExcludables = getProductExcludables(ingredientNames);
