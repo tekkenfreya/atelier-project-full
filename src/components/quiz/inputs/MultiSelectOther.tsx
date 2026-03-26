@@ -55,24 +55,37 @@ export default function MultiSelectOther({ options, value, onChange }: MultiSele
     }
   }
 
+  function isSelected(option: string): boolean {
+    if (option === "Other") return hasOther;
+    if (option === "None that I know of") return hasNone;
+    return selectedItems.includes(option);
+  }
+
   return (
     <div className="quiz-multi-select">
       {options.map((option) => {
-        const isSelected =
-          option === "Other"
-            ? hasOther
-            : option === "None that I know of"
-              ? hasNone
-              : selectedItems.includes(option);
-
+        const selected = isSelected(option);
         return (
           <div key={option}>
             <button
               type="button"
-              className={`quiz-option ${isSelected ? "selected" : ""}`}
+              className={`quiz-select-card ${selected ? "selected" : ""}`}
               onClick={() => handleToggle(option)}
             >
-              {option}
+              <span className="quiz-check-indicator">
+                {selected && (
+                  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                    <path
+                      d="M1 5L4.5 8.5L11 1.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </span>
+              <span className="quiz-select-label">{option}</span>
             </button>
             {option === "Other" && hasOther && (
               <div className="quiz-other-input">
