@@ -4,17 +4,16 @@ import { PRODUCT_PRICES } from "@/types/cart";
 interface SerumCardProps {
   result: ScoredProduct;
   fragranceOption: FragranceOption;
-  onFragranceChange: (option: FragranceOption) => void;
   selected?: boolean;
   onToggleSelect?: () => void;
   showSelection?: boolean;
 }
 
-const FRAGRANCE_OPTIONS: { value: FragranceOption; label: string; description: string }[] = [
-  { value: "F0", label: "No fragrance", description: "Pure formula, no added scent" },
-  { value: "F1", label: "Fragrance blend 1", description: "Light, fresh botanical notes" },
-  { value: "F2", label: "Fragrance blend 2", description: "Warm, earthy undertones" },
-];
+const FRAGRANCE_LABELS: Record<FragranceOption, string> = {
+  F0: "No fragrance",
+  F1: "Light, fresh botanical notes",
+  F2: "Warm, earthy undertones",
+};
 
 function getCategoryFromProduct(product: ScoredProduct["product"]): ProductCategory {
   const cat = product.category?.toLowerCase() ?? "";
@@ -26,7 +25,6 @@ function getCategoryFromProduct(product: ScoredProduct["product"]): ProductCateg
 export default function SerumCard({
   result,
   fragranceOption,
-  onFragranceChange,
   selected = true,
   onToggleSelect,
   showSelection = false,
@@ -100,24 +98,9 @@ export default function SerumCard({
         </ul>
       </div>
 
-      <div className="results-fragrance">
-        <span className="results-card-label">Fragrance Preference</span>
-        <div className="results-fragrance-options">
-          {FRAGRANCE_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              className={`results-fragrance-option${fragranceOption === opt.value ? " selected" : ""}`}
-              onClick={() => onFragranceChange(opt.value)}
-            >
-              <span className="results-fragrance-indicator" />
-              <span className="results-fragrance-content">
-                <span className="results-fragrance-label">{opt.label}</span>
-                <span className="results-fragrance-desc">{opt.description}</span>
-              </span>
-            </button>
-          ))}
-        </div>
+      <div className="results-fragrance-display">
+        <span className="results-card-label">Fragrance</span>
+        <p className="results-fragrance-value">{FRAGRANCE_LABELS[fragranceOption]}</p>
       </div>
     </div>
   );

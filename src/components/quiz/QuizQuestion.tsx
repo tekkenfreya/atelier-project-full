@@ -10,6 +10,7 @@ import MultiScaleGrid from "@/components/quiz/inputs/MultiScaleGrid";
 import YesNo from "@/components/quiz/inputs/YesNo";
 import DragRank from "@/components/quiz/inputs/DragRank";
 import FreeText from "@/components/quiz/inputs/FreeText";
+import MultiSelectOther from "@/components/quiz/inputs/MultiSelectOther";
 
 interface QuizQuestionProps {
   question: QuizQuestionType;
@@ -88,6 +89,14 @@ export default function QuizQuestion({
       case "drag-rank":
         return (
           <DragRank
+            options={question.options ?? []}
+            value={Array.isArray(answer) ? answer : []}
+            onChange={onAnswer}
+          />
+        );
+      case "multi-select-other":
+        return (
+          <MultiSelectOther
             options={question.options ?? []}
             value={Array.isArray(answer) ? answer : []}
             onChange={onAnswer}

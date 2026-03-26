@@ -8,17 +8,11 @@ import type { CartItem } from "@/types/cart";
 import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
 import SerumCard from "@/components/results/SerumCard";
 
-function getDefaultFragrance(answers: Record<number, AnswerValue>): FragranceOption {
-  const q25 = answers[25] as string[] | undefined;
-  if (q25 && Array.isArray(q25) && q25.includes("Fragrance-free")) {
-    return "F0";
-  }
-
-  const q29 = answers[29] as string[] | undefined;
-  if (q29 && Array.isArray(q29) && q29.includes("Fragrance / essential oils")) {
-    return "F0";
-  }
-
+function getFragranceFromAnswers(answers: Record<number, AnswerValue>): FragranceOption {
+  const q31 = answers[31] as string | undefined;
+  if (q31 === "No fragrance") return "F0";
+  if (q31 === "Warm, earthy undertones") return "F2";
+  if (q31 === "Light, fresh botanical notes") return "F1";
   return "F1";
 }
 
@@ -40,7 +34,7 @@ export default function ResultsPage() {
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [fragranceOption, setFragranceOption] = useState<FragranceOption>("F0");
+  const [fragranceOption, setFragranceOption] = useState<FragranceOption>("F1");
   const [selected, setSelected] = useState<SelectedProducts>({
     cleanser: true,
     serum: true,
@@ -57,7 +51,7 @@ export default function ResultsPage() {
 
       try {
         const answers: Record<number, AnswerValue> = JSON.parse(stored);
-        setFragranceOption(getDefaultFragrance(answers));
+        setFragranceOption(getFragranceFromAnswers(answers));
 
         const res = await fetch("/api/recommend", {
           method: "POST",
@@ -194,7 +188,6 @@ export default function ResultsPage() {
             <SerumCard
               result={recommendation.cleanser}
               fragranceOption={fragranceOption}
-              onFragranceChange={setFragranceOption}
               selected={selected.cleanser}
               onToggleSelect={() => toggleProduct("cleanser")}
               showSelection
@@ -204,7 +197,6 @@ export default function ResultsPage() {
             <SerumCard
               result={recommendation.serum}
               fragranceOption={fragranceOption}
-              onFragranceChange={setFragranceOption}
               selected={selected.serum}
               onToggleSelect={() => toggleProduct("serum")}
               showSelection
@@ -214,7 +206,6 @@ export default function ResultsPage() {
             <SerumCard
               result={recommendation.moisturizer}
               fragranceOption={fragranceOption}
-              onFragranceChange={setFragranceOption}
               selected={selected.moisturizer}
               onToggleSelect={() => toggleProduct("moisturizer")}
               showSelection
@@ -271,6 +262,10 @@ export default function ResultsPage() {
             Return Home
           </button>
         )}
+      </div>
+
+      <div className="results-report-link">
+        <a href="/report">View detailed report</a>
       </div>
     </div>
   );

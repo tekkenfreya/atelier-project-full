@@ -931,11 +931,8 @@ body {
   padding: 1.5rem 1rem;
   border: 1px solid var(--border);
   background-color: var(--bg-cream);
-  transition: border-color 0.3s ease;
-}
-
-.quiz-intro-section-card:hover {
-  border-color: var(--accent);
+  cursor: default;
+  pointer-events: none;
 }
 
 .quiz-intro-section-num {
@@ -1563,6 +1560,34 @@ body {
 }
 
 /* Free Text */
+/* Other text input (allergy question) */
+.quiz-other-input {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.quiz-other-field {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--accent);
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.quiz-other-field::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.quiz-other-field:focus {
+  border-color: var(--accent-hover);
+}
+
 .quiz-free-text {
   display: flex;
   flex-direction: column;
@@ -1863,87 +1888,38 @@ body {
   color: var(--accent);
 }
 
-/* Fragrance Selector */
-.results-fragrance {
+/* Fragrance Display */
+.results-fragrance-display {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border);
 }
 
-.results-fragrance-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.results-fragrance-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.results-fragrance-option:hover {
-  border-color: rgba(61, 58, 46, 0.25);
-}
-
-.results-fragrance-option.selected {
-  border-color: var(--accent);
-  background-color: rgba(139, 125, 60, 0.06);
-}
-
-.results-fragrance-indicator {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  flex-shrink: 0;
-  position: relative;
-  margin-top: 2px;
-  transition: border-color 0.3s ease;
-}
-
-.results-fragrance-option.selected .results-fragrance-indicator {
-  border-color: var(--accent);
-}
-
-.results-fragrance-option.selected .results-fragrance-indicator::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--accent);
-}
-
-.results-fragrance-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.results-fragrance-label {
+.results-fragrance-value {
   font-family: "Satoshi", sans-serif;
   font-size: 0.88rem;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--text-primary);
+  margin-top: 0.4rem;
 }
 
-.results-fragrance-desc {
+/* Report Link */
+.results-report-link {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.results-report-link a {
   font-family: "Satoshi", sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.results-report-link a:hover {
+  color: var(--text-primary);
 }
 
 /* ─── Results Card Selection ─── */
@@ -2081,13 +2057,14 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.4rem;
-  color: var(--text-light);
+  padding: 0.5rem;
+  color: #f5f0e8;
   opacity: 0.85;
   transition: opacity 0.3s ease, color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;
 }
 
 .nav-icon-btn:hover {
@@ -2097,6 +2074,11 @@ body {
 
 .navbar.scrolled .nav-icon-btn {
   color: var(--text-primary);
+  opacity: 0.7;
+}
+
+.navbar.scrolled .nav-icon-btn:hover {
+  opacity: 1;
 }
 
 .nav-cart-btn {
@@ -3076,4 +3058,271 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+/* ─── Report Page ─── */
+.report-container {
+  min-height: 100vh;
+  padding: 6rem 1.5rem 4rem;
+  background: var(--bg-primary);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.report-loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-family: "Satoshi", sans-serif;
+  color: var(--text-secondary);
+}
+
+.report-error {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.report-error h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.report-error p {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.report-header {
+  margin-bottom: 3rem;
+}
+
+.report-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.report-date {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.report-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-section-title {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+}
+
+.report-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-table td {
+  padding: 0.5rem 0.75rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: top;
+}
+
+.report-table tr:last-child td {
+  border-bottom: none;
+}
+
+.report-answers-table td:first-child,
+.report-answers-table th:first-child {
+  width: 3rem;
+}
+
+.report-answers-table td:last-child,
+.report-answers-table th:last-child {
+  width: 4rem;
+  text-align: center;
+}
+
+.report-engine-row {
+  background-color: rgba(67, 97, 238, 0.06);
+}
+
+.report-winner-row {
+  background-color: rgba(67, 97, 238, 0.08);
+}
+
+.report-mono {
+  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-size: 0.78rem;
+}
+
+.report-info-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.report-info-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.report-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0.75rem 1rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.report-list li::before {
+  content: "- ";
+  color: var(--text-secondary);
+}
+
+.report-category {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background-color: var(--bg-secondary);
+}
+
+.report-category-title {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.report-gate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+}
+
+.report-gate-label {
+  color: var(--text-secondary);
+}
+
+.report-gate-count {
+  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+}
+
+.report-sub-label {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.report-exclusions {
+  margin-top: 0.5rem;
+}
+
+.report-scoring {
+  margin-top: 0.5rem;
+}
+
+.report-gap-message {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.report-winner {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.report-winner strong {
+  color: var(--accent);
+}
+
+.report-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.report-btn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background-color: var(--accent);
+  border: none;
+  padding: 0.85rem 2.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.report-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+@media (max-width: 1000px) {
+  .report-table {
+    font-size: 0.72rem;
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .report-info-row {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
 }

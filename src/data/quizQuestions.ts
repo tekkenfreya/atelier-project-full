@@ -3,6 +3,7 @@ export type AnswerValue = string | string[] | number | Record<string, number> | 
 export type QuestionType =
   | "single-select"
   | "multi-select"
+  | "multi-select-other"
   | "scale"
   | "multi-scale-grid"
   | "yes-no"
@@ -551,11 +552,39 @@ export const quizQuestions: QuizQuestion[] = [
     id: 30,
     section: 3,
     sectionTitle: "Your Routine & Preferences",
-    question: "Is there anything else you\u2019d like us to know?",
-    type: "free-text",
+    question: "Do you have any known skin allergies?",
+    type: "multi-select-other",
     subtitle:
-      "Tell us about specific goals, skin history, dermatologist advice, or anything that didn\u2019t fit the previous questions.",
+      "Select all that apply. If your allergy isn\u2019t listed, select Other and describe it.",
+    options: [
+      "Fragrance / essential oils",
+      "Lanolin",
+      "Propylene glycol",
+      "Formaldehyde / formaldehyde releasers",
+      "Cocamidopropyl betaine",
+      "Parabens",
+      "Nickel (in cosmetic packaging)",
+      "Latex (natural rubber)",
+      "None that I know of",
+      "Other",
+    ],
     whyWeAsk:
-      "Skin is complex and personal. This is your space to tell us what makes your skin unique.",
+      "Known allergies are critical safety information. If you select Other, a human will review your response to ensure your formula is safe.",
+  },
+  {
+    id: 31,
+    section: 3,
+    sectionTitle: "Your Routine & Preferences",
+    question: "Would you like fragrance in your products?",
+    type: "single-select",
+    subtitle:
+      "Our fragrances are crafted from Eastern European botanical essences.",
+    options: [
+      "No fragrance",
+      "Light, fresh botanical notes",
+      "Warm, earthy undertones",
+    ],
+    whyWeAsk:
+      "Fragrance is entirely your choice. Some prefer fragrance-free formulas, while others enjoy a sensorial experience.",
   },
 ];
