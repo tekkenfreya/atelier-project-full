@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import type { Recommendation, FragranceOption } from "@/lib/matching-engine/types";
+import type { Recommendation, FragranceOption, ScoredProduct, ProductCategory } from "@/lib/matching-engine/types";
 import type { AnswerValue } from "@/data/quizQuestions";
+import type { CartItem } from "@/types/cart";
+import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
 import SerumCard from "@/components/results/SerumCard";
 
 function getDefaultFragrance(answers: Record<number, AnswerValue>): FragranceOption {
@@ -20,12 +22,30 @@ function getDefaultFragrance(answers: Record<number, AnswerValue>): FragranceOpt
   return "F1";
 }
 
+function getCategoryFromProduct(product: ScoredProduct["product"]): ProductCategory {
+  const cat = product.category?.toLowerCase() ?? "";
+  if (cat.includes("cleanser")) return "Cleanser";
+  if (cat.includes("moistur")) return "Moisturizer";
+  return "Serum";
+}
+
+interface SelectedProducts {
+  cleanser: boolean;
+  serum: boolean;
+  moisturizer: boolean;
+}
+
 export default function ResultsPage() {
   const router = useRouter();
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fragranceOption, setFragranceOption] = useState<FragranceOption>("F0");
+  const [selected, setSelected] = useState<SelectedProducts>({
+    cleanser: true,
+    serum: true,
+    moisturizer: true,
+  });
 
   useEffect(() => {
     async function fetchRecommendation() {
@@ -49,6 +69,12 @@ export default function ResultsPage() {
 
         const data: Recommendation = await res.json();
         setRecommendation(data);
+
+        setSelected({
+          cleanser: data.cleanser !== null,
+          serum: data.serum !== null,
+          moisturizer: data.moisturizer !== null,
+        });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
@@ -59,12 +85,67 @@ export default function ResultsPage() {
     fetchRecommendation();
   }, [router]);
 
+  const toggleProduct = useCallback((key: keyof SelectedProducts) => {
+    setSelected((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const getSelectedItems = useCallback((): CartItem[] => {
+    if (!recommendation) return [];
+
+    const items: CartItem[] = [];
+
+    if (selected.cleanser && recommendation.cleanser) {
+      const cat = getCategoryFromProduct(recommendation.cleanser.product);
+      items.push({
+        productId: recommendation.cleanser.product.id,
+        productName: recommendation.cleanser.product.name,
+        category: cat,
+        skinType: recommendation.cleanser.product.skin_type,
+        fragranceOption,
+        price: PRODUCT_PRICES[cat],
+      });
+    }
+
+    if (selected.serum && recommendation.serum) {
+      const cat = getCategoryFromProduct(recommendation.serum.product);
+      items.push({
+        productId: recommendation.serum.product.id,
+        productName: recommendation.serum.product.name,
+        category: cat,
+        skinType: recommendation.serum.product.skin_type,
+        fragranceOption,
+        price: PRODUCT_PRICES[cat],
+      });
+    }
+
+    if (selected.moisturizer && recommendation.moisturizer) {
+      const cat = getCategoryFromProduct(recommendation.moisturizer.product);
+      items.push({
+        productId: recommendation.moisturizer.product.id,
+        productName: recommendation.moisturizer.product.name,
+        category: cat,
+        skinType: recommendation.moisturizer.product.skin_type,
+        fragranceOption,
+        price: PRODUCT_PRICES[cat],
+      });
+    }
+
+    return items;
+  }, [recommendation, selected, fragranceOption]);
+
+  const handleContinueToCart = useCallback(() => {
+    const items = getSelectedItems();
+    if (items.length === 0) return;
+    sessionStorage.setItem("cartItems", JSON.stringify(items));
+    router.push("/cart");
+  }, [getSelectedItems, router]);
+
   if (loading) {
     return (
       <div className="results-container">
         <div className="results-loading">
           <h2>Analysing your skin profile...</h2>
-          <p>This won't take long</p>
+          <p>This won&apos;t take long</p>
         </div>
       </div>
     );
@@ -89,6 +170,12 @@ export default function ResultsPage() {
   const skinTypeLabel = recommendation.skinType.charAt(0).toUpperCase() + recommendation.skinType.slice(1);
   const hasAnyProduct = recommendation.serum || recommendation.cleanser || recommendation.moisturizer;
 
+  const selectedItems = getSelectedItems();
+  const selectedCount = selectedItems.length;
+  const { subtotal } = calculateTotal(selectedItems, "one-time");
+  const { total: subscriptionTotal } = calculateTotal(selectedItems, "bi-monthly");
+  const isBundle = selectedCount === 3;
+
   return (
     <div className="results-container">
       <div className="results-header">
@@ -108,6 +195,9 @@ export default function ResultsPage() {
               result={recommendation.cleanser}
               fragranceOption={fragranceOption}
               onFragranceChange={setFragranceOption}
+              selected={selected.cleanser}
+              onToggleSelect={() => toggleProduct("cleanser")}
+              showSelection
             />
           )}
           {recommendation.serum && (
@@ -115,6 +205,9 @@ export default function ResultsPage() {
               result={recommendation.serum}
               fragranceOption={fragranceOption}
               onFragranceChange={setFragranceOption}
+              selected={selected.serum}
+              onToggleSelect={() => toggleProduct("serum")}
+              showSelection
             />
           )}
           {recommendation.moisturizer && (
@@ -122,12 +215,15 @@ export default function ResultsPage() {
               result={recommendation.moisturizer}
               fragranceOption={fragranceOption}
               onFragranceChange={setFragranceOption}
+              selected={selected.moisturizer}
+              onToggleSelect={() => toggleProduct("moisturizer")}
+              showSelection
             />
           )}
         </div>
       ) : (
         <div className="results-gap">
-          <p>We don't have products matching your profile yet. New formulations are in development.</p>
+          <p>We don&apos;t have products matching your profile yet. New formulations are in development.</p>
         </div>
       )}
 
@@ -139,13 +235,42 @@ export default function ResultsPage() {
         </div>
       )}
 
+      {selectedCount > 0 && (
+        <div className="results-pricing">
+          <div className="results-pricing-row">
+            <span className="results-pricing-label">
+              {isBundle ? "Full Routine" : `${selectedCount} product${selectedCount > 1 ? "s" : ""}`}
+            </span>
+            <span className="results-pricing-value">${subtotal}</span>
+          </div>
+          {isBundle && (
+            <p className="results-pricing-note">
+              Bundle saves you ${(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE} vs individual prices
+            </p>
+          )}
+          <div className="results-pricing-sub">
+            <span className="results-pricing-sub-label">With subscription</span>
+            <span className="results-pricing-sub-value">
+              ${subscriptionTotal}
+              <span className="results-pricing-sub-freq"> / shipment</span>
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="results-actions">
         <button onClick={() => router.push("/quiz")} className="results-btn-secondary">
           Retake Quiz
         </button>
-        <button onClick={() => router.push("/")} className="results-btn">
-          Return Home
-        </button>
+        {selectedCount > 0 ? (
+          <button onClick={handleContinueToCart} className="results-btn">
+            Continue to Cart
+          </button>
+        ) : (
+          <button onClick={() => router.push("/")} className="results-btn">
+            Return Home
+          </button>
+        )}
       </div>
     </div>
   );
