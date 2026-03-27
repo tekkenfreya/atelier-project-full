@@ -1,5 +1,4 @@
 import LenisProvider from "@/components/LenisProvider";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
 import Products from "@/components/Products";
@@ -10,7 +9,6 @@ export default function Home() {
   return (
     <>
       <LenisProvider />
-      <Navbar />
       <Hero />
       <SocialProof />
       <Products />
