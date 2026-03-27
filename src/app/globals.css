@@ -961,20 +961,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   gap: 1.5rem;
-  padding-top: 4rem;
+  min-height: 70vh;
 }
 
 .quiz-name-field {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1.25rem;
   width: 100%;
   max-width: 320px;
-  min-height: 40vh;
 }
 
 .quiz-name-label {
