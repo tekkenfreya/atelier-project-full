@@ -74,6 +74,7 @@ export default function AccountPage() {
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [customerName, setCustomerName] = useState<string | null>(null);
 
   const fetchAccountData = useCallback(async (userId: string) => {
     setDataLoading(true);
@@ -111,6 +112,8 @@ export default function AccountPage() {
       const currentUser = await getUser();
       setUser(currentUser);
       setLoading(false);
+      const storedName = sessionStorage.getItem("customerName");
+      if (storedName) setCustomerName(storedName);
       if (currentUser) {
         fetchAccountData(currentUser.id);
       }
@@ -163,7 +166,7 @@ export default function AccountPage() {
       <div className="account-container">
         <div className="account-header">
           <span className="account-label">My Account</span>
-          <h1 className="account-title">Welcome</h1>
+          <h1 className="account-title">{customerName ? `Welcome, ${customerName}` : "Welcome"}</h1>
         </div>
 
         <div className="account-card account-card-wide">

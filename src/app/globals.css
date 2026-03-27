@@ -966,6 +966,51 @@ body {
   padding-top: 4rem;
 }
 
+.quiz-name-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.quiz-name-label {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.quiz-name-input {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border);
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.quiz-name-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.quiz-name-input:focus {
+  border-color: var(--accent);
+}
+
+.quiz-sex-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .quiz-sex-title {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(2rem, 4vw, 3rem);

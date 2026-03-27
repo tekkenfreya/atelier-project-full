@@ -32,6 +32,7 @@ const SECTION_INTROS: Record<1 | 2 | 3, { title: string; description: string }> 
 export default function Quiz() {
   const router = useRouter();
   const [screen, setScreen] = useState<QuizScreen>("sex-select");
+  const [customerName, setCustomerName] = useState("");
   const [biologicalSex, setBiologicalSex] = useState<BiologicalSex | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, AnswerValue>>({});
@@ -190,8 +191,10 @@ export default function Quiz() {
   }
 
   function handleSexSelect(sex: BiologicalSex) {
+    if (!customerName.trim()) return;
     setBiologicalSex(sex);
     setAnswers((prev) => ({ ...prev, 2: sex }));
+    sessionStorage.setItem("customerName", customerName.trim());
     animateTransition(() => {
       setScreen("intro");
     });
@@ -212,13 +215,27 @@ export default function Quiz() {
     return (
       <div className="quiz-sex-select">
         <span className="quiz-intro-label">Before We Begin</span>
+
+        <div className="quiz-name-field">
+          <label htmlFor="customer-name" className="quiz-name-label">What should we call you?</label>
+          <input
+            id="customer-name"
+            type="text"
+            className="quiz-name-input"
+            placeholder="Your first name"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            autoFocus
+          />
+        </div>
+
         <h2 className="quiz-sex-title">
           What is your biological sex?
         </h2>
         <p className="quiz-sex-subtitle">
           Hormonal differences affect sebum production, skin thickness, and sensitivity patterns. This lets us account for that in your formula.
         </p>
-        <div className="quiz-sex-options">
+        <div className={`quiz-sex-options ${!customerName.trim() ? "quiz-sex-disabled" : ""}`}>
           <button
             type="button"
             className="quiz-sex-btn"
