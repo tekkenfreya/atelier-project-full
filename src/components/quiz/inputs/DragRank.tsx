@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 
 interface DragRankProps {
   options: string[];
@@ -8,146 +8,81 @@ interface DragRankProps {
   onChange: (value: string[]) => void;
 }
 
-type InsertPosition = "above" | "below";
-
-interface DragState {
-  dragIndex: number;
-  overIndex: number | null;
-  insertPosition: InsertPosition | null;
-}
-
 export default function DragRank({ options, value, onChange }: DragRankProps) {
-  const items = value.length > 0 ? value : options;
-  const [dragState, setDragState] = useState<DragState | null>(null);
+  const selected = value.length > 0 ? value : [];
+  const maxPicks = 3;
 
   useEffect(() => {
     if (value.length === 0 && options.length > 0) {
-      onChange(options);
+      onChange([]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
-      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
-      e.preventDefault();
-      const targetIndex = e.key === "ArrowUp" ? index - 1 : index + 1;
-      if (targetIndex < 0 || targetIndex >= items.length) return;
-      const updated = [...items];
-      const [moved] = updated.splice(index, 1);
-      updated.splice(targetIndex, 0, moved);
-      onChange(updated);
+  const handleClick = useCallback(
+    (option: string) => {
+      const currentIndex = selected.indexOf(option);
+
+      if (currentIndex !== -1) {
+        const updated = selected.filter((v) => v !== option);
+        onChange(updated);
+      } else if (selected.length < maxPicks) {
+        onChange([...selected, option]);
+      }
     },
-    [items, onChange]
+    [selected, onChange]
   );
 
-  function handleDragStart(e: React.DragEvent<HTMLDivElement>, index: number) {
-    e.dataTransfer.effectAllowed = "move";
-    setDragState({ dragIndex: index, overIndex: null, insertPosition: null });
-  }
+  const getRank = (option: string): number | null => {
+    const idx = selected.indexOf(option);
+    return idx !== -1 ? idx + 1 : null;
+  };
 
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>, index: number) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    if (dragState === null || dragState.dragIndex === index) {
-      if (dragState && dragState.overIndex !== null) {
-        setDragState({ ...dragState, overIndex: null, insertPosition: null });
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>, option: string) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleClick(option);
       }
-      return;
-    }
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const midpoint = rect.top + rect.height / 2;
-    const position: InsertPosition = e.clientY < midpoint ? "above" : "below";
-
-    if (dragState.overIndex !== index || dragState.insertPosition !== position) {
-      setDragState({ ...dragState, overIndex: index, insertPosition: position });
-    }
-  }
-
-  function handleDrop(e: React.DragEvent<HTMLDivElement>, index: number) {
-    e.preventDefault();
-    if (dragState === null || dragState.dragIndex === index) {
-      resetDrag();
-      return;
-    }
-
-    const updated = [...items];
-    const [moved] = updated.splice(dragState.dragIndex, 1);
-
-    let insertAt = index;
-    if (dragState.dragIndex < index) {
-      insertAt = dragState.insertPosition === "above" ? index - 1 : index;
-    } else {
-      insertAt = dragState.insertPosition === "above" ? index : index + 1;
-    }
-
-    updated.splice(insertAt, 0, moved);
-    onChange(updated);
-    resetDrag();
-  }
-
-  function handleDragEnd() {
-    resetDrag();
-  }
-
-  function resetDrag() {
-    setDragState(null);
-  }
-
-  function getItemClassName(index: number): string {
-    const classes = ["quiz-rank-item"];
-
-    if (dragState) {
-      if (dragState.dragIndex === index) {
-        classes.push("quiz-rank-dragging");
-      }
-      if (dragState.overIndex === index && dragState.insertPosition === "above") {
-        classes.push("quiz-rank-insert-above");
-      }
-      if (dragState.overIndex === index && dragState.insertPosition === "below") {
-        classes.push("quiz-rank-insert-below");
-      }
-    }
-
-    return classes.join(" ");
-  }
+    },
+    [handleClick]
+  );
 
   return (
-    <div className="quiz-drag-rank" role="list">
-      {items.map((item, index) => (
-        <div
-          key={item}
-          className={getItemClassName(index)}
-          draggable
-          tabIndex={0}
-          role="listitem"
-          aria-label={`Item ${index + 1} of ${items.length}: ${item}`}
-          onDragStart={(e) => handleDragStart(e, index)}
-          onDragOver={(e) => handleDragOver(e, index)}
-          onDrop={(e) => handleDrop(e, index)}
-          onDragEnd={handleDragEnd}
-          onDragLeave={() => {
-            if (dragState && dragState.overIndex === index) {
-              setDragState({ ...dragState, overIndex: null, insertPosition: null });
-            }
-          }}
-          onKeyDown={(e) => handleKeyDown(e, index)}
-        >
-          <span className="quiz-rank-number">{index + 1}</span>
-          <span className="quiz-rank-handle">
-            <svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor">
-              <circle cx="2" cy="2" r="1.5" />
-              <circle cx="8" cy="2" r="1.5" />
-              <circle cx="2" cy="8" r="1.5" />
-              <circle cx="8" cy="8" r="1.5" />
-              <circle cx="2" cy="14" r="1.5" />
-              <circle cx="8" cy="14" r="1.5" />
-            </svg>
+    <div className="rank-grid" role="list">
+      <p className="rank-instruction">
+        Pick your top 3 in order of importance.
+        {selected.length < maxPicks && (
+          <span className="rank-counter">
+            {" "}{maxPicks - selected.length} remaining
           </span>
-          <span className="quiz-rank-label">{item}</span>
-        </div>
-      ))}
+        )}
+      </p>
+      {options.map((option) => {
+        const rank = getRank(option);
+        const isSelected = rank !== null;
+        const isMaxed = selected.length >= maxPicks && !isSelected;
+
+        return (
+          <button
+            key={option}
+            type="button"
+            role="listitem"
+            className={`rank-card ${isSelected ? "rank-selected" : ""} ${isMaxed ? "rank-disabled" : ""}`}
+            onClick={() => handleClick(option)}
+            onKeyDown={(e) => handleKeyDown(e, option)}
+            disabled={isMaxed}
+            aria-label={`${option}${rank ? `, ranked #${rank}` : ""}`}
+          >
+            {isSelected && (
+              <span className="rank-badge" data-rank={rank}>
+                {String(rank).padStart(2, "0")}
+              </span>
+            )}
+            <span className="rank-card-label">{option}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
