@@ -9,7 +9,7 @@ import QuizProgress from "@/components/quiz/QuizProgress";
 import QuizQuestion from "@/components/quiz/QuizQuestion";
 
 type BiologicalSex = "Female" | "Male" | "Prefer not to say";
-type QuizScreen = "sex-select" | "intro" | "section-transition" | "question" | "complete";
+type QuizScreen = "name-input" | "sex-select" | "intro" | "section-transition" | "question" | "complete";
 
 const SECTION_INTROS: Record<1 | 2 | 3, { title: string; description: string }> = {
   1: {
@@ -31,7 +31,7 @@ const SECTION_INTROS: Record<1 | 2 | 3, { title: string; description: string }> 
 
 export default function Quiz() {
   const router = useRouter();
-  const [screen, setScreen] = useState<QuizScreen>("sex-select");
+  const [screen, setScreen] = useState<QuizScreen>("name-input");
   const [customerName, setCustomerName] = useState("");
   const [biologicalSex, setBiologicalSex] = useState<BiologicalSex | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -190,11 +190,17 @@ export default function Quiz() {
     });
   }
 
-  function handleSexSelect(sex: BiologicalSex) {
+  function handleNameContinue() {
     if (!customerName.trim()) return;
+    sessionStorage.setItem("customerName", customerName.trim());
+    animateTransition(() => {
+      setScreen("sex-select");
+    });
+  }
+
+  function handleSexSelect(sex: BiologicalSex) {
     setBiologicalSex(sex);
     setAnswers((prev) => ({ ...prev, 2: sex }));
-    sessionStorage.setItem("customerName", customerName.trim());
     animateTransition(() => {
       setScreen("intro");
     });
@@ -211,11 +217,10 @@ export default function Quiz() {
     router.push("/");
   }
 
-  function renderSexSelect() {
+  function renderNameInput() {
     return (
       <div className="quiz-sex-select">
         <span className="quiz-intro-label">Before We Begin</span>
-
         <div className="quiz-name-field">
           <label htmlFor="customer-name" className="quiz-name-label">What should we call you?</label>
           <input
@@ -225,17 +230,33 @@ export default function Quiz() {
             placeholder="Your first name"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleNameContinue(); }}
             autoFocus
           />
+          <button
+            type="button"
+            className="quiz-cta-btn"
+            onClick={handleNameContinue}
+            disabled={!customerName.trim()}
+          >
+            Continue
+          </button>
         </div>
+      </div>
+    );
+  }
 
+  function renderSexSelect() {
+    return (
+      <div className="quiz-sex-select">
+        <span className="quiz-intro-label">Before We Begin</span>
         <h2 className="quiz-sex-title">
           What is your biological sex?
         </h2>
         <p className="quiz-sex-subtitle">
           Hormonal differences affect sebum production, skin thickness, and sensitivity patterns. This lets us account for that in your formula.
         </p>
-        <div className={`quiz-sex-options ${!customerName.trim() ? "quiz-sex-disabled" : ""}`}>
+        <div className="quiz-sex-options">
           <button
             type="button"
             className="quiz-sex-btn"
@@ -434,6 +455,7 @@ export default function Quiz() {
       </div>
 
       <div className="quiz-content" ref={contentRef}>
+        {screen === "name-input" && renderNameInput()}
         {screen === "sex-select" && renderSexSelect()}
         {screen === "intro" && renderIntro()}
         {screen === "section-transition" && renderSectionTransition()}
