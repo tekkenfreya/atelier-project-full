@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan, ShippingInfo, OrderData } from "@/types/cart";
 import { calculateTotal } from "@/types/cart";
+import { supabase } from "@/lib/supabase";
 
 const PLAN_LABELS: Record<SubscriptionPlan, string> = {
   "one-time": "One-Time Purchase",
@@ -72,7 +73,7 @@ export default function CheckoutPage() {
     shipping.country.trim() !== "" &&
     shipping.postalCode.trim() !== "";
 
-  const handlePlaceOrder = useCallback(() => {
+  const handlePlaceOrder = useCallback(async () => {
     if (!isFormValid || submitting) return;
 
     setSubmitting(true);
@@ -87,6 +88,29 @@ export default function CheckoutPage() {
       total,
       shipping,
     };
+
+    try {
+      const { data: authData } = await supabase.auth.getUser();
+      if (authData.user) {
+        await supabase.from("customer_orders").insert({
+          user_id: authData.user.id,
+          items: items,
+          subscription_plan: plan,
+          subtotal,
+          discount,
+          total,
+          shipping_name: `${shipping.firstName} ${shipping.lastName}`,
+          shipping_email: shipping.email,
+          shipping_address: shipping.address,
+          shipping_city: shipping.city,
+          shipping_country: shipping.country,
+          shipping_postal_code: shipping.postalCode,
+          status: "pending",
+        });
+      }
+    } catch {
+      // Non-critical — order saving failure should not block checkout
+    }
 
     sessionStorage.setItem("orderData", JSON.stringify(order));
     sessionStorage.removeItem("cartItems");

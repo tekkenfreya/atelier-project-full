@@ -3065,6 +3065,201 @@ body {
   gap: 0;
 }
 
+.account-section-loading {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.account-section {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 640px;
+}
+
+.account-section-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.account-card-wide {
+  max-width: 640px;
+}
+
+.account-profile-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.account-profile-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.account-profile-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.account-profile-value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.account-profile-highlight {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.account-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+}
+
+.account-tag {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.65rem;
+  border-radius: 2px;
+}
+
+.account-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+.account-product-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.account-product-category {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  min-width: 80px;
+}
+
+.account-product-name {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.account-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.account-history-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-history-row:last-child {
+  border-bottom: none;
+}
+
+.account-history-date {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.account-history-detail {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.account-history-products {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+}
+
+.account-status {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.account-status-pending {
+  color: #b8860b;
+  background-color: rgba(184, 134, 11, 0.1);
+}
+
+.account-status-confirmed {
+  color: #2e7d32;
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+.account-status-shipped {
+  color: #1565c0;
+  background-color: rgba(21, 101, 192, 0.1);
+}
+
+.account-status-delivered {
+  color: #2e7d32;
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+.account-status-cancelled {
+  color: #c0392b;
+  background-color: rgba(192, 57, 43, 0.1);
+}
+
+@media (max-width: 1000px) {
+  .account-history-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .account-status {
+    margin-left: 0;
+  }
+}
+
 /* ─── Report Page ─── */
 .report-container {
   min-height: 100vh;

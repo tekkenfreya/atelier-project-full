@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { Recommendation, FragranceOption, ScoredProduct, ProductCategory } from "@/lib/matching-engine/types";
 import type { AnswerValue } from "@/data/quizQuestions";
 import type { CartItem } from "@/types/cart";
 import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
+import { supabase } from "@/lib/supabase";
 import SerumCard from "@/components/results/SerumCard";
 
 function getFragranceFromAnswers(answers: Record<number, AnswerValue>): FragranceOption {
@@ -40,8 +41,46 @@ export default function ResultsPage() {
     serum: true,
     moisturizer: true,
   });
+  const savedQuizRef = useRef(false);
 
   useEffect(() => {
+    async function saveQuizResults(
+      answers: Record<number, AnswerValue>,
+      data: Recommendation,
+      fragrance: FragranceOption
+    ) {
+      if (savedQuizRef.current) return;
+      savedQuizRef.current = true;
+
+      try {
+        const { data: authData } = await supabase.auth.getUser();
+        if (!authData.user) return;
+
+        const answersKey = JSON.stringify(answers);
+        const { data: existing } = await supabase
+          .from("quiz_results")
+          .select("id")
+          .eq("user_id", authData.user.id)
+          .eq("answers", answersKey)
+          .limit(1);
+
+        if (existing && existing.length > 0) return;
+
+        await supabase.from("quiz_results").insert({
+          user_id: authData.user.id,
+          answers: answers,
+          skin_type: data.skinType,
+          concerns: data.concerns,
+          recommended_serum: data.serum?.product.name ?? null,
+          recommended_cleanser: data.cleanser?.product.name ?? null,
+          recommended_moisturizer: data.moisturizer?.product.name ?? null,
+          fragrance_choice: fragrance,
+        });
+      } catch {
+        // Non-critical — quiz saving failure should not block the user
+      }
+    }
+
     async function fetchRecommendation() {
       const stored = sessionStorage.getItem("quizAnswers");
       if (!stored) {
@@ -51,7 +90,8 @@ export default function ResultsPage() {
 
       try {
         const answers: Record<number, AnswerValue> = JSON.parse(stored);
-        setFragranceOption(getFragranceFromAnswers(answers));
+        const fragrance = getFragranceFromAnswers(answers);
+        setFragranceOption(fragrance);
 
         const res = await fetch("/api/recommend", {
           method: "POST",
@@ -69,6 +109,8 @@ export default function ResultsPage() {
           serum: data.serum !== null,
           moisturizer: data.moisturizer !== null,
         });
+
+        saveQuizResults(answers, data, fragrance);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
