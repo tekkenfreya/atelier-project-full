@@ -166,7 +166,7 @@ export default function AccountPage() {
           <h1 className="account-title">Welcome</h1>
         </div>
 
-        <div className="account-card">
+        <div className="account-card account-card-wide">
           <div className="account-info-row">
             <span className="account-info-label">Email</span>
             <span className="account-info-value">{user.email}</span>
@@ -179,34 +179,15 @@ export default function AccountPage() {
             </span>
           </div>
 
-          <div className="account-divider" />
+          {dataLoading && (
+            <div className="account-section-loading">Loading your data...</div>
+          )}
 
-          <div className="account-actions">
-            <button
-              type="button"
-              className="account-btn"
-              onClick={() => router.push("/quiz")}
-            >
-              Take New Quiz
-            </button>
-            <button
-              type="button"
-              className="account-btn-secondary"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
+          {latestQuiz && (
+            <>
+              <div className="account-divider" />
+              <h2 className="account-section-title">Skin Profile</h2>
 
-        {dataLoading && (
-          <div className="account-section-loading">Loading your data...</div>
-        )}
-
-        {latestQuiz && (
-          <div className="account-section">
-            <h2 className="account-section-title">Skin Profile</h2>
-            <div className="account-card account-card-wide">
               <div className="account-profile-grid">
                 <div className="account-profile-item">
                   <span className="account-profile-label">Skin Type</span>
@@ -266,14 +247,13 @@ export default function AccountPage() {
                   <span className="account-profile-value">{formatDate(latestQuiz.created_at)}</span>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </>
+          )}
 
-        {quizResults.length > 1 && (
-          <div className="account-section">
-            <h2 className="account-section-title">Quiz History</h2>
-            <div className="account-card account-card-wide">
+          {quizResults.length > 1 && (
+            <>
+              <div className="account-divider" />
+              <h2 className="account-section-title">Quiz History</h2>
               <div className="account-history-list">
                 {quizResults.slice(1).map((quiz) => (
                   <div key={quiz.id} className="account-history-row">
@@ -290,14 +270,13 @@ export default function AccountPage() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        )}
+            </>
+          )}
 
-        {orders.length > 0 && (
-          <div className="account-section">
-            <h2 className="account-section-title">Order History</h2>
-            <div className="account-card account-card-wide">
+          {orders.length > 0 && (
+            <>
+              <div className="account-divider" />
+              <h2 className="account-section-title">Order History</h2>
               <div className="account-history-list">
                 {orders.map((order) => (
                   <div key={order.id} className="account-history-row">
@@ -318,9 +297,28 @@ export default function AccountPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </>
+          )}
+
+          <div className="account-divider" />
+
+          <div className="account-actions">
+            <button
+              type="button"
+              className="account-btn"
+              onClick={() => router.push("/quiz")}
+            >
+              Take New Quiz
+            </button>
+            <button
+              type="button"
+              className="account-btn-secondary"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
           </div>
-        )}
+        </div>
       </div>
     );
   }
