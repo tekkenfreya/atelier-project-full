@@ -81,7 +81,7 @@ export default function SerumCard({
       )}
 
       <div className="results-card-actives">
-        <span className="results-card-label">Key Actives</span>
+        <span className="results-card-label">Key Extracts</span>
         <ul>
           {activeIngredients.map((ing) => (
             <li key={ing.id}>{ing.name}</li>
