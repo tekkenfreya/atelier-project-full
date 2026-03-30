@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { signIn, signUp, signOut, getUser } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type AuthMode = "login" | "signup";
-type DashboardSection = "overview" | "quiz" | "orders" | "subscription" | "settings";
 
 interface QuizResult {
   id: string;
@@ -63,14 +66,6 @@ const FRAGRANCE_LABELS: Record<string, string> = {
   F2: "Warm, earthy undertones",
 };
 
-const NAV_ITEMS: { key: DashboardSection; label: string }[] = [
-  { key: "overview", label: "Overview" },
-  { key: "quiz", label: "Quiz History" },
-  { key: "orders", label: "Orders" },
-  { key: "subscription", label: "Subscription" },
-  { key: "settings", label: "Settings" },
-];
-
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -92,7 +87,6 @@ export default function AccountPage() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
   const [customerName, setCustomerName] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<DashboardSection>("overview");
 
   // Settings state
   const [currentPassword, setCurrentPassword] = useState("");
@@ -100,6 +94,16 @@ export default function AccountPage() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+
+  // Section refs for GSAP scroll animations
+  const heroRef = useRef<HTMLElement>(null);
+  const regimenRef = useRef<HTMLElement>(null);
+  const skinProfileRef = useRef<HTMLElement>(null);
+  const quizHistoryRef = useRef<HTMLElement>(null);
+  const ordersRef = useRef<HTMLElement>(null);
+  const actionsRef = useRef<HTMLElement>(null);
+  const footerRef = useRef<HTMLElement>(null);
+  const settingsRef = useRef<HTMLElement>(null);
 
   const fetchAccountData = useCallback(async (userId: string) => {
     setDataLoading(true);
@@ -126,7 +130,7 @@ export default function AccountPage() {
         setOrders(ordersResponse.data as CustomerOrder[]);
       }
     } catch {
-      // Non-critical — account data fetch failure should not break the page
+      // Non-critical
     } finally {
       setDataLoading(false);
     }
@@ -145,6 +149,51 @@ export default function AccountPage() {
     }
     checkAuth();
   }, [fetchAccountData]);
+
+  // GSAP scroll-triggered animations
+  useEffect(() => {
+    if (loading || !user || dataLoading) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    const sections = [
+      heroRef.current,
+      regimenRef.current,
+      skinProfileRef.current,
+      quizHistoryRef.current,
+      ordersRef.current,
+      actionsRef.current,
+      settingsRef.current,
+      footerRef.current,
+    ].filter(Boolean) as HTMLElement[];
+
+    const triggers: ScrollTrigger[] = [];
+
+    sections.forEach((section) => {
+      const tween = gsap.fromTo(
+        section,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+          },
+        }
+      );
+      if (tween.scrollTrigger) {
+        triggers.push(tween.scrollTrigger);
+      }
+    });
+
+    return () => {
+      triggers.forEach((trigger) => trigger.kill());
+    };
+  }, [loading, user, dataLoading]);
 
   const handleSubmit = useCallback(async () => {
     if (submitting) return;
@@ -174,7 +223,6 @@ export default function AccountPage() {
     setPassword("");
     setQuizResults([]);
     setOrders([]);
-    setActiveSection("overview");
   }, []);
 
   const handlePasswordChange = useCallback(async () => {
@@ -189,7 +237,6 @@ export default function AccountPage() {
       return;
     }
 
-    // Re-authenticate with current password first
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: user?.email ?? "",
       password: currentPassword,
@@ -226,378 +273,316 @@ export default function AccountPage() {
     );
   }
 
-  // Authenticated — Dashboard
+  // Authenticated — Full-page scroll dashboard
   if (user) {
     const latestQuiz = quizResults.length > 0 ? quizResults[0] : null;
-    const latestOrder = orders.length > 0 ? orders[0] : null;
+
+    // No quiz data — single CTA
+    if (!dataLoading && !latestQuiz) {
+      return (
+        <div className="profile-page">
+          <section className="profile-section profile-section-cream profile-hero-empty">
+            <div className="profile-inner">
+              <span className="profile-label">Your Account</span>
+              <h1 className="profile-hero-title">
+                Welcome{customerName ? `, ${customerName}` : ""}
+              </h1>
+              <p className="profile-hero-subtitle">
+                Take your first consultation to receive personalized skincare recommendations tailored to your skin.
+              </p>
+              <button
+                type="button"
+                className="profile-btn-primary profile-btn-large"
+                onClick={() => router.push("/quiz")}
+              >
+                Take Your First Consultation
+              </button>
+            </div>
+          </section>
+
+          <footer className="profile-footer">
+            <div className="profile-inner profile-footer-inner">
+              <button
+                type="button"
+                className="profile-signout-btn"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </button>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    if (dataLoading) {
+      return (
+        <div className="account-container">
+          <div className="account-loading">Loading your profile...</div>
+        </div>
+      );
+    }
 
     return (
-      <div className="dashboard-wrapper">
-        {/* Sidebar */}
-        <aside className="dashboard-sidebar">
-          <div className="dashboard-sidebar-top">
-            <h2 className="dashboard-sidebar-name">
-              {customerName ?? "My Account"}
-            </h2>
-            <p className="dashboard-sidebar-email">{user.email}</p>
-            {latestQuiz && (
-              <span className="dashboard-skin-badge">
-                {capitalize(latestQuiz.skin_type)} Skin
-              </span>
+      <div className="profile-page">
+        {/* HERO — Welcome Section */}
+        <section ref={heroRef} className="profile-section profile-section-cream">
+          <div className="profile-inner">
+            <span className="profile-label">Your Account</span>
+            <h1 className="profile-hero-title">
+              Welcome back{customerName ? `, ${customerName}` : ""}
+            </h1>
+            <div className="profile-hero-meta">
+              <span className="profile-meta-item">{user.email}</span>
+              <span className="profile-meta-divider" />
+              <span className="profile-meta-item">Member since {formatDate(user.created_at)}</span>
+              {latestQuiz && (
+                <>
+                  <span className="profile-meta-divider" />
+                  <span className="profile-skin-badge">
+                    {capitalize(latestQuiz.skin_type)} Skin
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 1 — Your Regimen */}
+        {latestQuiz && (
+          <section ref={regimenRef} className="profile-section profile-section-white">
+            <div className="profile-inner">
+              <h2 className="profile-section-title">Your Regimen</h2>
+              <div className="profile-regimen-grid">
+                {latestQuiz.recommended_serum && (
+                  <div className="profile-regimen-card">
+                    <span className="profile-regimen-category">Serum</span>
+                    <span className="profile-regimen-name">{latestQuiz.recommended_serum}</span>
+                  </div>
+                )}
+                {latestQuiz.recommended_cleanser && (
+                  <div className="profile-regimen-card">
+                    <span className="profile-regimen-category">Cleanser</span>
+                    <span className="profile-regimen-name">{latestQuiz.recommended_cleanser}</span>
+                  </div>
+                )}
+                {latestQuiz.recommended_moisturizer && (
+                  <div className="profile-regimen-card">
+                    <span className="profile-regimen-category">Moisturizer</span>
+                    <span className="profile-regimen-name">{latestQuiz.recommended_moisturizer}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SECTION 2 — Skin Profile */}
+        {latestQuiz && (
+          <section ref={skinProfileRef} className="profile-section profile-section-cream">
+            <div className="profile-inner">
+              <h2 className="profile-section-title">Skin Profile</h2>
+              <div className="profile-skin-grid">
+                <div className="profile-skin-item">
+                  <span className="profile-skin-label">Skin Type</span>
+                  <span className="profile-skin-value-large">
+                    {capitalize(latestQuiz.skin_type)}
+                  </span>
+                </div>
+                {latestQuiz.concerns.length > 0 && (
+                  <div className="profile-skin-item">
+                    <span className="profile-skin-label">Top Concerns</span>
+                    <div className="profile-tag-list">
+                      {latestQuiz.concerns.slice(0, 3).map((concern) => (
+                        <span key={concern} className="profile-tag">
+                          {formatConcern(concern)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {latestQuiz.fragrance_choice && (
+                  <div className="profile-skin-item">
+                    <span className="profile-skin-label">Fragrance</span>
+                    <span className="profile-skin-value">
+                      {FRAGRANCE_LABELS[latestQuiz.fragrance_choice] ?? latestQuiz.fragrance_choice}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SECTION 3 — Your Botanicals (V1: link to ingredients) */}
+        {latestQuiz && (
+          <section className="profile-section profile-section-white">
+            <div className="profile-inner">
+              <h2 className="profile-section-title">Your Botanicals</h2>
+              <p className="profile-section-desc">
+                Explore the botanical extracts and active ingredients in your personalized regimen.
+              </p>
+              <button
+                type="button"
+                className="profile-btn-secondary"
+                onClick={() => router.push("/report")}
+              >
+                View Your Ingredients
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* SECTION 4 — Quiz History */}
+        <section ref={quizHistoryRef} className="profile-section profile-section-cream">
+          <div className="profile-inner">
+            <h2 className="profile-section-title">Quiz History</h2>
+            {quizResults.length > 0 ? (
+              <div className="profile-rows">
+                {quizResults.map((quiz) => (
+                  <div key={quiz.id} className="profile-row">
+                    <div className="profile-row-left">
+                      <span className="profile-row-date">{formatShortDate(quiz.created_at)}</span>
+                      <span className="profile-row-detail">
+                        {capitalize(quiz.skin_type)} Skin
+                      </span>
+                      <span className="profile-row-detail profile-row-muted">
+                        {[quiz.recommended_serum, quiz.recommended_cleanser, quiz.recommended_moisturizer]
+                          .filter(Boolean).length}{" "}products
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="profile-row-link"
+                      onClick={() => router.push("/report")}
+                    >
+                      View Report
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="profile-empty-text">No quiz results yet.</p>
             )}
           </div>
+        </section>
 
-          <nav className="dashboard-nav">
-            {NAV_ITEMS.map((item) => (
+        {/* SECTION 5 — Orders */}
+        <section ref={ordersRef} className="profile-section profile-section-white">
+          <div className="profile-inner">
+            <h2 className="profile-section-title">Orders</h2>
+            {orders.length > 0 ? (
+              <div className="profile-rows">
+                {orders.map((order) => (
+                  <div key={order.id} className="profile-row">
+                    <div className="profile-row-left">
+                      <span className="profile-row-date">{formatShortDate(order.created_at)}</span>
+                      <span className="profile-row-detail">
+                        {Array.isArray(order.items) ? order.items.length : 0}{" "}
+                        item{Array.isArray(order.items) && order.items.length !== 1 ? "s" : ""}
+                      </span>
+                      <span className="profile-row-detail">${order.total.toFixed(2)}</span>
+                      <span className="profile-row-detail profile-row-muted">
+                        {PLAN_LABELS[order.subscription_plan] ?? order.subscription_plan}
+                      </span>
+                    </div>
+                    <span className={`profile-status profile-status-${order.status}`}>
+                      {capitalize(order.status)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="profile-empty-text">No orders yet.</p>
+            )}
+          </div>
+        </section>
+
+        {/* SECTION 6 — Quick Actions */}
+        <section ref={actionsRef} className="profile-section profile-section-cream">
+          <div className="profile-inner">
+            <h2 className="profile-section-title">Quick Actions</h2>
+            <div className="profile-actions-row">
               <button
-                key={item.key}
                 type="button"
-                className={`dashboard-nav-link${activeSection === item.key ? " dashboard-nav-active" : ""}`}
-                onClick={() => setActiveSection(item.key)}
+                className="profile-btn-primary"
+                onClick={() => router.push("/quiz")}
               >
-                {item.label}
+                Retake Quiz
               </button>
-            ))}
-          </nav>
+              <button
+                type="button"
+                className="profile-btn-secondary"
+                onClick={() => router.push("/report")}
+              >
+                View Report
+              </button>
+            </div>
+          </div>
+        </section>
 
-          <div className="dashboard-sidebar-bottom">
+        {/* Settings — Change Password */}
+        <section ref={settingsRef} className="profile-section profile-section-white">
+          <div className="profile-inner">
+            <h2 className="profile-section-title">Settings</h2>
+            <div className="profile-settings-block">
+              <h3 className="profile-settings-subtitle">Change Password</h3>
+
+              <div className="profile-field">
+                <label className="profile-field-label" htmlFor="current-password">
+                  Current Password
+                </label>
+                <input
+                  id="current-password"
+                  type="password"
+                  className="profile-input"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <div className="profile-field">
+                <label className="profile-field-label" htmlFor="new-password">
+                  New Password
+                </label>
+                <input
+                  id="new-password"
+                  type="password"
+                  className="profile-input"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  autoComplete="new-password"
+                />
+              </div>
+
+              {passwordError && <p className="profile-field-error">{passwordError}</p>}
+              {passwordSuccess && <p className="profile-field-success">{passwordSuccess}</p>}
+
+              <button
+                type="button"
+                className="profile-btn-primary"
+                onClick={handlePasswordChange}
+                disabled={passwordSubmitting || currentPassword.trim() === "" || newPassword.trim() === ""}
+              >
+                {passwordSubmitting ? "Updating..." : "Update Password"}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer — Sign Out */}
+        <footer ref={footerRef} className="profile-footer">
+          <div className="profile-inner profile-footer-inner">
             <button
               type="button"
-              className="dashboard-signout"
+              className="profile-signout-btn"
               onClick={handleSignOut}
             >
               Sign Out
             </button>
           </div>
-        </aside>
-
-        {/* Mobile Tab Bar */}
-        <div className="dashboard-mobile-tabs">
-          <div className="dashboard-mobile-tabs-inner">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                className={`dashboard-mobile-tab${activeSection === item.key ? " dashboard-mobile-tab-active" : ""}`}
-                onClick={() => setActiveSection(item.key)}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <main className="dashboard-content">
-          {dataLoading && (
-            <div className="dashboard-loading">Loading your data...</div>
-          )}
-
-          {/* Overview Section */}
-          {activeSection === "overview" && !dataLoading && (
-            <div className="dashboard-section">
-              <h1 className="dashboard-page-title">Overview</h1>
-
-              {latestQuiz ? (
-                <>
-                  <div className="dashboard-block">
-                    {/* Your Regimen */}
-                    <h3 className="dashboard-block-title">Your Regimen</h3>
-                    <div className="dashboard-regimen-grid">
-                      {latestQuiz.recommended_serum && (
-                        <div className="dashboard-regimen-item">
-                          <span className="dashboard-regimen-category">Serum</span>
-                          <span className="dashboard-regimen-name">{latestQuiz.recommended_serum}</span>
-                        </div>
-                      )}
-                      {latestQuiz.recommended_cleanser && (
-                        <div className="dashboard-regimen-item">
-                          <span className="dashboard-regimen-category">Cleanser</span>
-                          <span className="dashboard-regimen-name">{latestQuiz.recommended_cleanser}</span>
-                        </div>
-                      )}
-                      {latestQuiz.recommended_moisturizer && (
-                        <div className="dashboard-regimen-item">
-                          <span className="dashboard-regimen-category">Moisturizer</span>
-                          <span className="dashboard-regimen-name">{latestQuiz.recommended_moisturizer}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="dashboard-divider" />
-
-                    {/* Skin Profile */}
-                    <h3 className="dashboard-block-title">Skin Profile</h3>
-                    <div className="dashboard-profile-row">
-                      <span className="dashboard-profile-label">Skin Type</span>
-                      <span className="dashboard-profile-value dashboard-profile-highlight">
-                        {capitalize(latestQuiz.skin_type)}
-                      </span>
-                    </div>
-                    {latestQuiz.concerns.length > 0 && (
-                      <div className="dashboard-profile-row">
-                        <span className="dashboard-profile-label">Top Concerns</span>
-                        <div className="dashboard-tag-list">
-                          {latestQuiz.concerns.slice(0, 3).map((concern) => (
-                            <span key={concern} className="dashboard-tag">
-                              {formatConcern(concern)}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {latestQuiz.fragrance_choice && (
-                      <div className="dashboard-profile-row">
-                        <span className="dashboard-profile-label">Fragrance</span>
-                        <span className="dashboard-profile-value">
-                          {FRAGRANCE_LABELS[latestQuiz.fragrance_choice] ?? latestQuiz.fragrance_choice}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="dashboard-divider" />
-
-                    {/* Quick Actions */}
-                    <h3 className="dashboard-block-title">Quick Actions</h3>
-                    <div className="dashboard-actions-row">
-                      <button
-                        type="button"
-                        className="dashboard-btn-primary"
-                        onClick={() => router.push("/quiz")}
-                      >
-                        Retake Quiz
-                      </button>
-                      <button
-                        type="button"
-                        className="dashboard-btn-secondary"
-                        onClick={() => router.push("/report")}
-                      >
-                        View Report
-                      </button>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="dashboard-block dashboard-empty-cta">
-                  <h3 className="dashboard-block-title">Discover Your Regimen</h3>
-                  <p className="dashboard-empty-text">
-                    Take your first consultation to receive personalized skincare recommendations.
-                  </p>
-                  <button
-                    type="button"
-                    className="dashboard-btn-primary"
-                    onClick={() => router.push("/quiz")}
-                  >
-                    Take Consultation
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Quiz History Section */}
-          {activeSection === "quiz" && !dataLoading && (
-            <div className="dashboard-section">
-              <h1 className="dashboard-page-title">Quiz History</h1>
-
-              {quizResults.length > 0 ? (
-                <div className="dashboard-table">
-                  <div className="dashboard-table-header">
-                    <span className="dashboard-th dashboard-th-date">Date</span>
-                    <span className="dashboard-th dashboard-th-type">Skin Type</span>
-                    <span className="dashboard-th dashboard-th-products">Products</span>
-                    <span className="dashboard-th dashboard-th-action">Action</span>
-                  </div>
-                  {quizResults.map((quiz) => (
-                    <div key={quiz.id} className="dashboard-table-row">
-                      <span className="dashboard-td dashboard-td-date">{formatShortDate(quiz.created_at)}</span>
-                      <span className="dashboard-td dashboard-td-type">{capitalize(quiz.skin_type)}</span>
-                      <span className="dashboard-td dashboard-td-products">
-                        {[quiz.recommended_serum, quiz.recommended_cleanser, quiz.recommended_moisturizer]
-                          .filter(Boolean)
-                          .length}{" "}
-                        products
-                      </span>
-                      <span className="dashboard-td dashboard-td-action">
-                        <button
-                          type="button"
-                          className="dashboard-link-btn"
-                          onClick={() => router.push("/report")}
-                        >
-                          View
-                        </button>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="dashboard-block dashboard-empty-state">
-                  <p className="dashboard-empty-text">No quiz results yet.</p>
-                  <button
-                    type="button"
-                    className="dashboard-btn-primary"
-                    onClick={() => router.push("/quiz")}
-                  >
-                    Take Consultation
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Orders Section */}
-          {activeSection === "orders" && !dataLoading && (
-            <div className="dashboard-section">
-              <h1 className="dashboard-page-title">Orders</h1>
-
-              {orders.length > 0 ? (
-                <div className="dashboard-table">
-                  <div className="dashboard-table-header">
-                    <span className="dashboard-th dashboard-th-date">Date</span>
-                    <span className="dashboard-th dashboard-th-items">Items</span>
-                    <span className="dashboard-th dashboard-th-total">Total</span>
-                    <span className="dashboard-th dashboard-th-plan">Plan</span>
-                    <span className="dashboard-th dashboard-th-status">Status</span>
-                  </div>
-                  {orders.map((order) => (
-                    <div key={order.id} className="dashboard-table-row">
-                      <span className="dashboard-td dashboard-td-date">{formatShortDate(order.created_at)}</span>
-                      <span className="dashboard-td dashboard-td-items">
-                        {Array.isArray(order.items) ? order.items.length : 0} item{Array.isArray(order.items) && order.items.length !== 1 ? "s" : ""}
-                      </span>
-                      <span className="dashboard-td dashboard-td-total">${order.total.toFixed(2)}</span>
-                      <span className="dashboard-td dashboard-td-plan">
-                        {PLAN_LABELS[order.subscription_plan] ?? order.subscription_plan}
-                      </span>
-                      <span className={`dashboard-status dashboard-status-${order.status}`}>
-                        {capitalize(order.status)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="dashboard-block dashboard-empty-state">
-                  <p className="dashboard-empty-text">No orders yet.</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Subscription Section */}
-          {activeSection === "subscription" && !dataLoading && (
-            <div className="dashboard-section">
-              <h1 className="dashboard-page-title">Subscription</h1>
-
-              <div className="dashboard-block">
-                {latestOrder ? (
-                  <>
-                    <div className="dashboard-profile-row">
-                      <span className="dashboard-profile-label">Current Plan</span>
-                      <span className="dashboard-profile-value dashboard-profile-highlight">
-                        {PLAN_LABELS[latestOrder.subscription_plan] ?? latestOrder.subscription_plan}
-                      </span>
-                    </div>
-                    <div className="dashboard-profile-row">
-                      <span className="dashboard-profile-label">Last Order</span>
-                      <span className="dashboard-profile-value">
-                        {formatDate(latestOrder.created_at)}
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <div className="dashboard-profile-row">
-                    <span className="dashboard-profile-label">Current Plan</span>
-                    <span className="dashboard-profile-value">No active plan</span>
-                  </div>
-                )}
-
-                <div className="dashboard-subscription-actions">
-                  <button
-                    type="button"
-                    className="dashboard-btn-primary"
-                    disabled
-                  >
-                    Manage Subscription
-                  </button>
-                  <p className="dashboard-muted-notice">Subscription management coming soon.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Settings Section */}
-          {activeSection === "settings" && !dataLoading && (
-            <div className="dashboard-section">
-              <h1 className="dashboard-page-title">Settings</h1>
-
-              <div className="dashboard-block">
-                <div className="dashboard-profile-row">
-                  <span className="dashboard-profile-label">Email</span>
-                  <span className="dashboard-profile-value">{user.email}</span>
-                </div>
-                <div className="dashboard-profile-row">
-                  <span className="dashboard-profile-label">Member Since</span>
-                  <span className="dashboard-profile-value">{formatDate(user.created_at)}</span>
-                </div>
-              </div>
-
-              <div className="dashboard-block">
-                <h3 className="dashboard-block-title">Change Password</h3>
-
-                <div className="dashboard-field">
-                  <label className="dashboard-field-label" htmlFor="current-password">
-                    Current Password
-                  </label>
-                  <input
-                    id="current-password"
-                    type="password"
-                    className="dashboard-input"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                </div>
-
-                <div className="dashboard-field">
-                  <label className="dashboard-field-label" htmlFor="new-password">
-                    New Password
-                  </label>
-                  <input
-                    id="new-password"
-                    type="password"
-                    className="dashboard-input"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                {passwordError && <p className="dashboard-field-error">{passwordError}</p>}
-                {passwordSuccess && <p className="dashboard-field-success">{passwordSuccess}</p>}
-
-                <button
-                  type="button"
-                  className="dashboard-btn-primary"
-                  onClick={handlePasswordChange}
-                  disabled={passwordSubmitting || currentPassword.trim() === "" || newPassword.trim() === ""}
-                >
-                  {passwordSubmitting ? "Updating..." : "Update Password"}
-                </button>
-              </div>
-
-              {/* Mobile Sign Out */}
-              <div className="dashboard-mobile-signout">
-                <button
-                  type="button"
-                  className="dashboard-signout"
-                  onClick={handleSignOut}
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-          )}
-        </main>
+        </footer>
       </div>
     );
   }
