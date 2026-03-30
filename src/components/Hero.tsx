@@ -23,7 +23,6 @@ export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
-  const scrollHintRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -71,15 +70,6 @@ export default function Hero() {
           ease: "power2.out",
         },
         "-=0.4"
-      )
-      .to(
-        scrollHintRef.current,
-        {
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        },
-        "-=0.2"
       );
 
     gsap.set([taglineRef.current, titleRef.current, subtitleRef.current, ctaRef.current], {
@@ -130,10 +120,6 @@ export default function Hero() {
           </button>
         </div>
 
-        <div className="hero-scroll-hint" ref={scrollHintRef}>
-          <span>Discover</span>
-          <div className="scroll-line" />
-        </div>
       </section>
 
       <div className="hero-fade" />
