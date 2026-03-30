@@ -3094,7 +3094,7 @@ body {
 .profile-page {
   min-height: 100vh;
   padding-top: 7.5rem;
-  background-color: var(--bg-cream);
+  background-color: #f5f0e8;
 }
 
 .profile-content {
