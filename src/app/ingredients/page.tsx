@@ -203,11 +203,11 @@ export default function IngredientsPage() {
       )}
 
       <div className="botanicals-actions botanicals-animate-header">
-        <button className="botanicals-cta" onClick={() => go("/cart")}>
-          Continue to Cart
+        <button className="botanicals-cta" onClick={() => go("/results")}>
+          See Your Products
         </button>
-        <button className="botanicals-cta-secondary" onClick={() => go("/results")}>
-          Back to Products
+        <button className="botanicals-cta-secondary" onClick={() => go("/analysis")}>
+          Back to Analysis
         </button>
       </div>
     </div>

@@ -205,8 +205,8 @@ export default function AnalysisPage() {
       </div>
 
       <div className="analysis-actions analysis-animate">
-        <button className="analysis-cta" onClick={() => go("/results")}>
-          See Your Products
+        <button className="analysis-cta" onClick={() => go("/ingredients")}>
+          Your Key Botanicals
         </button>
       </div>
     </div>

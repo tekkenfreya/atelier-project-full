@@ -175,7 +175,7 @@ export default function ResultsPage() {
     const items = getSelectedItems();
     if (items.length === 0) return;
     sessionStorage.setItem("cartItems", JSON.stringify(items));
-    go("/ingredients");
+    go("/cart");
   }, [getSelectedItems, go]);
 
   if (loading) {
@@ -299,7 +299,7 @@ export default function ResultsPage() {
         </button>
         {selectedCount > 0 ? (
           <button onClick={handleContinueToCart} className="results-btn">
-            Your Key Botanicals
+            Continue to Cart
           </button>
         ) : (
           <button onClick={() => go("/")} className="results-btn">
