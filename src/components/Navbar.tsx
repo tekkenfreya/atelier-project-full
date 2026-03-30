@@ -50,15 +50,17 @@ export default function Navbar() {
   return (
     <>
       <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
-        <Image
-          src="/logo.png"
-          alt="Atelier Rusalka"
-          width={280}
-          height={65}
-          className="navbar-logo"
-          priority
-          style={scrolled ? {} : { filter: "brightness(0) invert(1)" }}
-        />
+        <a href="/" className="navbar-logo-link">
+          <Image
+            src="/logo.png"
+            alt="Atelier Rusalka"
+            width={280}
+            height={65}
+            className="navbar-logo"
+            priority
+            style={scrolled ? {} : { filter: "brightness(0) invert(1)" }}
+          />
+        </a>
 
         <ul className="nav-links">
           <li><a href="#products">Products</a></li>
