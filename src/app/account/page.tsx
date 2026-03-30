@@ -300,9 +300,8 @@ export default function AccountPage() {
 
               {latestQuiz ? (
                 <>
-                  <div className="dashboard-overview-grid">
-                  {/* Your Regimen */}
                   <div className="dashboard-block">
+                    {/* Your Regimen */}
                     <h3 className="dashboard-block-title">Your Regimen</h3>
                     <div className="dashboard-regimen-grid">
                       {latestQuiz.recommended_serum && (
@@ -324,10 +323,10 @@ export default function AccountPage() {
                         </div>
                       )}
                     </div>
-                  </div>
 
-                  {/* Skin Profile */}
-                  <div className="dashboard-block">
+                    <div className="dashboard-divider" />
+
+                    {/* Skin Profile */}
                     <h3 className="dashboard-block-title">Skin Profile</h3>
                     <div className="dashboard-profile-row">
                       <span className="dashboard-profile-label">Skin Type</span>
@@ -355,11 +354,10 @@ export default function AccountPage() {
                         </span>
                       </div>
                     )}
-                  </div>
 
-                  </div>
-                  {/* Quick Actions */}
-                  <div className="dashboard-block">
+                    <div className="dashboard-divider" />
+
+                    {/* Quick Actions */}
                     <h3 className="dashboard-block-title">Quick Actions</h3>
                     <div className="dashboard-actions-row">
                       <button

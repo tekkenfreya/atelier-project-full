@@ -3230,21 +3230,10 @@ body {
 }
 
 /* Dashboard Blocks */
-.dashboard-overview-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-@media (max-width: 900px) {
-  .dashboard-overview-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.dashboard-overview-grid .dashboard-block {
-  margin-bottom: 0;
+.dashboard-divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 1.75rem 0;
 }
 
 .dashboard-block {
