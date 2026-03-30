@@ -58,7 +58,6 @@ export default function Navbar() {
             height={65}
             className="navbar-logo"
             priority
-            style={scrolled ? {} : { filter: "brightness(0) invert(1)" }}
           />
         </a>
 
