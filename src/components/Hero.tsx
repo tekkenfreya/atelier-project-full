@@ -122,7 +122,6 @@ export default function Hero() {
 
       </section>
 
-      <div className="hero-fade" />
     </>
   );
 }
