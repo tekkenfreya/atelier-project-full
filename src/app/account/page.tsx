@@ -151,50 +151,47 @@ export default function AccountPage() {
     checkAuth();
   }, [fetchAccountData]);
 
-  // GSAP scroll-triggered animations
+  // GSAP scroll-triggered animations — correct gsap.context pattern
+  const pageRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (loading || !user || dataLoading) return;
+    if (!pageRef.current) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
 
-    const sections = [
-      heroRef.current,
-      regimenRef.current,
-      skinProfileRef.current,
-      botanicalsRef.current,
-      quizHistoryRef.current,
-      ordersRef.current,
-      actionsRef.current,
-      settingsRef.current,
-      footerRef.current,
-    ].filter(Boolean) as HTMLElement[];
-
-    const triggers: ScrollTrigger[] = [];
-
-    sections.forEach((section) => {
-      const tween = gsap.fromTo(
-        section,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
-          },
-        }
-      );
-      if (tween.scrollTrigger) {
-        triggers.push(tween.scrollTrigger);
+    const ctx = gsap.context(() => {
+      // Hero — visible on load, animate immediately (no ScrollTrigger)
+      if (heroRef.current) {
+        gsap.fromTo(heroRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+        );
       }
-    });
 
-    return () => {
-      triggers.forEach((trigger) => trigger.kill());
-    };
+      // Below-fold sections — paused, triggered on scroll
+      const belowFoldRefs = [
+        regimenRef, skinProfileRef, botanicalsRef,
+        quizHistoryRef, ordersRef, actionsRef, settingsRef, footerRef,
+      ];
+
+      belowFoldRefs.forEach((ref) => {
+        if (!ref.current) return;
+        const anim = gsap.fromTo(ref.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", paused: true }
+        );
+        ScrollTrigger.create({
+          trigger: ref.current,
+          start: "top 85%",
+          animation: anim,
+          once: true,
+        });
+      });
+    }, pageRef);
+
+    return () => ctx.revert();
   }, [loading, user, dataLoading]);
 
   const handleSubmit = useCallback(async () => {
@@ -323,7 +320,7 @@ export default function AccountPage() {
     }
 
     return (
-      <div className="profile-page">
+      <div className="profile-page" ref={pageRef}>
         {/* HERO */}
         <section ref={heroRef} className="profile-hero">
           <div className="profile-content">
