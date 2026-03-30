@@ -300,6 +300,7 @@ export default function AccountPage() {
 
               {latestQuiz ? (
                 <>
+                  <div className="dashboard-overview-grid">
                   {/* Your Regimen */}
                   <div className="dashboard-block">
                     <h3 className="dashboard-block-title">Your Regimen</h3>
@@ -356,6 +357,7 @@ export default function AccountPage() {
                     )}
                   </div>
 
+                  </div>
                   {/* Quick Actions */}
                   <div className="dashboard-block">
                     <h3 className="dashboard-block-title">Quick Actions</h3>
