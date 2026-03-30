@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import { quizQuestions } from "@/data/quizQuestions";
 import type { AnswerValue } from "@/data/quizQuestions";
 import QuizProgress from "@/components/quiz/QuizProgress";
@@ -31,6 +32,7 @@ const SECTION_INTROS: Record<1 | 2 | 3, { title: string; description: string }> 
 
 export default function Quiz() {
   const router = useRouter();
+  const { go } = usePageTransition();
   const [screen, setScreen] = useState<QuizScreen>("name-input");
   const [customerName, setCustomerName] = useState("");
   const [biologicalSex, setBiologicalSex] = useState<BiologicalSex | null>(null);
@@ -360,9 +362,9 @@ export default function Quiz() {
         <button
           type="button"
           className="quiz-cta-btn"
-          onClick={() => router.push("/results")}
+          onClick={() => go("/analysis")}
         >
-          See Your Results
+          See Your Analysis
         </button>
       </div>
     );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { usePageTransition } from "@/hooks/usePageTransition";
 import type { Recommendation, FragranceOption, ScoredProduct, ProductCategory } from "@/lib/matching-engine/types";
 import type { AnswerValue } from "@/data/quizQuestions";
 import type { CartItem } from "@/types/cart";
@@ -32,6 +33,7 @@ interface SelectedProducts {
 
 export default function ResultsPage() {
   const router = useRouter();
+  const { go } = usePageTransition();
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -173,8 +175,8 @@ export default function ResultsPage() {
     const items = getSelectedItems();
     if (items.length === 0) return;
     sessionStorage.setItem("cartItems", JSON.stringify(items));
-    router.push("/cart");
-  }, [getSelectedItems, router]);
+    go("/ingredients");
+  }, [getSelectedItems, go]);
 
   if (loading) {
     return (
@@ -292,15 +294,15 @@ export default function ResultsPage() {
       )}
 
       <div className="results-actions">
-        <button onClick={() => router.push("/quiz")} className="results-btn-secondary">
+        <button onClick={() => go("/quiz")} className="results-btn-secondary">
           Retake Quiz
         </button>
         {selectedCount > 0 ? (
           <button onClick={handleContinueToCart} className="results-btn">
-            Continue to Cart
+            Your Key Botanicals
           </button>
         ) : (
-          <button onClick={() => router.push("/")} className="results-btn">
+          <button onClick={() => go("/")} className="results-btn">
             Return Home
           </button>
         )}
