@@ -506,7 +506,6 @@ export const quizQuestions: QuizQuestion[] = [
     type: "single-select",
     options: [
       "No, never",
-      "Never, I\u2019m a retinol beginner",
       "Tried once or twice, didn\u2019t stick with it",
       "Yes, occasionally. I use it a few times a month",
       "Yes, regularly. It\u2019s part of my routine",
