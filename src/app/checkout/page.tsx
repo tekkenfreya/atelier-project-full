@@ -110,7 +110,7 @@ export default function CheckoutPage() {
                 <span className="checkout-review-item-category">{item.category}</span>
                 <span className="checkout-review-item-name">{item.productName}</span>
               </div>
-              <span className="checkout-review-item-price">${item.price}</span>
+              <span className="checkout-review-item-price">€{item.price}</span>
             </div>
           ))}
         </div>
@@ -127,25 +127,25 @@ export default function CheckoutPage() {
         <div className="checkout-sidebar-totals">
           <div className="checkout-sidebar-row">
             <span>Subtotal</span>
-            <span>${subtotal}</span>
+            <span>€{subtotal}</span>
           </div>
           {discount > 0 && (
             <div className="checkout-sidebar-row checkout-sidebar-discount">
               <span>Subscription discount (20%)</span>
-              <span>-${discount.toFixed(2)}</span>
+              <span>-€{discount.toFixed(2)}</span>
             </div>
           )}
           <div className="checkout-sidebar-row checkout-sidebar-total">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>€{total.toFixed(2)}</span>
           </div>
         </div>
 
         {plan !== "one-time" && (
           <p className="checkout-recurring-note">
             {plan === "bi-monthly"
-              ? `You will be charged $${total.toFixed(2)} every 2 months.`
-              : `You will be charged $${total.toFixed(2)} annually.`}
+              ? `You will be charged €${total.toFixed(2)} every 2 months.`
+              : `You will be charged €${total.toFixed(2)} annually.`}
           </p>
         )}
 

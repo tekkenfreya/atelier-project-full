@@ -97,7 +97,7 @@ function ConfirmationContent() {
     );
   }
 
-  const totalDollars = session.amountTotal !== null ? (session.amountTotal / 100).toFixed(2) : "0.00";
+  const totalEuros = session.amountTotal !== null ? (session.amountTotal / 100).toFixed(2) : "0.00";
 
   return (
     <div className="confirmation-container">
@@ -134,7 +134,7 @@ function ConfirmationContent() {
                 <span className="confirmation-item-name">{item.name}</span>
               </div>
               <span className="confirmation-item-price">
-                ${(item.amountTotal / 100).toFixed(2)}
+                €{(item.amountTotal / 100).toFixed(2)}
               </span>
             </div>
           ))}
@@ -162,7 +162,7 @@ function ConfirmationContent() {
         <div className="confirmation-totals">
           <div className="confirmation-detail-row confirmation-total">
             <span>Total</span>
-            <span>${totalDollars}</span>
+            <span>€{totalEuros}</span>
           </div>
         </div>
       </div>

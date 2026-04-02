@@ -77,7 +77,7 @@ export default function SerumCard({
       <p className="results-card-skin">For {product.skin_type}</p>
 
       {showSelection && (
-        <p className="results-card-price">${price}</p>
+        <p className="results-card-price">€{price}</p>
       )}
 
       <div className="results-card-actives">

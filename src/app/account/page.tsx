@@ -467,7 +467,7 @@ export default function AccountPage() {
                       {Array.isArray(order.items) ? order.items.length : 0}{" "}
                       item{Array.isArray(order.items) && order.items.length !== 1 ? "s" : ""}
                     </span>
-                    <span className="profile-row__detail">${order.total.toFixed(2)}</span>
+                    <span className="profile-row__detail">€{order.total.toFixed(2)}</span>
                     <span className="profile-row__detail profile-row__detail--muted">
                       {PLAN_LABELS[order.subscription_plan] ?? order.subscription_plan}
                     </span>

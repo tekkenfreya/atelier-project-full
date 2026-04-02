@@ -276,17 +276,17 @@ export default function ResultsPage() {
             <span className="results-pricing-label">
               {isBundle ? "Full Routine" : `${selectedCount} product${selectedCount > 1 ? "s" : ""}`}
             </span>
-            <span className="results-pricing-value">${subtotal}</span>
+            <span className="results-pricing-value">€{subtotal}</span>
           </div>
           {isBundle && (
             <p className="results-pricing-note">
-              Bundle saves you ${(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE} vs individual prices
+              Bundle saves you €{(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE} vs individual prices
             </p>
           )}
           <div className="results-pricing-sub">
             <span className="results-pricing-sub-label">With subscription</span>
             <span className="results-pricing-sub-value">
-              ${subscriptionTotal}
+              €{subscriptionTotal}
               <span className="results-pricing-sub-freq"> / shipment</span>
             </span>
           </div>

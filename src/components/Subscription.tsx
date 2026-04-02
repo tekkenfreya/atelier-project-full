@@ -56,7 +56,7 @@ export default function Subscription() {
         Build Your Routine, Save 20%
       </button>
       <p className="subscription-note" ref={noteRef}>
-        Full routine from $116/shipment · Free shipping · Cancel anytime
+        Full routine from €100/shipment · Free shipping · Cancel anytime
       </p>
     </section>
   );

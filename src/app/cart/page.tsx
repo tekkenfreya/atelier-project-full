@@ -107,7 +107,7 @@ export default function CartPage() {
                 </p>
               </div>
               <div className="cart-item-right">
-                <span className="cart-item-price">${item.price}</span>
+                <span className="cart-item-price">€{item.price}</span>
                 <button
                   type="button"
                   className="cart-item-remove"
@@ -155,13 +155,13 @@ export default function CartPage() {
           <div className="cart-summary-rows">
             <div className="cart-summary-row">
               <span>Subtotal ({items.length} item{items.length > 1 ? "s" : ""})</span>
-              <span>${subtotal}</span>
+              <span>€{subtotal}</span>
             </div>
 
             {discount > 0 && (
               <div className="cart-summary-row cart-summary-discount">
                 <span>Subscription discount</span>
-                <span>-${discount.toFixed(2)}</span>
+                <span>-€{discount.toFixed(2)}</span>
               </div>
             )}
 
@@ -174,12 +174,12 @@ export default function CartPage() {
 
             <div className="cart-summary-row cart-summary-total">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>€{total.toFixed(2)}</span>
             </div>
 
             {plan === "annual" && items.length === 3 && (
               <p className="cart-summary-annual-note">
-                Billed as $600 annually (6 shipments)
+                Billed as €600 annually (6 shipments)
               </p>
             )}
           </div>

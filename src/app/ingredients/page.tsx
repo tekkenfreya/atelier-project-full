@@ -30,7 +30,7 @@ function extractBotanicals(recommendation: Recommendation): BotanicalEntry[] {
     for (const ing of scored.product.ingredients) {
       if (seen.has(ing.id)) continue;
       const fn = ing.function?.toLowerCase() ?? "";
-      if (fn.includes("extract") || fn.includes("botanical") || fn.includes("active")) {
+      if (fn.includes("extract") || fn.includes("botanical")) {
         seen.add(ing.id);
         entries.push({
           ingredient: ing,
