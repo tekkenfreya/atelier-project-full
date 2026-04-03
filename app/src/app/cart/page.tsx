@@ -179,7 +179,7 @@ export default function CartPage() {
 
             {plan === "annual" && items.length === 3 && (
               <p className="cart-summary-annual-note">
-                Billed as €600 annually (6 shipments)
+                Billed as €552 annually (6 shipments)
               </p>
             )}
           </div>
