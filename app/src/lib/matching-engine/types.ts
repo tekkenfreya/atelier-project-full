@@ -83,3 +83,40 @@ export interface Recommendation {
   concerns: Concern[];
   gaps: string[];
 }
+
+export interface DebugCategoryResult {
+  category: ProductCategory;
+  gate1Passed: ProductSummary[];
+  gate2Passed: ProductSummary[];
+  allScored: ScoredProduct[];
+  winner: ScoredProduct | null;
+  exclusionReasons: ExclusionReason[];
+  hasGap: boolean;
+  gapMessage?: string;
+}
+
+export interface ProductSummary {
+  id: string;
+  name: string;
+  skinType: string;
+  concernTags: string[];
+}
+
+export interface ExclusionReason {
+  productId: string;
+  productName: string;
+  reason: string;
+}
+
+export interface DebugRecommendation {
+  skinType: SkinType;
+  concerns: Concern[];
+  exclusions: string[];
+  safetyContext: {
+    isPregnant: boolean;
+    hasRosacea: boolean;
+    hasEczema: boolean;
+  };
+  categories: DebugCategoryResult[];
+  finalResults: Recommendation;
+}

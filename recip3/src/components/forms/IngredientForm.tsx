@@ -60,8 +60,21 @@ interface IngredientFormProps {
   onCancel: () => void;
 }
 
+interface Supplier {
+  id: string;
+  name: string;
+}
+
+interface FunctionCategory {
+  id: string;
+  name: string;
+  sort_order: number;
+}
+
 export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFormProps) => {
-  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [functionCategories, setFunctionCategories] = useState<FunctionCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || "");
@@ -247,9 +260,27 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Function</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="e.g., Emollient, Humectant" />
-                </FormControl>
+                <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select function" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Solvent">Solvent</SelectItem>
+                    <SelectItem value="Humectant">Humectant</SelectItem>
+                    <SelectItem value="Emulsifier">Emulsifier</SelectItem>
+                    <SelectItem value="Lipid">Lipid</SelectItem>
+                    <SelectItem value="Thickener / Stabiliser">Thickener / Stabiliser</SelectItem>
+                    <SelectItem value="Preservative">Preservative</SelectItem>
+                    <SelectItem value="Chelating Agent">Chelating Agent</SelectItem>
+                    <SelectItem value="pH Adjuster">pH Adjuster</SelectItem>
+                    <SelectItem value="Antioxidant">Antioxidant</SelectItem>
+                    <SelectItem value="Active Phase-Shot">Active Phase-Shot</SelectItem>
+                    <SelectItem value="EE Botanical Extract">EE Botanical Extract</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

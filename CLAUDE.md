@@ -1,7 +1,7 @@
 # Kyrill Skincare — Development Guidelines
 
 > **Purpose:** Standard development rules and best practices
-> **Last Updated:** 2026-03-18
+> **Last Updated:** 2026-03-27
 
 ---
 
@@ -44,6 +44,13 @@ Before making any change, check in order:
 - No console.log left in production code — only `console.error` in API routes for server-side error tracking
 - Every function does one thing
 
+### 5b. Layout & UI Basics
+- **Always center content** — full-screen pages and standalone screens (quiz steps, loading states, auth forms) must be vertically and horizontally centered using `min-height: 100vh` with flexbox `align-items: center; justify-content: center`
+- **Never leave content floating top-left** — if a component renders on its own screen, it must be centered in the viewport
+- **Use the existing design tokens** — follow the `--bg-primary`, `--bg-cream`, `--text-primary`, `--accent`, `--border` variables. Never hardcode colors
+- **Feature-prefixed CSS** — every new page/component gets its own prefix (`.quiz-*`, `.cart-*`, `.account-*`, `.report-*`). No generic class names
+- **Responsive by default** — all layouts must work on mobile (320px) through desktop (1440px)
+
 ### 6. Check Codebase Before Writing
 - Read the relevant file before editing it
 - Check if a component already exists before creating a new one
@@ -74,37 +81,16 @@ Before making any change, check in order:
 
 ### Matching Engine Module (`src/lib/matching-engine/`)
 - Pure logic module — no React, no UI, no side effects except Supabase reads
-- File separation by responsibility:
-  - `types.ts` — all interfaces and type aliases for the engine (`Product`, `ScoredProduct`, `Recommendation`, `Concern`, `SkinType`)
-  - `ingredient-map.ts` — static mapping of ingredient names to concerns and excludability
-  - `filters.ts` — skin type normalization, exclusion extraction, and product filtering
-  - `scoring.ts` — quiz-answer-to-concern mapping, priority ranking, and product scoring
-  - `recommend.ts` — orchestrator that fetches products, filters, scores, and returns a `Recommendation`
-- Types are exported from `types.ts` — the single source of truth for the engine
-- The orchestrator (`recommend.ts`) is the only file that touches Supabase; filters and scoring are pure functions
+- `types.ts` (source of truth), `filters.ts`, `scoring.ts`, `recommend.ts` (orchestrator, only file touching Supabase)
 
 ### Shared Supabase Project
-- The e-commerce app (`app/`) and the ERP (`recip3/`) share the same Supabase project (`kdjcbxjagaltvynvshkj`)
-- `app/src/lib/supabase.ts` creates a client using `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- The matching engine reads from the same `products`, `ingredients`, and `product_ingredients` tables managed by the ERP
-- Schema changes in the ERP affect the e-commerce app — coordinate across both codebases
+- `app/` and `recip3/` share the same Supabase project — schema changes affect both
 
 ---
 
 ## Animation & Interaction Patterns
 
-### GSAP Usage
-- Store active tweens in a `useRef` and call `.kill()` before starting a new tween on the same element
-- Tween refs must be cleaned up — never let a tween outlive its component or transition cycle
-- Use `gsap.to` / `gsap.fromTo` directly; do not wrap in custom abstractions unless reuse is proven
-
-### Native Drag-and-Drop
-- Use native HTML drag events (`onDragStart`, `onDragOver`, `onDrop`) — no external drag libraries
-- Always provide keyboard fallback (ArrowUp/ArrowDown with `e.preventDefault()`) for accessibility
-
-### Multi-Step Form Navigation
-- Section transition screens display only on forward navigation — back navigation skips them and goes directly to the previous question
-- Components that render with a default value (e.g., DragRank defaulting to options order) must call `onChange` on mount to sync parent state
+Full GSAP, Lenis, and page transition rules: @.claude/rules/animation-patterns.md
 
 ---
 
@@ -137,50 +123,17 @@ Before making any change, check in order:
 
 ---
 
-## Recip3 / Cosmetic Inventory Hub (ERP)
+## Reference Files
 
-### Overview
-Internal ERP system for cosmetic formulation management, migrated from Lovable to self-hosted infrastructure. Originally built with Vite + React 18 + TypeScript + Tailwind + shadcn/ui + Supabase.
+### Rules (loaded on demand)
+- @.claude/rules/animation-patterns.md — GSAP, Lenis, page transitions, CSS animation patterns
 
-### Infrastructure
-- **Source repo:** `atelier-rusalka/atelier-rusalka` (GitHub, private)
-- **Database:** Supabase project `kdjcbxjagaltvynvshkj` (own account, not Lovable-managed)
-- **Deployment:** Vercel (pending full setup)
-- **Local code:** `recip3/` subdirectory in this workspace
-
-### Supabase Migration Lessons
-
-#### Auth Users — Never Raw INSERT
-- Do **not** manually INSERT into `auth.users` and `auth.identities` via raw SQL — Supabase Auth has many hidden fields and internal state that must be set correctly
-- "database error querying schema" on login = broken auth user records
-- Always create users through the **Supabase Dashboard** (Authentication → Users → Add User) or the **Admin API**
-- Passwords are bcrypt-hashed one-way — they cannot be transferred between Supabase projects. Use temp passwords + password reset flow when migrating
-
-#### Schema Must Match Exactly
-- The typed Supabase client (`src/integrations/supabase/types.ts`) expects **exact foreign key constraint names** (e.g., `ingredients_supplier_id_fkey`, not `fk_ingredients_supplier`)
-- Custom **enums** (e.g., `app_role`) and **functions** (e.g., `has_role()`, `update_updated_at_column()`) must be created in the new database — they are not part of table data exports
-- RLS policies in the original use `has_role(auth.uid(), 'admin'::app_role)` — not generic "Allow authenticated" policies
-- After schema changes, always run `NOTIFY pgrst, 'reload schema';` to refresh PostgREST cache
-
-#### Data Export Approach
-- Export schema: `SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_schema = 'public'`
-- Export data: UNION ALL query with `to_jsonb(t)` for all tables in a single CSV
-- Also export: functions (`pg_get_functiondef`), foreign keys (`pg_constraint`), enums (`pg_type`/`pg_enum`), RLS policies (`pg_policies`)
-- Auth users are in `auth.users`, not in `public` schema — they require separate handling
-
-#### SDK Key Compatibility
-- `@supabase/supabase-js ^2.x` requires the **legacy JWT anon key** (starts with `eyJ...`)
-- New Supabase "publishable keys" (starts with `sb_publishable__`) are not compatible with v2 SDK
-- Use the legacy key from Supabase Dashboard → Settings → API → Legacy API keys
-
-### ERP Database Tables
-`products` (24), `ingredients` (95), `product_ingredients` (232), `product_method_steps` (109), `suppliers` (7), `manufacturers` (0), `orders` (14), `order_items` (63), `user_roles` (4), `startup_project_cards` (15), `report_subscriptions` (1), `saved_exports` (1), `scheduled_exports` (2), `export_history` (30), `cloud_storage_integrations` (2)
-
-### ERP User Roles
-- `kyrillkaz@outlook.com` — admin
-- `andreea.marica.lma@gmail.com` — editor
-- `martin.cholakov@dijksterhuisltd.com` — editor
-- `martin.cholakov@dijksterhuisltd.co` — editor
+### Auto Memory (project knowledge)
+- User profile & client relationship → `~/.claude-personal/.../memory/user_kyrill_client.md`
+- ERP infrastructure, repos, databases, migration lessons → `~/.claude-personal/.../memory/project_erp_migration.md`
+- Matching engine architecture → `~/.claude-personal/.../memory/project_matching_engine.md`
+- Supabase auth migration rules → `~/.claude-personal/.../memory/feedback_supabase_auth.md`
+- Supabase schema export rules → `~/.claude-personal/.../memory/feedback_supabase_schema_export.md`
 
 ---
 

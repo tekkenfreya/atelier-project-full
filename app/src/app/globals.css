@@ -25,6 +25,30 @@
   --border-dark: rgba(61, 58, 46, 0.06);
 }
 
+/* ─── View Transitions ─── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none !important;
+}
+
+::view-transition-group(root) {
+  z-index: auto !important;
+}
+
+::view-transition-image-pair(root) {
+  z-index: 1;
+  isolation: isolate;
+  will-change: transform, opacity, clip-path;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 10000;
+}
+
 /* ─── Base ─── */
 *,
 *::before,
@@ -67,18 +91,16 @@ body {
   left: 0;
   width: 100%;
   z-index: 100;
-  padding: 1.5rem clamp(1.5rem, 4vw, 4rem);
+  padding: 1rem clamp(1.5rem, 4vw, 4rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.6s ease, padding 0.4s ease, backdrop-filter 0.6s ease;
+  background-color: var(--bg-cream);
+  border-bottom: 1px solid var(--border);
 }
 
 .navbar.scrolled {
-  background-color: rgba(245, 240, 232, 0.85);
-  backdrop-filter: blur(20px);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  background-color: var(--bg-cream);
 }
 
 .navbar-logo {
@@ -100,7 +122,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--text-light);
+  color: var(--text-primary);
   text-decoration: none;
   transition: color 0.3s ease, opacity 0.3s ease;
   opacity: 0.85;
@@ -931,11 +953,8 @@ body {
   padding: 1.5rem 1rem;
   border: 1px solid var(--border);
   background-color: var(--bg-cream);
-  transition: border-color 0.3s ease;
-}
-
-.quiz-intro-section-card:hover {
-  border-color: var(--accent);
+  cursor: default;
+  pointer-events: none;
 }
 
 .quiz-intro-section-num {
@@ -964,9 +983,54 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   gap: 1.5rem;
-  padding-top: 4rem;
+  min-height: 70vh;
+}
+
+.quiz-name-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.quiz-name-label {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.quiz-name-input {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border);
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.quiz-name-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.quiz-name-input:focus {
+  border-color: var(--accent);
+}
+
+.quiz-sex-disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .quiz-sex-title {
@@ -1480,81 +1544,86 @@ body {
 }
 
 /* Drag Rank */
-.quiz-drag-rank {
+/* Priority Ranking — Click to pick top 3 */
+.rank-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.65rem;
 }
 
-.quiz-rank-item {
+.rank-instruction {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.rank-counter {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rank-card {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.9rem 1.1rem;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
-  cursor: grab;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  transition: all 0.35s ease;
   user-select: none;
+  text-align: left;
+  width: 100%;
 }
 
-.quiz-rank-item:hover {
-  border-color: rgba(61, 58, 46, 0.2);
+.rank-card:hover:not(.rank-disabled) {
+  border-color: rgba(61, 58, 46, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.quiz-rank-item.quiz-rank-insert-above {
-  position: relative;
+.rank-card.rank-selected {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  background-color: #faf8f3;
 }
 
-.quiz-rank-item.quiz-rank-insert-above::before {
-  content: "";
-  position: absolute;
-  top: -0.3rem;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--accent);
-  border-radius: 1px;
+.rank-card.rank-disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
-.quiz-rank-item.quiz-rank-insert-below {
-  position: relative;
-}
-
-.quiz-rank-item.quiz-rank-insert-below::after {
-  content: "";
-  position: absolute;
-  bottom: -0.3rem;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--accent);
-  border-radius: 1px;
-}
-
-.quiz-rank-item.quiz-rank-dragging {
-  opacity: 0.4;
-}
-
-.quiz-rank-number {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 400;
-  color: var(--accent);
-  width: 22px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.quiz-rank-handle {
-  color: var(--text-secondary);
-  opacity: 0.4;
-  flex-shrink: 0;
+.rank-badge {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: #fff;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  animation: rankBadgeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.quiz-rank-label {
+@keyframes rankBadgeIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.rank-card-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.85rem;
   font-weight: 400;
@@ -1563,6 +1632,34 @@ body {
 }
 
 /* Free Text */
+/* Other text input (allergy question) */
+.quiz-other-input {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.quiz-other-field {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--accent);
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.quiz-other-field::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.quiz-other-field:focus {
+  border-color: var(--accent-hover);
+}
+
 .quiz-free-text {
   display: flex;
   flex-direction: column;
@@ -1678,7 +1775,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 1.5rem;
+  padding: 7.5rem 1.5rem 4rem;
   background: var(--bg-primary);
 }
 
@@ -1863,85 +1960,2415 @@ body {
   color: var(--accent);
 }
 
-/* Fragrance Selector */
-.results-fragrance {
+/* Fragrance Display */
+.results-fragrance-display {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border);
 }
 
-.results-fragrance-options {
+.results-fragrance-value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-top: 0.4rem;
+}
+
+/* Report Link */
+.results-report-link {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.results-report-link a {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.results-report-link a:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Results Card Selection ─── */
+.results-card-selected {
+  border-color: var(--accent);
+  position: relative;
+}
+
+.results-card-deselected {
+  opacity: 0.45;
+  filter: grayscale(0.3);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.results-card-deselected:hover {
+  opacity: 0.65;
+}
+
+.results-card-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.results-card-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  color: #fff;
+}
+
+.results-card-checkbox.checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.results-card-toggle-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.results-card-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+/* ─── Results Pricing Summary ─── */
+.results-pricing {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--bg-cream);
+  max-width: 480px;
+  width: 100%;
+}
+
+.results-pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-pricing-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.results-pricing-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.results-pricing-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-top: 0.25rem;
+}
+
+.results-pricing-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.results-pricing-sub-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.results-pricing-sub-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.results-pricing-sub-freq {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* ─── Nav Icon Buttons ─── */
+.nav-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+  transition: opacity 0.3s ease, color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.nav-icon-btn:hover {
+  opacity: 1;
+  color: var(--accent-hover);
+}
+
+.navbar.scrolled .nav-icon-btn {
+  color: var(--text-primary);
+  opacity: 0.7;
+}
+
+.navbar.scrolled .nav-icon-btn:hover {
+  opacity: 1;
+}
+
+.nav-cart-btn {
+  position: relative;
+}
+
+.nav-cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  background-color: var(--accent);
+  color: #fff;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ─── Cart Page ─── */
+.cart-container {
+  min-height: 100vh;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cart-loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-family: "Satoshi", sans-serif;
+  color: var(--text-secondary);
+}
+
+.cart-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cart-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cart-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--bg-cream);
+}
+
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cart-item-category {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cart-item-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.cart-item-details {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.cart-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.cart-item-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.cart-item-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+  padding: 0;
+}
+
+.cart-item-remove:hover {
+  color: #c0392b;
+}
+
+.cart-bundle-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-align: center;
+  padding: 0.75rem;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  background-color: rgba(139, 125, 60, 0.06);
+}
+
+.cart-plan-section {
+  margin-top: 1.5rem;
+}
+
+.cart-plan-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.cart-plan-options {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 0.75rem;
 }
 
-.results-fragrance-option {
+.cart-plan-option {
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
-  padding: 0.85rem 1rem;
-  background-color: var(--bg-primary);
+  padding: 1rem 1.25rem;
+  background-color: var(--bg-cream);
   border: 1px solid var(--border);
+  border-radius: 4px;
   cursor: pointer;
   text-align: left;
   width: 100%;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.results-fragrance-option:hover {
+.cart-plan-option:hover {
   border-color: rgba(61, 58, 46, 0.25);
 }
 
-.results-fragrance-option.selected {
+.cart-plan-option.selected {
   border-color: var(--accent);
   background-color: rgba(139, 125, 60, 0.06);
 }
 
-.results-fragrance-indicator {
+.cart-plan-radio {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   border: 1.5px solid var(--border);
   flex-shrink: 0;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 2px;
   transition: border-color 0.3s ease;
 }
 
-.results-fragrance-option.selected .results-fragrance-indicator {
+.cart-plan-option.selected .cart-plan-radio {
   border-color: var(--accent);
 }
 
-.results-fragrance-option.selected .results-fragrance-indicator::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.cart-plan-radio-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background-color: var(--accent);
 }
 
-.results-fragrance-content {
+.cart-plan-content {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 
-.results-fragrance-label {
+.cart-plan-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
-.results-fragrance-desc {
+.cart-plan-desc {
   font-family: "Satoshi", sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-secondary);
+}
+
+/* ─── Cart Summary ─── */
+.cart-summary {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  background-color: var(--bg-cream);
+  position: sticky;
+  top: 6rem;
+}
+
+.cart-summary-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.cart-summary-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.cart-summary-discount {
+  color: var(--accent);
+}
+
+.cart-summary-shipping {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.cart-summary-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.5rem 0;
+}
+
+.cart-summary-total {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.cart-summary-annual-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.cart-checkout-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+}
+
+.cart-checkout-btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.cart-back-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.cart-back-btn:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Checkout Page ─── */
+.checkout-container {
+  min-height: 100vh;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.checkout-loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-family: "Satoshi", sans-serif;
+  color: var(--text-secondary);
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.checkout-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.checkout-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.checkout-section-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.checkout-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 500px) {
+  .checkout-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkout-field-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.checkout-input {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.checkout-input:focus {
+  border-color: var(--accent);
+}
+
+.checkout-place-order {
+  margin-top: 1rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem 2.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease, opacity 0.3s ease;
+}
+
+.checkout-place-order:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.checkout-place-order:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Checkout Sidebar ─── */
+.checkout-sidebar {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  background-color: var(--bg-cream);
+  position: sticky;
+  top: 6rem;
+}
+
+.checkout-sidebar-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.checkout-sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkout-sidebar-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.checkout-sidebar-item-category {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.checkout-sidebar-item-name {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 0.15rem;
+}
+
+.checkout-sidebar-item-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.checkout-sidebar-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+  margin: 1rem 0;
+}
+
+.checkout-sidebar-plan {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkout-sidebar-plan-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.checkout-sidebar-plan-value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.checkout-sidebar-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkout-sidebar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.checkout-sidebar-discount {
+  color: var(--accent);
+}
+
+.checkout-sidebar-total {
+  font-weight: 600;
+  font-size: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.checkout-back-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.checkout-back-btn:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Checkout Review (Stripe) ─── */
+.checkout-review {
+  max-width: 560px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  background-color: var(--bg-cream);
+}
+
+.checkout-review-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkout-review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.checkout-review-item-category {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.checkout-review-item-name {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 0.15rem;
+}
+
+.checkout-review-item-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.checkout-recurring-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.checkout-error {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: #c44d4d;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.checkout-stripe-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem 2.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease, opacity 0.3s ease;
+}
+
+.checkout-stripe-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.checkout-stripe-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Confirmation Page ─── */
+.confirmation-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+}
+
+.confirmation-loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-family: "Satoshi", sans-serif;
+  color: var(--text-secondary);
+}
+
+.confirmation-icon {
+  margin-bottom: 1.5rem;
+}
+
+.confirmation-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.confirmation-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.confirmation-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+.confirmation-subtitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.confirmation-summary {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  background-color: var(--bg-cream);
+  max-width: 520px;
+  width: 100%;
+}
+
+.confirmation-summary-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.confirmation-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.confirmation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.confirmation-item-category {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.confirmation-item-name {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 0.15rem;
+}
+
+.confirmation-item-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.confirmation-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+  margin: 1rem 0;
+}
+
+.confirmation-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  padding: 0.25rem 0;
+}
+
+.confirmation-discount {
+  color: var(--accent);
+}
+
+.confirmation-totals {
+  margin-top: 0.5rem;
+}
+
+.confirmation-total {
+  font-weight: 600;
+  font-size: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.confirmation-actions {
+  margin-top: 2.5rem;
+}
+
+.confirmation-btn {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem 2.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+}
+
+.confirmation-btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* ─── Account Page (Login/Signup Form) ─── */
+.account-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+}
+
+.account-loading {
+  text-align: center;
+  padding: 6rem 0;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+}
+
+.account-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.account-label {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.account-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.account-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  background-color: var(--bg-cream);
+  max-width: 420px;
+  width: 100%;
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.account-field-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.account-input {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.account-input:focus {
+  border-color: var(--accent);
+}
+
+.account-error {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: #c0392b;
+  margin-bottom: 1rem;
+}
+
+.account-btn {
+  display: block;
+  width: 100%;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease, opacity 0.3s ease;
+}
+
+.account-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.account-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.account-toggle {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.account-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.account-toggle-btn:hover {
+  color: var(--accent-hover);
+}
+
+@media (max-width: 768px) {
+  .account-container {
+    padding: 6.5rem 1rem 3rem;
+  }
+
+  .account-card {
+    padding: 1.75rem;
+  }
+}
+
+/* ─── Profile Page (Luxury Editorial) ─── */
+.profile-page {
+  min-height: 100vh;
+  padding-top: 7.5rem;
+  background-color: #f5f0e8;
+}
+
+.profile-content {
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+/* Hero */
+.profile-hero {
+  padding: 4rem 0 6rem;
+}
+
+.profile-hero--empty {
+  min-height: calc(100vh - 7.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.profile-hero--empty .profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-hero__title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.profile-hero__subtitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 480px;
+  margin-bottom: 2.5rem;
+}
+
+.profile-hero__email {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.profile-hero__skin-badge {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(139, 125, 60, 0.25);
+  padding: 0.35rem 0.85rem;
+}
+
+/* Section Layout */
+.profile-section {
+  padding: 5rem 0;
+}
+
+.profile-section__title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+  letter-spacing: -0.01em;
+}
+
+.profile-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+  margin-bottom: 3rem;
+}
+
+.profile-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 1.25rem;
+}
+
+/* Regimen — 3 columns, no cards */
+.profile-regimen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.profile-regimen__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-regimen__label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+}
+
+.profile-regimen__name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.3;
+  padding-right: 1.5rem;
+}
+
+/* Skin Profile */
+.profile-skin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.profile-skin__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.profile-skin__label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.profile-skin__type {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.profile-skin__value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* Concern Pills */
+.profile-concerns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.profile-concern {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid rgba(139, 125, 60, 0.25);
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+}
+
+/* Text Link */
+.profile-text-link {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.3s ease;
+}
+
+.profile-text-link:hover {
+  color: var(--accent-hover);
+}
+
+/* Data Rows — minimal, no card container */
+.profile-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-row:last-child {
+  border-bottom: none;
+}
+
+.profile-row__date {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-width: 110px;
+}
+
+.profile-row__detail {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.profile-row__detail--muted {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.profile-row__link {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: color 0.3s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.profile-row__link:hover {
+  color: var(--accent-hover);
+}
+
+/* Status — text only, no background badge */
+.profile-status {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.profile-status--pending {
+  color: #b8860b;
+}
+
+.profile-status--confirmed {
+  color: #2e7d32;
+}
+
+.profile-status--shipped {
+  color: #1565c0;
+}
+
+.profile-status--delivered {
+  color: #2e7d32;
+}
+
+.profile-status--cancelled {
+  color: #c0392b;
+}
+
+/* Buttons */
+.profile-btn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.profile-btn--primary {
+  color: #fff;
+  background-color: var(--accent);
+}
+
+.profile-btn--primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.profile-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.profile-btn--large {
+  padding: 1.1rem 2.5rem;
+  font-size: 0.75rem;
+}
+
+.profile-btn--outline {
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+.profile-btn--outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Empty */
+.profile-empty {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Settings */
+.profile-settings {
+  max-width: 420px;
+}
+
+.profile-settings__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-settings__label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.profile-settings__value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.profile-settings__password {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.profile-settings__heading {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.profile-field__label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.profile-field__input {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+  max-width: 360px;
+  width: 100%;
+}
+
+.profile-field__input:focus {
+  border-color: var(--accent);
+}
+
+.profile-field__error {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: #c0392b;
+  margin-bottom: 1rem;
+}
+
+.profile-field__success {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: #2e7d32;
+  margin-bottom: 1rem;
+}
+
+/* Sign Out */
+.profile-signout {
+  padding: 3rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.profile-signout__link {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.profile-signout__link:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Profile Responsive ─── */
+@media (max-width: 1000px) {
+  .profile-page {
+    padding-top: 5rem;
+  }
+
+  .profile-hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .profile-section {
+    padding: 3.5rem 0;
+  }
+
+  .profile-regimen {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .profile-regimen__name {
+    padding-right: 0;
+  }
+
+  .profile-skin {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .profile-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.85rem 0;
+  }
+
+  .profile-row__link,
+  .profile-status {
+    margin-left: 0;
+  }
+
+  .profile-field__input {
+    max-width: 100%;
+  }
+
+  .profile-content {
+    padding: 0 1rem;
+  }
+}
+
+/* ─── Report Page ─── */
+.report-container {
+  min-height: 100vh;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.report-loading {
+  text-align: center;
+  padding: 4rem 0;
+  font-family: "Satoshi", sans-serif;
+  color: var(--text-secondary);
+}
+
+.report-error {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.report-error h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.report-error p {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.report-header {
+  margin-bottom: 3rem;
+}
+
+.report-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.report-date {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.report-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-section-title {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+}
+
+.report-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-table td {
+  padding: 0.5rem 0.75rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: top;
+}
+
+.report-table tr:last-child td {
+  border-bottom: none;
+}
+
+.report-answers-table td:first-child,
+.report-answers-table th:first-child {
+  width: 3rem;
+}
+
+.report-answers-table td:last-child,
+.report-answers-table th:last-child {
+  width: 4rem;
+  text-align: center;
+}
+
+.report-engine-row {
+  background-color: rgba(67, 97, 238, 0.06);
+}
+
+.report-winner-row {
+  background-color: rgba(67, 97, 238, 0.08);
+}
+
+.report-mono {
+  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-size: 0.78rem;
+}
+
+.report-info-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.report-info-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.report-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0.75rem 1rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.report-list li::before {
+  content: "- ";
+  color: var(--text-secondary);
+}
+
+.report-category {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background-color: var(--bg-secondary);
+}
+
+.report-category-title {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.report-gate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+}
+
+.report-gate-label {
+  color: var(--text-secondary);
+}
+
+.report-gate-count {
+  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+}
+
+.report-sub-label {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.report-exclusions {
+  margin-top: 0.5rem;
+}
+
+.report-scoring {
+  margin-top: 0.5rem;
+}
+
+.report-gap-message {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.report-winner {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.report-winner strong {
+  color: var(--accent);
+}
+
+.report-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.report-btn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background-color: var(--accent);
+  border: none;
+  padding: 0.85rem 2.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.report-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+@media (max-width: 1000px) {
+  .report-table {
+    font-size: 0.72rem;
+  }
+
+  .report-table th,
+  .report-table td {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .report-info-row {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+}
+
+/* ─── Skin Analysis Page ─── */
+.analysis-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.analysis-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.analysis-loading-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.analysis-loading-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.analysis-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.analysis-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.analysis-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+.analysis-skin-type {
+  width: 100%;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.analysis-section-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.analysis-skin-type-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.analysis-skin-type-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-top: 1rem;
+}
+
+.analysis-concerns {
+  width: 100%;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.analysis-concerns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.analysis-concern-item {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-cream);
+}
+
+.analysis-concern-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.analysis-concern-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+
+.analysis-priority {
+  width: 100%;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.analysis-priority-text {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.analysis-priority-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.analysis-summary {
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.analysis-summary-text {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(0.9rem, 1vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.analysis-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.analysis-cta {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem 3rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+}
+
+.analysis-cta:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* ─── Botanicals / Ingredients Page ─── */
+.botanicals-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--bg-primary);
+}
+
+.botanicals-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.botanicals-loading-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.botanicals-loading-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.botanicals-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.botanicals-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.botanicals-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+.botanicals-subtitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  max-width: 500px;
+}
+
+.botanicals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .botanicals-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 600px) {
+  .botanicals-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
+}
+
+.botanicals-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.75rem;
+  background-color: var(--bg-cream);
+  display: flex;
+  flex-direction: column;
+}
+
+.botanicals-card-category {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.botanicals-card-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.botanicals-card-scientific {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+.botanicals-card-function {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+}
+
+.botanicals-card-priorities {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.botanicals-card-priorities-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.botanicals-card-priorities-value {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-top: 0.3rem;
+}
+
+.botanicals-card-product {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
+.botanicals-card-product strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.botanicals-empty {
+  text-align: center;
+  max-width: 480px;
+  padding: 2rem 0;
+}
+
+.botanicals-empty p {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.botanicals-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.botanicals-cta {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 1rem 2.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+}
+
+.botanicals-cta:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.botanicals-cta-secondary {
+  display: inline-block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.botanicals-cta-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }

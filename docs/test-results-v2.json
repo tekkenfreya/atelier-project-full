@@ -1,0 +1,3212 @@
+[
+  {
+    "id": 1,
+    "name": "Young oily urban female - Breakouts focus",
+    "answers": {
+      "1": "25–34",
+      "2": "Female",
+      "3": "Central Europe (Germany, Poland, Czech Rep., Austria, Switzerland)",
+      "4": "Urban / City centre",
+      "5": 3,
+      "6": 4,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 3,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 3
+      },
+      "9": 2,
+      "10": "No",
+      "11": "Oily: shiny all over, especially T-zone",
+      "12": [
+        "Breakouts or blemishes",
+        "Oiliness or excess shine",
+        "Enlarged pores"
+      ],
+      "13": 3,
+      "14": "Slightly oily: shine returns quickly",
+      "15": "Frequently, multiple times per month",
+      "16": [
+        "None of the above"
+      ],
+      "17": 4,
+      "18": "Fair: sometimes burns, tans gradually",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 4,
+        "Redness Level": 2,
+        "Firmness / Elasticity": 4
+      },
+      "20": "No, never",
+      "21": "3–4 steps: cleanser, serum, moisturiser, SPF",
+      "22": "Lightweight gel: absorbs instantly, no residue",
+      "23": "Foaming / Gel cleanser: fresh, squeaky-clean feel",
+      "24": [
+        "Clarifying (control oil, minimise breakouts)",
+        "Brightening (even tone, radiance)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Hydration (plump, dewy, moisturised)",
+        "Calming (reduce redness, soothe irritation)",
+        "Repair (strengthen barrier, heal damage)"
+      ],
+      "25": [
+        "Science-first: proven clinical actives",
+        "Clean beauty: no parabens, SLS, silicones"
+      ],
+      "26": 4,
+      "27": "Never, I’m a retinol beginner",
+      "28": "2–5 minutes, quick but considered",
+      "29": [
+        "Nothing specific, I’m open to everything"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "5cfb5b00-d80b-42d5-88c7-cd80b15c976a",
+          "name": "SO1",
+          "category": "Serum",
+          "skin_type": "Oily Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Breakouts or blemishes",
+            "Lack of firmness",
+            "Redness or irritation",
+            "Enlarged pores",
+            "Oiliness or excess shine",
+            "Texture irregularities"
+          ],
+          "safe_for_pregnancy": false,
+          "safe_for_rosacea": false,
+          "safe_for_eczema": false,
+          "contains_retinol": false,
+          "contains_bha": true,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3cd21b4d-8256-47c8-ab92-4a1c49e4bf37",
+              "name": "Citric Acid 50% Solution",
+              "function": "pH adjuster",
+              "scientific_name": "Citric Acid 50% Solution",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ba28b9f3-97d8-403b-ac7d-72f086fdd6ef",
+              "name": "Sepimax Zen",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Sepimax Zen",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "bcb8976e-004a-40a3-82af-7ba43f7079be",
+              "name": "Xanthan Gum",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Xanthan Gum",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e568a630-a253-4c60-9bff-975b31e556bf",
+              "name": "Salicylic Acid",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Salicylic Acid",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "7d55a194-25b6-4239-8b01-5d906d416157",
+              "name": "Zinc PCA",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Zinc PCA",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "c0285587-c259-4ef3-aeb3-5559864eff4c",
+              "name": "Salix alba (White Willow) Bark Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Repair"
+              ]
+            },
+            {
+              "id": "93e9525a-4675-481c-b13c-51890c7afc0e",
+              "name": "Urtica dioica (Nettle) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Calming"
+              ]
+            },
+            {
+              "id": "8f3a9d21-8619-4b0f-aa73-86fe2c3df8bf",
+              "name": "Betula alba (Birch) Bark Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "d0ecaf5f-f0b4-410c-9f8a-4e8554d286ae",
+              "name": "Juniperus communis (Juniper) Berry Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "b576adad-b3ad-45d0-98f2-5663caadde7f",
+              "name": "Niacinamide",
+              "function": "Barrier Support",
+              "scientific_name": "Niacinamide",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 91.5,
+        "matchedConcerns": [
+          "acne",
+          "oil-control"
+        ],
+        "reasons": [
+          "Formulated for breakouts & blemishes, oil control",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Clarifying"
+        ]
+      },
+      "skinType": "oily",
+      "concerns": [
+        "acne",
+        "oil-control"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 2,
+    "name": "Mature dry rural female - Anti-aging focus",
+    "answers": {
+      "1": "55–64",
+      "2": "Female",
+      "3": "Eastern Europe (Romania, Bulgaria, Ukraine, Russia)",
+      "4": "Rural / Countryside",
+      "5": 4,
+      "6": 3,
+      "7": 2,
+      "8": {
+        "Vegetables & Fruits": 5,
+        "Dairy": 2,
+        "Sugar & Processed Foods": 1,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 4
+      },
+      "9": 3,
+      "10": "No",
+      "11": "Dry: tight, flaky, sometimes rough",
+      "12": [
+        "Fine lines or wrinkles",
+        "Lack of firmness",
+        "Dryness or dehydration"
+      ],
+      "13": 4,
+      "14": "Tight and dry: needs moisture immediately",
+      "15": "Rarely or never",
+      "16": [
+        "None of the above"
+      ],
+      "17": 2,
+      "18": "Medium: rarely burns, tans well",
+      "19": {
+        "Hydration Level": 2,
+        "Oiliness Level": 1,
+        "Redness Level": 2,
+        "Firmness / Elasticity": 2
+      },
+      "20": "No, never",
+      "21": "3–4 steps: cleanser, serum, moisturiser, SPF",
+      "22": "Cream: rich and nourishing",
+      "23": "Cream / Milk cleanser: soft, non-stripping",
+      "24": [
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Hydration (plump, dewy, moisturised)",
+        "Repair (strengthen barrier, heal damage)",
+        "Brightening (even tone, radiance)",
+        "Calming (reduce redness, soothe irritation)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Natural / botanical-forward formulas",
+        "Sustainably sourced ingredients"
+      ],
+      "26": 3,
+      "27": "Yes, occasionally. I use it a few times a month",
+      "28": "5–10 minutes, I enjoy the process",
+      "29": [
+        "Nothing specific, I’m open to everything"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "a4edf5c6-99af-4f58-a930-ebb9c989a06a",
+          "name": "SD3",
+          "category": "Serum",
+          "skin_type": "Dry Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Dullness or tired-looking skin",
+            "Fine lines or wrinkles",
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Texture irregularities",
+            "Sensitivity or reactivity"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d042f9c9-c84c-4bc2-9b97-75b157175666",
+              "name": "Chelating Agent",
+              "function": "Chelating Agent",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e29c40b1-060a-4866-adb8-3b6ebb2b6e77",
+              "name": "Glyceryl Stearate SE",
+              "function": "Anionic emulsifier",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ab6db17a-cacf-4c20-835c-379e40a003d6",
+              "name": "Olivem 1000",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "fdec5784-1077-4585-b2c8-0626f834a6f0",
+              "name": "Shea butter",
+              "function": "Lipid",
+              "scientific_name": "Shea butter/refined",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d2b4d22a-4b5e-481e-b79c-fc3b51fe3f83",
+              "name": "Ceramide-Complex",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "b45b12b4-9598-4b4c-b905-1e518741a95c",
+              "name": "Geogard ECT",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "c41f7ebf-7db6-4344-8098-4252d8326c1e",
+              "name": "AquaxylTM",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "80b3c5ba-d1e1-4929-9a59-101435e12c24",
+              "name": "4D MB Hyaluronic acid",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "4c14980e-6faf-4600-8b32-2c251d67f39e",
+              "name": "Betula alba (Birch) Sap Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "f96de114-b36c-48a0-b281-8d1199a1084b",
+              "name": "Centaurea cyanus (Cornflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "4dc7e491-ebe9-4777-98b4-fe9a29d0f2dc",
+              "name": "Rosa damascena (Bulgarian Rose) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "8f11aa9a-6691-40fb-b4bb-9114a8c1cf5e",
+              "name": "Sambucus nigra (Elderflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "0c42fa8a-7839-47ba-a05f-30b15c1c863b",
+              "name": "Plantago major (Plantain) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 103.5,
+        "matchedConcerns": [
+          "anti-aging",
+          "hydration"
+        ],
+        "reasons": [
+          "Formulated for fine lines & wrinkles, hydration",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Anti-aging"
+        ]
+      },
+      "skinType": "dry",
+      "concerns": [
+        "anti-aging",
+        "hydration"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 3,
+    "name": "Young oily male - Anti-aging but NO retinol",
+    "answers": {
+      "1": "25–34",
+      "2": "Male",
+      "3": "North America",
+      "4": "Urban / City centre",
+      "5": 3,
+      "6": 3,
+      "7": 4,
+      "8": {
+        "Vegetables & Fruits": 3,
+        "Dairy": 3,
+        "Sugar & Processed Foods": 3,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 2
+      },
+      "9": 3,
+      "10": "No",
+      "11": "Oily: shiny all over, especially T-zone",
+      "12": [
+        "Fine lines or wrinkles"
+      ],
+      "13": 2,
+      "14": "Slightly oily: shine returns quickly",
+      "15": "Occasionally, a few times per year",
+      "16": [
+        "None of the above"
+      ],
+      "17": 3,
+      "18": "Dark: never burns",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 4,
+        "Redness Level": 1,
+        "Firmness / Elasticity": 3
+      },
+      "20": "No, never",
+      "21": "2 steps: cleanser + moisturiser",
+      "22": "Lightweight gel: absorbs instantly, no residue",
+      "23": "Foaming / Gel cleanser: fresh, squeaky-clean feel",
+      "24": [
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Clarifying (control oil, minimise breakouts)",
+        "Brightening (even tone, radiance)",
+        "Hydration (plump, dewy, moisturised)",
+        "Repair (strengthen barrier, heal damage)",
+        "Calming (reduce redness, soothe irritation)"
+      ],
+      "25": [
+        "Science-first: proven clinical actives"
+      ],
+      "26": 2,
+      "27": "Never, I’m a retinol beginner",
+      "28": "Under 2 minutes, I want it fast",
+      "29": [
+        "Retinol / retinoids"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "5cfb5b00-d80b-42d5-88c7-cd80b15c976a",
+          "name": "SO1",
+          "category": "Serum",
+          "skin_type": "Oily Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Breakouts or blemishes",
+            "Lack of firmness",
+            "Redness or irritation",
+            "Enlarged pores",
+            "Oiliness or excess shine",
+            "Texture irregularities"
+          ],
+          "safe_for_pregnancy": false,
+          "safe_for_rosacea": false,
+          "safe_for_eczema": false,
+          "contains_retinol": false,
+          "contains_bha": true,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3cd21b4d-8256-47c8-ab92-4a1c49e4bf37",
+              "name": "Citric Acid 50% Solution",
+              "function": "pH adjuster",
+              "scientific_name": "Citric Acid 50% Solution",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ba28b9f3-97d8-403b-ac7d-72f086fdd6ef",
+              "name": "Sepimax Zen",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Sepimax Zen",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "bcb8976e-004a-40a3-82af-7ba43f7079be",
+              "name": "Xanthan Gum",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Xanthan Gum",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e568a630-a253-4c60-9bff-975b31e556bf",
+              "name": "Salicylic Acid",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Salicylic Acid",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "7d55a194-25b6-4239-8b01-5d906d416157",
+              "name": "Zinc PCA",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Zinc PCA",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "c0285587-c259-4ef3-aeb3-5559864eff4c",
+              "name": "Salix alba (White Willow) Bark Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Repair"
+              ]
+            },
+            {
+              "id": "93e9525a-4675-481c-b13c-51890c7afc0e",
+              "name": "Urtica dioica (Nettle) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Calming"
+              ]
+            },
+            {
+              "id": "8f3a9d21-8619-4b0f-aa73-86fe2c3df8bf",
+              "name": "Betula alba (Birch) Bark Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "d0ecaf5f-f0b4-410c-9f8a-4e8554d286ae",
+              "name": "Juniperus communis (Juniper) Berry Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "b576adad-b3ad-45d0-98f2-5663caadde7f",
+              "name": "Niacinamide",
+              "function": "Barrier Support",
+              "scientific_name": "Niacinamide",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 81.5,
+        "matchedConcerns": [
+          "anti-aging"
+        ],
+        "reasons": [
+          "Formulated for fine lines & wrinkles",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Anti-aging"
+        ]
+      },
+      "skinType": "oily",
+      "concerns": [
+        "anti-aging"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 4,
+    "name": "Pregnant oily female - Breakouts",
+    "answers": {
+      "1": "25–34",
+      "2": "Female",
+      "3": "Southern Europe (Mediterranean, Balkans)",
+      "4": "Suburban",
+      "5": 4,
+      "6": 3,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 3,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 3
+      },
+      "9": 2,
+      "10": "Yes",
+      "11": "Oily: shiny all over, especially T-zone",
+      "12": [
+        "Breakouts or blemishes",
+        "Oiliness or excess shine"
+      ],
+      "13": 3,
+      "14": "Slightly oily: shine returns quickly",
+      "15": "Monthly, often around my cycle",
+      "16": [
+        "Hormonal acne (jawline, chin)"
+      ],
+      "17": 3,
+      "18": "Olive: almost never burns",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 4,
+        "Redness Level": 2,
+        "Firmness / Elasticity": 4
+      },
+      "20": "No, never",
+      "21": "2 steps: cleanser + moisturiser",
+      "22": "Lotion: light but hydrating",
+      "23": "Cream / Milk cleanser: soft, non-stripping",
+      "24": [
+        "Clarifying (control oil, minimise breakouts)",
+        "Calming (reduce redness, soothe irritation)",
+        "Hydration (plump, dewy, moisturised)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Brightening (even tone, radiance)",
+        "Repair (strengthen barrier, heal damage)"
+      ],
+      "25": [
+        "Clean beauty: no parabens, SLS, silicones",
+        "Fragrance-free"
+      ],
+      "26": 1,
+      "27": "Never, I’m a retinol beginner",
+      "28": "Under 2 minutes, I want it fast",
+      "29": [
+        "Retinol / retinoids",
+        "Exfoliating acids (AHA, BHA)"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "052d6986-8ff4-4b62-b56f-90d77833e544",
+          "name": "SO3",
+          "category": "Serum",
+          "skin_type": "Oily Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Breakouts or blemishes",
+            "Uneven skin tone or dark spots",
+            "Redness or irritation",
+            "Enlarged pores",
+            "Oiliness or excess shine",
+            "Texture irregularities",
+            "Sensitivity or reactivity",
+            "Under-eye concerns (dark circles",
+            "puffiness)"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": true,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "8cb2a1c5-d93c-49a4-aaef-1ec1f6c922fe",
+              "name": "Glycerin",
+              "function": "Humectant/Solvent",
+              "scientific_name": "Glycerin",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ad2628d5-65b8-475b-8d09-daa54d0bda89",
+              "name": "Butylene Glycol",
+              "function": null,
+              "scientific_name": "Butylene Glycol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ba28b9f3-97d8-403b-ac7d-72f086fdd6ef",
+              "name": "Sepimax Zen",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Sepimax Zen",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b576adad-b3ad-45d0-98f2-5663caadde7f",
+              "name": "Niacinamide",
+              "function": "Barrier Support",
+              "scientific_name": "Niacinamide",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "572fa041-78d6-4e8a-88cd-ede49233d8b7",
+              "name": "Azeloglycine",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Azeloglycine",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "76a0b4e3-f607-49b5-b4d9-6698822b0191",
+              "name": "DPG",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Dipropylene Glycol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "f96de114-b36c-48a0-b281-8d1199a1084b",
+              "name": "Centaurea cyanus (Cornflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "682ca1c6-5ce6-48e2-af49-2baef2400e90",
+              "name": "Tilia cordata (Linden Blossom) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "dd063f98-0e8a-4f6c-85d7-a3e17f463ccb",
+              "name": "Salvia officinalis (Sage) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Calming"
+              ]
+            },
+            {
+              "id": "0371f25a-8f23-4493-8d44-28869f5a23b0",
+              "name": "Parfum",
+              "function": "Fragrance",
+              "scientific_name": "Parfum",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 86.5,
+        "matchedConcerns": [
+          "acne",
+          "oil-control"
+        ],
+        "reasons": [
+          "Formulated for breakouts & blemishes, oil control",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Clarifying"
+        ]
+      },
+      "skinType": "oily",
+      "concerns": [
+        "acne",
+        "oil-control"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 5,
+    "name": "Dry + Rosacea - Calming focus",
+    "answers": {
+      "1": "35–44",
+      "2": "Female",
+      "3": "Northern Europe (Scandinavia, Baltics, UK, Ireland)",
+      "4": "Suburban",
+      "5": 3,
+      "6": 4,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 2,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 4
+      },
+      "9": 2,
+      "10": "No",
+      "11": "Dry: tight, flaky, sometimes rough",
+      "12": [
+        "Redness or irritation",
+        "Sensitivity or reactivity",
+        "Dryness or dehydration"
+      ],
+      "13": 4,
+      "14": "Irritated or red: even water feels harsh",
+      "15": "Rarely or never",
+      "16": [
+        "Rosacea or redness-prone skin"
+      ],
+      "17": 2,
+      "18": "Very fair: burns easily, rarely tans",
+      "19": {
+        "Hydration Level": 2,
+        "Oiliness Level": 1,
+        "Redness Level": 5,
+        "Firmness / Elasticity": 3
+      },
+      "20": "Yes, to fragrance or essential oils",
+      "21": "2 steps: cleanser + moisturiser",
+      "22": "Cream: rich and nourishing",
+      "23": "Cream / Milk cleanser: soft, non-stripping",
+      "24": [
+        "Calming (reduce redness, soothe irritation)",
+        "Hydration (plump, dewy, moisturised)",
+        "Repair (strengthen barrier, heal damage)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Brightening (even tone, radiance)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Fragrance-free",
+        "Natural / botanical-forward formulas"
+      ],
+      "26": 1,
+      "27": "Never, I’m a retinol beginner",
+      "28": "2–5 minutes, quick but considered",
+      "29": [
+        "Fragrance / essential oils",
+        "Exfoliating acids (AHA, BHA)"
+      ],
+      "30": "I have very reactive skin. My dermatologist told me to avoid fragrance."
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "5d99b8a7-7737-44d3-bee2-9a5d1d1730e1",
+          "name": "SD2",
+          "category": "Serum",
+          "skin_type": "Dry Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Texture irregularities",
+            "Sensitivity or reactivity"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d042f9c9-c84c-4bc2-9b97-75b157175666",
+              "name": "Chelating Agent",
+              "function": "Chelating Agent",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e29c40b1-060a-4866-adb8-3b6ebb2b6e77",
+              "name": "Glyceryl Stearate SE",
+              "function": "Anionic emulsifier",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ab6db17a-cacf-4c20-835c-379e40a003d6",
+              "name": "Olivem 1000",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "fdec5784-1077-4585-b2c8-0626f834a6f0",
+              "name": "Shea butter",
+              "function": "Lipid",
+              "scientific_name": "Shea butter/refined",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d2b4d22a-4b5e-481e-b79c-fc3b51fe3f83",
+              "name": "Ceramide-Complex",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "b45b12b4-9598-4b4c-b905-1e518741a95c",
+              "name": "Geogard ECT",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "004031f6-d155-4997-ad3d-43658da60a0c",
+              "name": "Bisabolol",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "0da99cbc-8123-42a9-9e3b-608f2523f3f2",
+              "name": "Ectoin",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "a6a4157f-fd74-4794-a59b-5cc84ccb81b8",
+              "name": "Hypericum perforatum (St. John's Wort) Oil/Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "d18b7e83-deb3-42ff-a3dd-2a7a66dcb5c8",
+              "name": "Marigold CO2 extract",
+              "function": "Extract EE",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "3adcbe7e-0cb4-4d96-a459-bc9f8790d596",
+              "name": "Hippophae rhamnoides (Sea Buckthorn) Oil",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 103.5,
+        "matchedConcerns": [
+          "calming",
+          "hydration"
+        ],
+        "reasons": [
+          "Formulated for redness & sensitivity, hydration",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Calming"
+        ]
+      },
+      "skinType": "dry",
+      "concerns": [
+        "calming",
+        "hydration"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 6,
+    "name": "Dry + Eczema - Hydration focus",
+    "answers": {
+      "1": "35–44",
+      "2": "Female",
+      "3": "Central Europe (Germany, Poland, Czech Rep., Austria, Switzerland)",
+      "4": "Urban / City centre",
+      "5": 4,
+      "6": 3,
+      "7": 2,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 1,
+        "Sugar & Processed Foods": 1,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 4
+      },
+      "9": 2,
+      "10": "No",
+      "11": "Dry: tight, flaky, sometimes rough",
+      "12": [
+        "Dryness or dehydration",
+        "Sensitivity or reactivity",
+        "Texture irregularities"
+      ],
+      "13": 3,
+      "14": "Tight and dry: needs moisture immediately",
+      "15": "Rarely or never",
+      "16": [
+        "Eczema or atopic dermatitis"
+      ],
+      "17": 1,
+      "18": "Fair: sometimes burns, tans gradually",
+      "19": {
+        "Hydration Level": 1,
+        "Oiliness Level": 1,
+        "Redness Level": 3,
+        "Firmness / Elasticity": 3
+      },
+      "20": "Yes, to fragrance or essential oils",
+      "21": "2 steps: cleanser + moisturiser",
+      "22": "Balm / Oil: very rich, cocooning",
+      "23": "Oil / Balm cleanser: dissolves everything, luxurious",
+      "24": [
+        "Hydration (plump, dewy, moisturised)",
+        "Repair (strengthen barrier, heal damage)",
+        "Calming (reduce redness, soothe irritation)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Brightening (even tone, radiance)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Fragrance-free",
+        "Natural / botanical-forward formulas",
+        "Vegan / cruelty-free"
+      ],
+      "26": 1,
+      "27": "Never, I’m a retinol beginner",
+      "28": "2–5 minutes, quick but considered",
+      "29": [
+        "Fragrance / essential oils"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "5d99b8a7-7737-44d3-bee2-9a5d1d1730e1",
+          "name": "SD2",
+          "category": "Serum",
+          "skin_type": "Dry Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Texture irregularities",
+            "Sensitivity or reactivity"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d042f9c9-c84c-4bc2-9b97-75b157175666",
+              "name": "Chelating Agent",
+              "function": "Chelating Agent",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e29c40b1-060a-4866-adb8-3b6ebb2b6e77",
+              "name": "Glyceryl Stearate SE",
+              "function": "Anionic emulsifier",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ab6db17a-cacf-4c20-835c-379e40a003d6",
+              "name": "Olivem 1000",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "fdec5784-1077-4585-b2c8-0626f834a6f0",
+              "name": "Shea butter",
+              "function": "Lipid",
+              "scientific_name": "Shea butter/refined",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d2b4d22a-4b5e-481e-b79c-fc3b51fe3f83",
+              "name": "Ceramide-Complex",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "b45b12b4-9598-4b4c-b905-1e518741a95c",
+              "name": "Geogard ECT",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "004031f6-d155-4997-ad3d-43658da60a0c",
+              "name": "Bisabolol",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "0da99cbc-8123-42a9-9e3b-608f2523f3f2",
+              "name": "Ectoin",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "a6a4157f-fd74-4794-a59b-5cc84ccb81b8",
+              "name": "Hypericum perforatum (St. John's Wort) Oil/Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "d18b7e83-deb3-42ff-a3dd-2a7a66dcb5c8",
+              "name": "Marigold CO2 extract",
+              "function": "Extract EE",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "3adcbe7e-0cb4-4d96-a459-bc9f8790d596",
+              "name": "Hippophae rhamnoides (Sea Buckthorn) Oil",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 118.5,
+        "matchedConcerns": [
+          "hydration",
+          "calming",
+          "repair"
+        ],
+        "reasons": [
+          "Formulated for hydration, redness & sensitivity, barrier repair",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Hydration"
+        ]
+      },
+      "skinType": "dry",
+      "concerns": [
+        "hydration",
+        "calming",
+        "repair"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 7,
+    "name": "Combination - Brightening focus",
+    "answers": {
+      "1": "35–44",
+      "2": "Female",
+      "3": "Asia / Middle East",
+      "4": "Urban / City centre",
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 2,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 4
+      },
+      "9": 4,
+      "10": "No",
+      "11": "Combination: oily T-zone, dry cheeks",
+      "12": [
+        "Uneven skin tone or dark spots",
+        "Dullness or tired-looking skin"
+      ],
+      "13": 3,
+      "14": "Comfortable: feels balanced",
+      "15": "Occasionally, a few times per year",
+      "16": [
+        "Melasma or post-inflammatory hyperpigmentation"
+      ],
+      "17": 2,
+      "18": "Medium: rarely burns, tans well",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 3,
+        "Redness Level": 2,
+        "Firmness / Elasticity": 3
+      },
+      "20": "No, never",
+      "21": "3–4 steps: cleanser, serum, moisturiser, SPF",
+      "22": "Lotion: light but hydrating",
+      "23": "Micellar / Lotion: gentle, no-rinse",
+      "24": [
+        "Brightening (even tone, radiance)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Hydration (plump, dewy, moisturised)",
+        "Calming (reduce redness, soothe irritation)",
+        "Repair (strengthen barrier, heal damage)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Science-first: proven clinical actives"
+      ],
+      "26": 4,
+      "27": "Tried once or twice, didn’t stick with it",
+      "28": "5–10 minutes, I enjoy the process",
+      "29": [
+        "Nothing specific, I’m open to everything"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "ceda1819-b9e4-4b0c-b216-62fbdb9d319d",
+          "name": "SC3",
+          "category": "Serum",
+          "skin_type": "Combination Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Uneven skin tone or dark spots",
+            "Dullness or tired-looking skin",
+            "Fine lines or wrinkles",
+            "Lack of firmness",
+            "Redness or irritation",
+            "Texture irregularities",
+            "Sensitivity or reactivity"
+          ],
+          "safe_for_pregnancy": false,
+          "safe_for_rosacea": false,
+          "safe_for_eczema": false,
+          "contains_retinol": true,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "8cb2a1c5-d93c-49a4-aaef-1ec1f6c922fe",
+              "name": "Glycerin",
+              "function": "Humectant/Solvent",
+              "scientific_name": "Glycerin",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "4af00f14-86a5-45f5-897c-f6c4f69bdec1",
+              "name": "Retinol Liposome OS",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "e24f14a4-437f-468e-a4b6-159f79658f45",
+              "name": "Matrixyl 3000",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "d2b4d22a-4b5e-481e-b79c-fc3b51fe3f83",
+              "name": "Ceramide-Complex",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "458dcba8-4ee2-47b8-840c-1cfdb306a0c8",
+              "name": "Organic Rosehip seed CO2 extract",
+              "function": "Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "7eadc97b-bebc-494f-8cb9-3973190d5858",
+              "name": "Hippophae rhamnoides (Sea Buckthorn) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "3daa5e86-d0d2-46ec-8c6f-e50d4eda7d43",
+              "name": "Equisetum arvense (Horsetail) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "4dc7e491-ebe9-4777-98b4-fe9a29d0f2dc",
+              "name": "Rosa damascena (Bulgarian Rose) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 93.5,
+        "matchedConcerns": [
+          "hyperpigmentation",
+          "brightening"
+        ],
+        "reasons": [
+          "Formulated for dark spots, dullness & uneven tone",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Brightening"
+        ]
+      },
+      "skinType": "combination",
+      "concerns": [
+        "hyperpigmentation",
+        "brightening"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 8,
+    "name": "Sensitive - Calming focus",
+    "answers": {
+      "1": "25–34",
+      "2": "Female",
+      "3": "Northern Europe (Scandinavia, Baltics, UK, Ireland)",
+      "4": "Suburban",
+      "5": 4,
+      "6": 4,
+      "7": 2,
+      "8": {
+        "Vegetables & Fruits": 5,
+        "Dairy": 1,
+        "Sugar & Processed Foods": 1,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 5
+      },
+      "9": 1,
+      "10": "No",
+      "11": "Sensitive: easily irritated, reactive to new products",
+      "12": [
+        "Redness or irritation",
+        "Sensitivity or reactivity"
+      ],
+      "13": 5,
+      "14": "Irritated or red: even water feels harsh",
+      "15": "Rarely or never",
+      "16": [
+        "Contact allergies to cosmetic ingredients"
+      ],
+      "17": 1,
+      "18": "Very fair: burns easily, rarely tans",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 1,
+        "Redness Level": 4,
+        "Firmness / Elasticity": 4
+      },
+      "20": "I have multiple known sensitivities",
+      "21": "1 step: I just wash my face",
+      "22": "Cream: rich and nourishing",
+      "23": "Cream / Milk cleanser: soft, non-stripping",
+      "24": [
+        "Calming (reduce redness, soothe irritation)",
+        "Hydration (plump, dewy, moisturised)",
+        "Repair (strengthen barrier, heal damage)",
+        "Brightening (even tone, radiance)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Fragrance-free",
+        "Clean beauty: no parabens, SLS, silicones",
+        "Natural / botanical-forward formulas"
+      ],
+      "26": 1,
+      "27": "Never, I’m a retinol beginner",
+      "28": "Under 2 minutes, I want it fast",
+      "29": [
+        "Fragrance / essential oils",
+        "Retinol / retinoids",
+        "Exfoliating acids (AHA, BHA)"
+      ],
+      "30": "Very sensitive skin, react to almost everything."
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "018db161-c640-44be-84ac-1cbbc1a79a9a",
+          "name": "SS5",
+          "category": "Serum",
+          "skin_type": "Sensitive Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Dullness or tired-looking skin",
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Sensitivity or reactivity",
+            "Under-eye concerns (dark circles",
+            "puffiness)"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "8cb2a1c5-d93c-49a4-aaef-1ec1f6c922fe",
+              "name": "Glycerin",
+              "function": "Humectant/Solvent",
+              "scientific_name": "Glycerin",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "80b3c5ba-d1e1-4929-9a59-101435e12c24",
+              "name": "4D MB Hyaluronic acid",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "c41f7ebf-7db6-4344-8098-4252d8326c1e",
+              "name": "AquaxylTM",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "0da99cbc-8123-42a9-9e3b-608f2523f3f2",
+              "name": "Ectoin",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "dd2fec7d-65ea-4b8a-8558-f114f7e8b426",
+              "name": "Allantoin",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "f96de114-b36c-48a0-b281-8d1199a1084b",
+              "name": "Centaurea cyanus (Cornflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "0c42fa8a-7839-47ba-a05f-30b15c1c863b",
+              "name": "Plantago major (Plantain) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "4c14980e-6faf-4600-8b32-2c251d67f39e",
+              "name": "Betula alba (Birch) Sap Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Clarifying",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "682ca1c6-5ce6-48e2-af49-2baef2400e90",
+              "name": "Tilia cordata (Linden Blossom) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 83.5,
+        "matchedConcerns": [
+          "calming"
+        ],
+        "reasons": [
+          "Formulated for redness & sensitivity",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Calming"
+        ]
+      },
+      "skinType": "sensitive",
+      "concerns": [
+        "calming"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 9,
+    "name": "Oily male - Excludes BHA + PEGs",
+    "answers": {
+      "1": "25–34",
+      "2": "Male",
+      "3": "Central Europe (Germany, Poland, Czech Rep., Austria, Switzerland)",
+      "4": "Urban / City centre",
+      "5": 3,
+      "6": 3,
+      "7": 4,
+      "8": {
+        "Vegetables & Fruits": 3,
+        "Dairy": 3,
+        "Sugar & Processed Foods": 4,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 2
+      },
+      "9": 2,
+      "10": "No",
+      "11": "Oily: shiny all over, especially T-zone",
+      "12": [
+        "Breakouts or blemishes",
+        "Enlarged pores",
+        "Oiliness or excess shine"
+      ],
+      "13": 2,
+      "14": "Slightly oily: shine returns quickly",
+      "15": "Frequently, multiple times per month",
+      "16": [
+        "None of the above"
+      ],
+      "17": 4,
+      "18": "Dark: never burns",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 5,
+        "Redness Level": 1,
+        "Firmness / Elasticity": 4
+      },
+      "20": "No, never",
+      "21": "1 step: I just wash my face",
+      "22": "Lightweight gel: absorbs instantly, no residue",
+      "23": "Foaming / Gel cleanser: fresh, squeaky-clean feel",
+      "24": [
+        "Clarifying (control oil, minimise breakouts)",
+        "Brightening (even tone, radiance)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Hydration (plump, dewy, moisturised)",
+        "Calming (reduce redness, soothe irritation)",
+        "Repair (strengthen barrier, heal damage)"
+      ],
+      "25": [
+        "Science-first: proven clinical actives"
+      ],
+      "26": 4,
+      "27": "Never, I’m a retinol beginner",
+      "28": "Under 2 minutes, I want it fast",
+      "29": [
+        "Exfoliating acids (AHA, BHA)",
+        "PEGs"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "052d6986-8ff4-4b62-b56f-90d77833e544",
+          "name": "SO3",
+          "category": "Serum",
+          "skin_type": "Oily Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Breakouts or blemishes",
+            "Uneven skin tone or dark spots",
+            "Redness or irritation",
+            "Enlarged pores",
+            "Oiliness or excess shine",
+            "Texture irregularities",
+            "Sensitivity or reactivity",
+            "Under-eye concerns (dark circles",
+            "puffiness)"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": true,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7c77f1d7-75be-4ad7-967a-516b42a6cf44",
+              "name": "Tetrasodium Glutamate Diacetate",
+              "function": "Chelating Agent",
+              "scientific_name": "Tetrasodium Glutamate Diacetate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "8cb2a1c5-d93c-49a4-aaef-1ec1f6c922fe",
+              "name": "Glycerin",
+              "function": "Humectant/Solvent",
+              "scientific_name": "Glycerin",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ad2628d5-65b8-475b-8d09-daa54d0bda89",
+              "name": "Butylene Glycol",
+              "function": null,
+              "scientific_name": "Butylene Glycol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ba28b9f3-97d8-403b-ac7d-72f086fdd6ef",
+              "name": "Sepimax Zen",
+              "function": "Thickener + stabiliser",
+              "scientific_name": "Sepimax Zen",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b576adad-b3ad-45d0-98f2-5663caadde7f",
+              "name": "Niacinamide",
+              "function": "Barrier Support",
+              "scientific_name": "Niacinamide",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "572fa041-78d6-4e8a-88cd-ede49233d8b7",
+              "name": "Azeloglycine",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Azeloglycine",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "76a0b4e3-f607-49b5-b4d9-6698822b0191",
+              "name": "DPG",
+              "function": "Active Phase-Shot",
+              "scientific_name": "Dipropylene Glycol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "f96de114-b36c-48a0-b281-8d1199a1084b",
+              "name": "Centaurea cyanus (Cornflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "682ca1c6-5ce6-48e2-af49-2baef2400e90",
+              "name": "Tilia cordata (Linden Blossom) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "dd063f98-0e8a-4f6c-85d7-a3e17f463ccb",
+              "name": "Salvia officinalis (Sage) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Calming"
+              ]
+            },
+            {
+              "id": "0371f25a-8f23-4493-8d44-28869f5a23b0",
+              "name": "Parfum",
+              "function": "Fragrance",
+              "scientific_name": "Parfum",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 84,
+        "matchedConcerns": [
+          "acne",
+          "oil-control"
+        ],
+        "reasons": [
+          "Formulated for breakouts & blemishes, oil control",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Clarifying"
+        ]
+      },
+      "skinType": "oily",
+      "concerns": [
+        "acne",
+        "oil-control"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 10,
+    "name": "Dry female - Multiple concerns, Repair #1",
+    "answers": {
+      "1": "45–54",
+      "2": "Female",
+      "3": "Eastern Europe (Romania, Bulgaria, Ukraine, Russia)",
+      "4": "Rural / Countryside",
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 4,
+        "Dairy": 2,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 3
+      },
+      "9": 3,
+      "10": "No",
+      "11": "Dry: tight, flaky, sometimes rough",
+      "12": [
+        "Texture irregularities",
+        "Dryness or dehydration",
+        "Sensitivity or reactivity"
+      ],
+      "13": 3,
+      "14": "Tight and dry: needs moisture immediately",
+      "15": "Rarely or never",
+      "16": [
+        "None of the above"
+      ],
+      "17": 2,
+      "18": "Medium: rarely burns, tans well",
+      "19": {
+        "Hydration Level": 2,
+        "Oiliness Level": 1,
+        "Redness Level": 2,
+        "Firmness / Elasticity": 3
+      },
+      "20": "No, never",
+      "21": "3–4 steps: cleanser, serum, moisturiser, SPF",
+      "22": "Cream: rich and nourishing",
+      "23": "Oil / Balm cleanser: dissolves everything, luxurious",
+      "24": [
+        "Repair (strengthen barrier, heal damage)",
+        "Hydration (plump, dewy, moisturised)",
+        "Calming (reduce redness, soothe irritation)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Brightening (even tone, radiance)",
+        "Clarifying (control oil, minimise breakouts)"
+      ],
+      "25": [
+        "Natural / botanical-forward formulas",
+        "Sustainably sourced ingredients"
+      ],
+      "26": 3,
+      "27": "Tried once or twice, didn’t stick with it",
+      "28": "5–10 minutes, I enjoy the process",
+      "29": [
+        "Nothing specific, I’m open to everything"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "5d99b8a7-7737-44d3-bee2-9a5d1d1730e1",
+          "name": "SD2",
+          "category": "Serum",
+          "skin_type": "Dry Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Texture irregularities",
+            "Sensitivity or reactivity"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d042f9c9-c84c-4bc2-9b97-75b157175666",
+              "name": "Chelating Agent",
+              "function": "Chelating Agent",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "b2129b7d-7551-4661-9984-c83bb1fd04c1",
+              "name": "Solagum AX",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "e29c40b1-060a-4866-adb8-3b6ebb2b6e77",
+              "name": "Glyceryl Stearate SE",
+              "function": "Anionic emulsifier",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ab6db17a-cacf-4c20-835c-379e40a003d6",
+              "name": "Olivem 1000",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "3dc300d3-2f25-48b5-a208-ad8c46b35484",
+              "name": "Squalane vegetable",
+              "function": "Lipid",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Hydration"
+              ]
+            },
+            {
+              "id": "fdec5784-1077-4585-b2c8-0626f834a6f0",
+              "name": "Shea butter",
+              "function": "Lipid",
+              "scientific_name": "Shea butter/refined",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "d2b4d22a-4b5e-481e-b79c-fc3b51fe3f83",
+              "name": "Ceramide-Complex",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Hydration"
+              ]
+            },
+            {
+              "id": "b45b12b4-9598-4b4c-b905-1e518741a95c",
+              "name": "Geogard ECT",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "9bd26154-53f8-460b-b2db-1c9566f17e28",
+              "name": "Vitamine E plant-based",
+              "function": "Antioxidant",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "004031f6-d155-4997-ad3d-43658da60a0c",
+              "name": "Bisabolol",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "0da99cbc-8123-42a9-9e3b-608f2523f3f2",
+              "name": "Ectoin",
+              "function": "Active",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "a6a4157f-fd74-4794-a59b-5cc84ccb81b8",
+              "name": "Hypericum perforatum (St. John's Wort) Oil/Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "d18b7e83-deb3-42ff-a3dd-2a7a66dcb5c8",
+              "name": "Marigold CO2 extract",
+              "function": "Extract EE",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "3adcbe7e-0cb4-4d96-a459-bc9f8790d596",
+              "name": "Hippophae rhamnoides (Sea Buckthorn) Oil",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening",
+                "Anti-aging"
+              ]
+            },
+            {
+              "id": "767fd930-8de7-4e9e-99e7-0158a7fe52cf",
+              "name": "pH adjuster",
+              "function": "pH adjuster",
+              "scientific_name": "pH adjuster",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            }
+          ]
+        },
+        "score": 118.5,
+        "matchedConcerns": [
+          "repair",
+          "hydration",
+          "calming"
+        ],
+        "reasons": [
+          "Formulated for barrier repair, hydration, redness & sensitivity",
+          "Matched to your top priority",
+          "Ingredients aligned with your #1 priority: Repair"
+        ]
+      },
+      "skinType": "dry",
+      "concerns": [
+        "repair",
+        "hydration",
+        "calming"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  },
+  {
+    "id": 11,
+    "name": "Oily + Eczema (gap test)",
+    "answers": {
+      "1": "25–34",
+      "2": "Female",
+      "3": "Central Europe (Germany, Poland, Czech Rep., Austria, Switzerland)",
+      "4": "Urban / City centre",
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "8": {
+        "Vegetables & Fruits": 3,
+        "Dairy": 2,
+        "Sugar & Processed Foods": 2,
+        "Omega-Rich Foods: Fish, Nuts, Seeds": 3
+      },
+      "9": 2,
+      "10": "No",
+      "11": "Oily: shiny all over, especially T-zone",
+      "12": [
+        "Breakouts or blemishes"
+      ],
+      "13": 3,
+      "14": "Slightly oily: shine returns quickly",
+      "15": "Frequently, multiple times per month",
+      "16": [
+        "Eczema or atopic dermatitis"
+      ],
+      "17": 3,
+      "18": "Fair: sometimes burns, tans gradually",
+      "19": {
+        "Hydration Level": 3,
+        "Oiliness Level": 4,
+        "Redness Level": 3,
+        "Firmness / Elasticity": 4
+      },
+      "20": "Yes, to fragrance or essential oils",
+      "21": "2 steps: cleanser + moisturiser",
+      "22": "Lightweight gel: absorbs instantly, no residue",
+      "23": "Foaming / Gel cleanser: fresh, squeaky-clean feel",
+      "24": [
+        "Clarifying (control oil, minimise breakouts)",
+        "Calming (reduce redness, soothe irritation)",
+        "Hydration (plump, dewy, moisturised)",
+        "Anti-aging (wrinkles, firmness, elasticity)",
+        "Brightening (even tone, radiance)",
+        "Repair (strengthen barrier, heal damage)"
+      ],
+      "25": [
+        "Fragrance-free",
+        "Clean beauty: no parabens, SLS, silicones"
+      ],
+      "26": 1,
+      "27": "Never, I’m a retinol beginner",
+      "28": "Under 2 minutes, I want it fast",
+      "29": [
+        "Fragrance / essential oils"
+      ],
+      "30": null
+    },
+    "result": {
+      "serum": {
+        "product": {
+          "id": "4214faba-9a65-4946-bc2b-3155071b1d9b",
+          "name": "SO5",
+          "category": "Serum",
+          "skin_type": "Oily Skin",
+          "product_level": "End Product",
+          "concern_tags": [
+            "Fine lines or wrinkles",
+            "Redness or irritation",
+            "Dryness or dehydration",
+            "Texture irregularities",
+            "Sensitivity or reactivity",
+            "Under-eye concerns (dark circles",
+            "puffiness)"
+          ],
+          "safe_for_pregnancy": true,
+          "safe_for_rosacea": true,
+          "safe_for_eczema": true,
+          "contains_retinol": false,
+          "contains_bha": false,
+          "contains_pegs": false,
+          "contains_fragrance": false,
+          "ingredients": [
+            {
+              "id": "2dc1cd2c-f020-4cb4-960d-c07dd1e9abfe",
+              "name": "Water (Aqua)",
+              "function": "Solvent",
+              "scientific_name": "Water (Aqua)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "c909d8af-b08f-4b25-acc3-4c0832ba14a1",
+              "name": "Propanediol",
+              "function": "Humectant",
+              "scientific_name": "Propanediol",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "bc005475-eae7-4661-8603-34ee71c1ca48",
+              "name": "Pemulen TR1",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "dc2c022c-c44b-4e73-a109-fdadd4aca0d2",
+              "name": "Sodium Hydroxide (18% solution)",
+              "function": "Neutralising agent",
+              "scientific_name": "Sodium Hydroxide (18% solution)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "bf3a7085-4297-439c-9eba-7177427e8486",
+              "name": "VP/VA Copolymer GC",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "7db742a2-8102-4568-8a3e-aac842ab7bfe",
+              "name": "Panthenol",
+              "function": null,
+              "scientific_name": "Panthenol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Hydration",
+                "Repair"
+              ]
+            },
+            {
+              "id": "a7e5b287-e217-4838-8831-a19bb72ee5fe",
+              "name": "Coco-Caprylate/Caprate",
+              "function": "Lipid/emollient",
+              "scientific_name": "Coco-Caprylate/Caprate",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "ce3fa48a-5070-4087-a15a-55fa32b7a660",
+              "name": "Vitamin E Tocopherol",
+              "function": "Antioxidant",
+              "scientific_name": "Vitamin E Tocopherol",
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Brightening"
+              ]
+            },
+            {
+              "id": "be469508-f4b8-450a-8ca5-dbc42490ab33",
+              "name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "function": "Preservative",
+              "scientific_name": "Euxyl PE9010 (Phenoxyethanol, Ethylhexylglycerin)",
+              "type": "Ingredient",
+              "skincare_priorities": []
+            },
+            {
+              "id": "81f5912f-8515-4ff1-9a52-bc6d577849a1",
+              "name": "Centella Asiatica Extract GW",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "11058ada-586c-4840-86bc-acc1e77ba467",
+              "name": "Bakuchiol",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Anti-aging",
+                "Calming"
+              ]
+            },
+            {
+              "id": "004031f6-d155-4997-ad3d-43658da60a0c",
+              "name": "Bisabolol",
+              "function": "Active Phase-Shot",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "743a8046-47d7-4d69-8159-58edabcaba45",
+              "name": "Achillea millefolium (Yarrow) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair",
+                "Clarifying"
+              ]
+            },
+            {
+              "id": "9e168154-af24-4c03-b146-0bcaf87696e7",
+              "name": "Chamomile CO2 Extract",
+              "function": "Botanical Extract",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            },
+            {
+              "id": "d18b7e83-deb3-42ff-a3dd-2a7a66dcb5c8",
+              "name": "Marigold CO2 extract",
+              "function": "Extract EE",
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "0c42fa8a-7839-47ba-a05f-30b15c1c863b",
+              "name": "Plantago major (Plantain) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming",
+                "Repair"
+              ]
+            },
+            {
+              "id": "f96de114-b36c-48a0-b281-8d1199a1084b",
+              "name": "Centaurea cyanus (Cornflower) Extract",
+              "function": null,
+              "scientific_name": null,
+              "type": "Ingredient",
+              "skincare_priorities": [
+                "Calming"
+              ]
+            }
+          ]
+        },
+        "score": 51.5,
+        "matchedConcerns": [],
+        "reasons": [
+          "Ingredients aligned with your #1 priority: Clarifying"
+        ]
+      },
+      "skinType": "oily",
+      "concerns": [
+        "acne"
+      ],
+      "hasGap": false
+    },
+    "source": "concern_tags",
+    "hasTags": true,
+    "hasPriorities": true
+  }
+]

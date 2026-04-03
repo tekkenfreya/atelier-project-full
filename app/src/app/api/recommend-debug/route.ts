@@ -1,0 +1,26 @@
+import { NextRequest, NextResponse } from "next/server";
+import { recommendDebug } from "@/lib/matching-engine/recommend";
+import type { QuizAnswers } from "@/lib/matching-engine/types";
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const answers: QuizAnswers = body.answers;
+
+    if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+      return NextResponse.json(
+        { error: "Missing quiz answers" },
+        { status: 400 }
+      );
+    }
+
+    const result = await recommendDebug(answers);
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Debug recommendation error:", error);
+    return NextResponse.json(
+      { error: "Failed to generate debug recommendation" },
+      { status: 500 }
+    );
+  }
+}
