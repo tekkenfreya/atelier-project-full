@@ -16,17 +16,17 @@ interface CheckoutRequestBody {
 }
 
 const SUBSCRIPTION_DISCOUNT = 0.2;
-const BUNDLE_PRICE_CENTS = 12500;
+const BUNDLE_PRICE_CENTS = 11500;
 
 function getItemPriceCents(item: CheckoutCartItem, isBundle: boolean, isSubscription: boolean): number {
   if (isBundle) {
     const categoryShare: Record<ProductCategory, number> = {
-      Cleanser: 2500,
-      Serum: 5500,
-      Moisturizer: 4500,
+      Cleanser: 2300,
+      Serum: 5000,
+      Moisturizer: 4100,
     };
     const fullShare = categoryShare[item.category];
-    const bundleShare = Math.round((fullShare / 12500) * BUNDLE_PRICE_CENTS);
+    const bundleShare = Math.round((fullShare / 11400) * BUNDLE_PRICE_CENTS);
 
     if (isSubscription) {
       return Math.round(bundleShare * (1 - SUBSCRIPTION_DISCOUNT));

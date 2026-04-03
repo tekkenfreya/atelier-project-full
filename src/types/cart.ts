@@ -31,15 +31,15 @@ export interface ShippingInfo {
 }
 
 export const PRODUCT_PRICES: Record<ProductCategory, number> = {
-  Cleanser: 25,
-  Serum: 55,
-  Moisturizer: 45,
+  Cleanser: 23,
+  Serum: 50,
+  Moisturizer: 41,
 };
 
-export const BUNDLE_PRICE = 125;
+export const BUNDLE_PRICE = 115;
 export const SUBSCRIPTION_DISCOUNT = 0.2;
-export const BIMONTHLY_BUNDLE_PRICE = 100;
-export const ANNUAL_BUNDLE_PRICE = 600;
+export const BIMONTHLY_BUNDLE_PRICE = 92;
+export const ANNUAL_BUNDLE_PRICE = 552;
 
 export function calculateSubtotal(items: CartItem[]): number {
   if (items.length === 3) {

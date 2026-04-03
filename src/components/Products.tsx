@@ -22,7 +22,7 @@ const PRODUCTS: Product[] = [
     name: "The Purifying Wash",
     description:
       "A gentle, pH-balanced cleanser that dissolves impurities without stripping your skin's natural moisture barrier. Custom-formulated with botanicals selected for your skin type.",
-    price: "€25",
+    price: "€23",
     placeholder: "cleanser",
   },
   {
@@ -31,7 +31,7 @@ const PRODUCTS: Product[] = [
     name: "The Concentrated Elixir",
     description:
       "A potent blend of targeted actives that penetrate deep to address your specific skin concerns, from fine lines to uneven tone. Your most powerful step.",
-    price: "€55",
+    price: "€50",
     placeholder: "serum",
   },
   {
@@ -40,7 +40,7 @@ const PRODUCTS: Product[] = [
     name: "The Nourishing Veil",
     description:
       "A rich yet weightless moisturiser that locks in hydration and protects your skin throughout the day. Adapts to your environment and skin needs.",
-    price: "€45",
+    price: "€41",
     placeholder: "moisturiser",
   },
 ];
