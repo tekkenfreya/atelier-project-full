@@ -3954,73 +3954,160 @@ body {
   }
 }
 
-/* ─── Skin Analysis Page ─── */
-.analysis-container {
+/* ═══════════════════════════════════════════════════
+   Unified Results Page — Parallax + Reveal-on-Scroll
+   ═══════════════════════════════════════════════════ */
+
+/* ─── Page wrapper ─── */
+.ur-page {
+  background: var(--bg-primary);
+}
+
+/* ─── Loading / Error screen ─── */
+.ur-loading-screen {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 7.5rem 1.5rem 4rem;
-  background: var(--bg-primary);
-  max-width: 740px;
-  margin: 0 auto;
-}
-
-.analysis-loading {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  min-height: 60vh;
+  background: var(--bg-primary);
 }
 
-.analysis-loading-title {
+.ur-loading-content {
+  text-align: center;
+  max-width: 480px;
+  padding: 1.5rem;
+}
+
+.ur-loading-title {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 300;
   color: var(--text-primary);
 }
 
-.analysis-loading-desc {
+.ur-loading-desc {
   font-family: "Satoshi", sans-serif;
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
 }
 
-.analysis-header {
-  text-align: center;
-  margin-bottom: 3.5rem;
+/* ─── Sections ─── */
+.ur-section {
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 1.5rem;
 }
 
-.analysis-label {
+.ur-section:first-child {
+  padding-top: 7.5rem;
+}
+
+.ur-section-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Parallax background accents ─── */
+.ur-parallax {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ur-profile-bg-accent {
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 125, 60, 0.04) 0%, transparent 70%);
+  top: -100px;
+  right: -200px;
+}
+
+.ur-botanicals-bg-accent {
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 125, 60, 0.05) 0%, transparent 70%);
+  top: 50px;
+  left: -250px;
+}
+
+.ur-products-bg-accent {
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 125, 60, 0.03) 0%, transparent 70%);
+  bottom: -200px;
+  right: -300px;
+}
+
+/* ─── Section dividers ─── */
+.ur-section-profile {
+  border-bottom: 1px solid var(--border);
+}
+
+.ur-section-botanicals {
+  background: var(--bg-cream);
+  border-bottom: 1px solid var(--border);
+}
+
+.ur-section-products {
+  padding-bottom: 8rem;
+}
+
+/* ─── Shared typography ─── */
+.ur-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--accent);
+  display: block;
+  text-align: center;
 }
 
-.analysis-title {
+.ur-hero-title {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-top: 0.5rem;
+  text-align: center;
 }
 
-.analysis-skin-type {
-  width: 100%;
-  margin-bottom: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--border);
+.ur-section-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+  text-align: center;
 }
 
-.analysis-section-label {
+.ur-section-subtitle {
+  font-family: "Satoshi", sans-serif;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  text-align: center;
+  max-width: 500px;
+}
+
+.ur-section-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.65rem;
   font-weight: 500;
@@ -4031,7 +4118,15 @@ body {
   margin-bottom: 0.75rem;
 }
 
-.analysis-skin-type-name {
+/* ─── Section 1: Skin Profile ─── */
+.ur-profile-type {
+  width: 100%;
+  margin-top: 3.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ur-profile-type-name {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
@@ -4039,7 +4134,7 @@ body {
   color: var(--text-primary);
 }
 
-.analysis-skin-type-desc {
+.ur-profile-type-desc {
   font-family: "Satoshi", sans-serif;
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
@@ -4048,27 +4143,27 @@ body {
   margin-top: 1rem;
 }
 
-.analysis-concerns {
+.ur-profile-concerns {
   width: 100%;
-  margin-bottom: 3rem;
+  margin-top: 3rem;
   padding-bottom: 3rem;
   border-bottom: 1px solid var(--border);
 }
 
-.analysis-concerns-list {
+.ur-concerns-grid {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-.analysis-concern-item {
+.ur-concern-card {
   padding: 1.25rem 1.5rem;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--bg-cream);
 }
 
-.analysis-concern-name {
+.ur-concern-name {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.3rem;
   font-weight: 400;
@@ -4076,7 +4171,7 @@ body {
   line-height: 1.2;
 }
 
-.analysis-concern-desc {
+.ur-concern-desc {
   font-family: "Satoshi", sans-serif;
   font-size: 0.88rem;
   font-weight: 400;
@@ -4085,14 +4180,12 @@ body {
   margin-top: 0.4rem;
 }
 
-.analysis-priority {
+.ur-profile-priority {
   width: 100%;
-  margin-bottom: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--border);
+  margin-top: 3rem;
 }
 
-.analysis-priority-text {
+.ur-priority-text {
   font-family: "Satoshi", sans-serif;
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
@@ -4100,149 +4193,44 @@ body {
   color: var(--text-secondary);
 }
 
-.analysis-priority-text strong {
+.ur-priority-text strong {
   color: var(--text-primary);
   font-weight: 600;
 }
 
-.analysis-summary {
-  width: 100%;
-  margin-bottom: 3rem;
-}
-
-.analysis-summary-text {
-  font-family: "Satoshi", sans-serif;
-  font-size: clamp(0.9rem, 1vw, 1.05rem);
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--text-secondary);
-}
-
-.analysis-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.analysis-cta {
-  display: inline-block;
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #fff;
-  background-color: var(--accent);
-  padding: 1rem 3rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.25s ease;
-}
-
-.analysis-cta:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-/* ─── Botanicals / Ingredients Page ─── */
-.botanicals-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 7.5rem 1.5rem 4rem;
-  background: var(--bg-primary);
-}
-
-.botanicals-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 60vh;
-}
-
-.botanicals-loading-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 300;
-  color: var(--text-primary);
-}
-
-.botanicals-loading-desc {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-top: 0.5rem;
-}
-
-.botanicals-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.botanicals-label {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.botanicals-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  margin-top: 0.5rem;
-}
-
-.botanicals-subtitle {
-  font-family: "Satoshi", sans-serif;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  font-weight: 400;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-top: 0.5rem;
-  max-width: 500px;
-}
-
-.botanicals-grid {
+/* ─── Section 2: Key Botanicals ─── */
+.ur-botanicals-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   max-width: 1100px;
   width: 100%;
+  margin-top: 3rem;
 }
 
 @media (max-width: 1000px) {
-  .botanicals-grid {
+  .ur-botanicals-grid {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 600px;
   }
 }
 
 @media (max-width: 600px) {
-  .botanicals-grid {
+  .ur-botanicals-grid {
     grid-template-columns: 1fr;
     max-width: 420px;
   }
 }
 
-.botanicals-card {
+.ur-botanical-card {
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 1.75rem;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   display: flex;
   flex-direction: column;
 }
 
-.botanicals-card-category {
+.ur-botanical-category {
   font-family: "Satoshi", sans-serif;
   font-size: 0.6rem;
   font-weight: 500;
@@ -4251,7 +4239,7 @@ body {
   color: var(--accent);
 }
 
-.botanicals-card-name {
+.ur-botanical-name {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(1.3rem, 2.5vw, 1.6rem);
   font-weight: 400;
@@ -4260,7 +4248,7 @@ body {
   margin-top: 0.25rem;
 }
 
-.botanicals-card-scientific {
+.ur-botanical-scientific {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 0.9rem;
   font-weight: 300;
@@ -4269,22 +4257,13 @@ body {
   margin-top: 0.15rem;
 }
 
-.botanicals-card-function {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin-top: 0.75rem;
-}
-
-.botanicals-card-priorities {
-  margin-top: 1rem;
+.ur-botanical-priorities {
+  margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
 }
 
-.botanicals-card-priorities-label {
+.ur-botanical-priorities-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.6rem;
   font-weight: 500;
@@ -4293,7 +4272,7 @@ body {
   color: var(--text-secondary);
 }
 
-.botanicals-card-priorities-value {
+.ur-botanical-priorities-value {
   font-family: "Satoshi", sans-serif;
   font-size: 0.85rem;
   font-weight: 400;
@@ -4301,39 +4280,257 @@ body {
   margin-top: 0.3rem;
 }
 
-.botanicals-card-product {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin-top: auto;
-  padding-top: 1.25rem;
+/* ─── Section 3: Products ─── */
+.ur-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  width: 100%;
+  margin-top: 3rem;
 }
 
-.botanicals-card-product strong {
-  color: var(--text-primary);
-  font-weight: 500;
+@media (max-width: 900px) {
+  .ur-products-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
 }
 
-.botanicals-empty {
+.ur-no-products {
   text-align: center;
   max-width: 480px;
   padding: 2rem 0;
-}
-
-.botanicals-empty p {
   font-family: "Satoshi", sans-serif;
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
 
-.botanicals-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
+.ur-gaps {
+  max-width: 600px;
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
-.botanicals-cta {
+.ur-gap-item {
+  font-size: 0.85rem;
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+
+/* ─── Checkout Panel ─── */
+.ur-checkout-panel {
+  margin-top: 3rem;
+  max-width: 520px;
+  width: 100%;
+}
+
+.ur-checkout-pricing {
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--bg-cream);
+}
+
+.ur-pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ur-pricing-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ur-pricing-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.ur-pricing-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-top: 0.25rem;
+}
+
+.ur-pricing-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.ur-pricing-sub-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.ur-pricing-sub-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.ur-pricing-freq {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* ─── Plan Selector ─── */
+.ur-plan-selector {
+  margin-top: 2rem;
+}
+
+.ur-plan-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ur-plan-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-cream);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.ur-plan-option:hover {
+  background: rgba(139, 125, 60, 0.04);
+}
+
+.ur-plan-option-active {
+  border-color: var(--accent);
+  background: rgba(139, 125, 60, 0.06);
+}
+
+.ur-plan-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.ur-plan-radio-active {
+  border-color: var(--accent);
+}
+
+.ur-plan-radio-active::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.ur-plan-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ur-plan-name {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ur-plan-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 0.1rem;
+}
+
+/* ─── Checkout Summary ─── */
+.ur-checkout-summary {
+  margin-top: 1.5rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.ur-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.ur-summary-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ur-summary-discount {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #5a8a3c;
+}
+
+.ur-summary-total .ur-summary-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ur-summary-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.ur-summary-note {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-top: -0.25rem;
+}
+
+/* ─── Checkout Actions ─── */
+.ur-checkout-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.ur-checkout-error {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: #b44;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* ─── Buttons ─── */
+.ur-btn-primary {
   display: inline-block;
   font-family: "Satoshi", sans-serif;
   font-size: 0.7rem;
@@ -4346,14 +4543,22 @@ body {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.25s ease;
+  flex: 1;
+  text-align: center;
 }
 
-.botanicals-cta:hover {
+.ur-btn-primary:hover {
   background-color: var(--accent-hover);
   transform: translateY(-2px);
 }
 
-.botanicals-cta-secondary {
+.ur-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ur-btn-secondary {
   display: inline-block;
   font-family: "Satoshi", sans-serif;
   font-size: 0.7rem;
@@ -4368,7 +4573,133 @@ body {
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
-.botanicals-cta-secondary:hover {
+.ur-btn-secondary:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* ─── Footer links ─── */
+.ur-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.ur-report-link {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.ur-report-link:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Sticky Bottom Bar ─── */
+.ur-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--bg-cream);
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  animation: ur-slideUp 0.4s ease forwards;
+}
+
+@keyframes ur-slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.ur-sticky-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ur-sticky-summary {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ur-sticky-plan {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.ur-sticky-btn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--accent);
+  padding: 0.75rem 2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.ur-sticky-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.ur-sticky-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Responsive adjustments ─── */
+@media (max-width: 768px) {
+  .ur-section {
+    padding: 4rem 1.25rem;
+  }
+
+  .ur-section:first-child {
+    padding-top: 6.5rem;
+  }
+
+  .ur-section-products {
+    padding-bottom: 6rem;
+  }
+
+  .ur-checkout-actions {
+    flex-direction: column;
+  }
+
+  .ur-sticky-summary {
+    font-size: 0.75rem;
+  }
+
+  .ur-sticky-btn {
+    font-size: 0.6rem;
+    padding: 0.65rem 1.5rem;
+  }
+
+  .ur-concern-card {
+    background: var(--bg-primary);
+  }
+
+  .ur-botanical-card {
+    background: var(--bg-cream);
+  }
 }
