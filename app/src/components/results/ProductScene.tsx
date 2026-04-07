@@ -53,7 +53,27 @@ const ORB_COLORS = [
   { color: "#b8c4a3", emissive: "#96aa7a", core: "#e0ecd4" },
 ];
 
-/* ─── Single botanical orb ─── */
+/* ─── Shapes — each botanical gets a shape based on its index ─── */
+
+const SHAPES = ["sphere", "octahedron", "dodecahedron", "torus", "icosahedron"] as const;
+type ShapeName = typeof SHAPES[number];
+
+function ShapeGeometry({ shape }: { shape: string }) {
+  switch (shape) {
+    case "octahedron":
+      return <octahedronGeometry args={[0.42, 0]} />;
+    case "dodecahedron":
+      return <dodecahedronGeometry args={[0.45, 0]} />;
+    case "torus":
+      return <torusGeometry args={[0.32, 0.14, 16, 32]} />;
+    case "icosahedron":
+      return <icosahedronGeometry args={[0.4, 0]} />;
+    default:
+      return <sphereGeometry args={[0.4, 32, 32]} />;
+  }
+}
+
+/* ─── Single botanical shape ─── */
 
 interface BotanicalOrbProps {
   name: string;
@@ -68,57 +88,63 @@ function BotanicalOrb({ name, scientificName, targetX, colorIndex, isCenter, ima
   const groupRef = useRef<THREE.Group>(null);
   const orbRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
+  const initialized = useRef(false);
 
   const palette = ORB_COLORS[colorIndex % ORB_COLORS.length];
-
-  const texture = useMemo(() => {
-    if (!imagePath) return null;
-    const loader = new THREE.TextureLoader();
-    const tex = loader.load(imagePath);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    return tex;
-  }, [imagePath]);
+  const shape = SHAPES[colorIndex % SHAPES.length];
 
   useFrame(({ clock }) => {
     if (!groupRef.current || !orbRef.current) return;
 
-    /* Slide X — only the group position moves, smooth lerp */
-    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, 0.1);
+    /* On first frame, snap to position and scale instantly */
+    if (!initialized.current) {
+      initialized.current = true;
+      groupRef.current.position.x = targetX;
+      const initScale = isCenter ? 0.95 : 0.65;
+      orbRef.current.scale.setScalar(initScale);
+      return;
+    }
 
-    /* Gentle Y float — only center orb, very subtle */
+    /* Slide to target X position */
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, 0.09);
+
+    /* Gentle Y float — center only */
     const floatY = isCenter ? Math.sin(clock.getElapsedTime() * 1.2) * 0.04 : 0;
     groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, floatY, 0.05);
 
+    /* Slow rotation — each shape rotates slightly */
+    orbRef.current.rotation.y += 0.003;
+    orbRef.current.rotation.x += 0.001;
+
     /* Scale */
-    const targetScale = isCenter ? 0.85 : 0.55;
+    const targetScale = isCenter ? 0.95 : 0.65;
     orbRef.current.scale.setScalar(THREE.MathUtils.lerp(orbRef.current.scale.x, targetScale, 0.08));
 
     /* Material */
     const mat = orbRef.current.material as THREE.MeshPhysicalMaterial;
-    mat.opacity = THREE.MathUtils.lerp(mat.opacity, isCenter ? 0.9 : 0.45, 0.07);
-    mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, isCenter ? 0.4 : 0.08, 0.07);
+    mat.opacity = THREE.MathUtils.lerp(mat.opacity, isCenter ? 0.9 : 0.4, 0.07);
+    mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, isCenter ? 0.45 : 0.06, 0.07);
 
     /* Selection glow halo */
     if (glowRef.current) {
       const glowMat = glowRef.current.material as THREE.MeshBasicMaterial;
       const targetOpacity = isCenter
-        ? 0.22 + Math.sin(clock.getElapsedTime() * 1.5) * 0.06
+        ? 0.25 + Math.sin(clock.getElapsedTime() * 1.5) * 0.08
         : 0;
       glowMat.opacity = THREE.MathUtils.lerp(glowMat.opacity, targetOpacity, 0.07);
 
       const targetGlowScale = isCenter
-        ? 1.6 + Math.sin(clock.getElapsedTime() * 1.0) * 0.08
-        : 0.9;
-      const gs = glowRef.current.scale.x;
-      glowRef.current.scale.setScalar(THREE.MathUtils.lerp(gs, targetGlowScale, 0.06));
+        ? 1.8 + Math.sin(clock.getElapsedTime() * 1.0) * 0.1
+        : 0.8;
+      glowRef.current.scale.setScalar(THREE.MathUtils.lerp(glowRef.current.scale.x, targetGlowScale, 0.06));
     }
   });
 
   return (
     <group ref={groupRef} position={[targetX, 0, 0]}>
-      {/* Selection glow — large soft halo, only visible on center */}
-      <mesh ref={glowRef} scale={0.9}>
-        <sphereGeometry args={[0.7, 32, 32]} />
+      {/* Selection glow */}
+      <mesh ref={glowRef} scale={0.8}>
+        <sphereGeometry args={[0.5, 32, 32]} />
         <meshBasicMaterial
           color={palette.emissive}
           transparent
@@ -128,39 +154,25 @@ function BotanicalOrb({ name, scientificName, targetX, colorIndex, isCenter, ima
         />
       </mesh>
 
-      {/* The orb itself */}
+      {/* Shape */}
       <mesh ref={orbRef}>
-        <sphereGeometry args={[0.7, 64, 64]} />
-        {texture ? (
-          <meshPhysicalMaterial
-            map={texture}
-            transparent
-            opacity={0.85}
-            roughness={0.2}
-            metalness={0.05}
-            clearcoat={0.6}
-            clearcoatRoughness={0.1}
-            emissive={palette.emissive}
-            emissiveIntensity={0.15}
-          />
-        ) : (
-          <meshPhysicalMaterial
-            color={palette.core}
-            transparent
-            opacity={0.75}
-            roughness={0.15}
-            metalness={0.05}
-            clearcoat={0.8}
-            clearcoatRoughness={0.08}
-            emissive={palette.emissive}
-            emissiveIntensity={0.15}
-          />
-        )}
+        <ShapeGeometry shape={shape} />
+        <meshPhysicalMaterial
+          color={palette.core}
+          transparent
+          opacity={0.7}
+          roughness={0.12}
+          metalness={0.05}
+          clearcoat={0.9}
+          clearcoatRoughness={0.06}
+          emissive={palette.emissive}
+          emissiveIntensity={0.1}
+        />
       </mesh>
 
-      {/* Label — only on center orb */}
+      {/* Label — center only */}
       {isCenter && (
-        <Html center position={[0, -1.1, 0]} style={{ pointerEvents: "none" }}>
+        <Html center position={[0, -0.9, 0]} style={{ pointerEvents: "none" }}>
           <div className="rd-orb-label">
             <span className="rd-orb-label-name">{name}</span>
             {scientificName && <span className="rd-orb-label-sci">{scientificName}</span>}
@@ -223,10 +235,10 @@ export default function ProductScene({ botanicals }: ProductSceneProps) {
 
         {visibleOrbs.map(({ item, offset, index }) => (
           <BotanicalOrb
-            key={`${centerIndex}-${offset}`}
+            key={item.id}
             name={item.name}
             scientificName={item.scientificName}
-            targetX={offset * 2.2}
+            targetX={offset * 1.8}
             colorIndex={index}
             isCenter={offset === 0}
             imagePath={item.imagePath}
