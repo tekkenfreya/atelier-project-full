@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePageTransition } from "@/hooks/usePageTransition";
 import type {
   Recommendation,
@@ -17,14 +17,18 @@ import type { AnswerValue } from "@/data/quizQuestions";
 import type { CartItem } from "@/types/cart";
 import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
 import { supabase } from "@/lib/supabase";
-import SerumCard from "@/components/results/SerumCard";
+import BotanicalCard from "@/components/results/BotanicalCard";
+import type { BotanicalItem } from "@/components/results/ProductScene";
 
-gsap.registerPlugin(ScrollTrigger);
+const ProductScene = dynamic(() => import("@/components/results/ProductScene"), {
+  ssr: false,
+  loading: () => <div className="rd-scene-container rd-scene-loading" />,
+});
 
 /* ─── Static Data ─── */
 
 const SKIN_TYPE_DESCRIPTIONS: Record<SkinType, string> = {
-  oily: "Your skin produces more sebum than average, particularly in the T-zone. This means lightweight, oil-free textures work best. The good news: oily skin ages more slowly.",
+  oily: "Your skin produces more sebum than average, particularly in the T-zone. Lightweight, oil-free textures work best. The good news: oily skin ages more slowly.",
   dry: "Your skin barrier needs extra support. Hydration and nourishment are key. Rich textures and barrier-strengthening ingredients will transform how your skin feels.",
   combination: "Your skin has dual needs — managing oil in some areas while nourishing others. We balance lightweight hydration with targeted treatment.",
   sensitive: "Your skin reacts easily to new ingredients and environmental stress. We focus on calming, barrier-supporting formulas with minimal irritation risk.",
@@ -92,11 +96,7 @@ function extractBotanicals(recommendation: Recommendation): BotanicalEntry[] {
       const fn = ing.function?.toLowerCase() ?? "";
       if (fn.includes("extract") || fn.includes("botanical")) {
         seen.add(ing.id);
-        entries.push({
-          ingredient: ing,
-          productName: scored.product.name,
-          category,
-        });
+        entries.push({ ingredient: ing, productName: scored.product.name, category });
       }
     }
   }
@@ -104,9 +104,23 @@ function extractBotanicals(recommendation: Recommendation): BotanicalEntry[] {
   addFromProduct(recommendation.cleanser);
   addFromProduct(recommendation.serum);
   addFromProduct(recommendation.moisturizer);
-
   return entries;
 }
+
+const FRAGRANCE_LABELS: Record<FragranceOption, string> = {
+  F0: "No fragrance",
+  F1: "Light, fresh botanical notes",
+  F2: "Warm, earthy undertones",
+};
+
+/* ─── Tabs ─── */
+
+type Tab = "analysis" | "regimen";
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: "analysis", label: "Analysis" },
+  { key: "regimen", label: "Regimen" },
+];
 
 /* ─── Component ─── */
 
@@ -132,12 +146,12 @@ export default function ResultsPage() {
   const [plan, setPlan] = useState<"one-time" | "bi-monthly" | "annual">("one-time");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [showStickyBar, setShowStickyBar] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>("analysis");
 
   const savedQuizRef = useRef(false);
-  const pageRef = useRef<HTMLDivElement>(null);
-  const stickyTriggerRef = useRef<HTMLDivElement>(null);
-  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
+  const tabContentRef = useRef<HTMLDivElement>(null);
+  const tabIndicatorRef = useRef<HTMLDivElement>(null);
+  const tabButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   /* ─── Data fetching ─── */
 
@@ -208,8 +222,6 @@ export default function ResultsPage() {
           serum: data.serum !== null,
           moisturizer: data.moisturizer !== null,
         });
-
-        saveQuizResults(parsed, data, fragrance);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
@@ -220,76 +232,47 @@ export default function ResultsPage() {
     fetchRecommendation();
   }, [router]);
 
-  /* ─── ScrollTrigger animations ─── */
+  /* ─── Tab indicator slide ─── */
 
   useEffect(() => {
-    if (loading || !pageRef.current) return;
+    const idx = TABS.findIndex((t) => t.key === activeTab);
+    const btn = tabButtonsRef.current[idx];
+    const indicator = tabIndicatorRef.current;
+    if (!btn || !indicator) return;
 
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
-
-    const triggers: ScrollTrigger[] = [];
-
-    // Section reveals
-    const sections = pageRef.current.querySelectorAll(".ur-section");
-    sections.forEach((section) => {
-      const elements = section.querySelectorAll(".ur-reveal");
-      if (elements.length === 0) return;
-
-      gsap.set(elements, { opacity: 0, y: 50 });
-
-      const trigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          gsap.to(elements, {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
-            stagger: 0.12,
-            ease: "power4.out",
-          });
-        },
-      });
-      triggers.push(trigger);
+    gsap.to(indicator, {
+      x: btn.offsetLeft,
+      width: btn.offsetWidth,
+      duration: 0.4,
+      ease: "power3.out",
     });
+  }, [activeTab]);
 
-    // Parallax on background decorative elements (desktop only)
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    if (!isMobile) {
-      const parallaxElements = pageRef.current.querySelectorAll(".ur-parallax");
-      parallaxElements.forEach((el) => {
-        const trigger = ScrollTrigger.create({
-          trigger: el,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-          onUpdate: (self) => {
-            gsap.set(el, { y: self.progress * -80 });
-          },
-        });
-        triggers.push(trigger);
-      });
+  /* ─── Tab content transition ─── */
+
+  const switchTab = useCallback((tab: Tab) => {
+    if (tab === activeTab) return;
+    const content = tabContentRef.current;
+    if (!content) {
+      setActiveTab(tab);
+      return;
     }
 
-    // Sticky bar trigger
-    if (stickyTriggerRef.current) {
-      const trigger = ScrollTrigger.create({
-        trigger: stickyTriggerRef.current,
-        start: "top 90%",
-        onEnter: () => setShowStickyBar(true),
-        onLeaveBack: () => setShowStickyBar(false),
-      });
-      triggers.push(trigger);
-    }
-
-    scrollTriggersRef.current = triggers;
-
-    return () => {
-      triggers.forEach((t) => t.kill());
-    };
-  }, [loading]);
+    gsap.to(content, {
+      opacity: 0,
+      x: -20,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => {
+        setActiveTab(tab);
+        gsap.fromTo(
+          content,
+          { opacity: 0, x: 20 },
+          { opacity: 1, x: 0, duration: 0.35, ease: "power4.out" }
+        );
+      },
+    });
+  }, [activeTab]);
 
   /* ─── Product selection ─── */
 
@@ -301,38 +284,20 @@ export default function ResultsPage() {
     if (!recommendation) return [];
 
     const items: CartItem[] = [];
+    const entries: [keyof SelectedProducts, ScoredProduct | null][] = [
+      ["cleanser", recommendation.cleanser],
+      ["serum", recommendation.serum],
+      ["moisturizer", recommendation.moisturizer],
+    ];
 
-    if (selected.cleanser && recommendation.cleanser) {
-      const cat = getCategoryFromProduct(recommendation.cleanser.product);
+    for (const [key, scored] of entries) {
+      if (!selected[key] || !scored) continue;
+      const cat = getCategoryFromProduct(scored.product);
       items.push({
-        productId: recommendation.cleanser.product.id,
-        productName: recommendation.cleanser.product.name,
+        productId: scored.product.id,
+        productName: scored.product.name,
         category: cat,
-        skinType: recommendation.cleanser.product.skin_type,
-        fragranceOption,
-        price: PRODUCT_PRICES[cat],
-      });
-    }
-
-    if (selected.serum && recommendation.serum) {
-      const cat = getCategoryFromProduct(recommendation.serum.product);
-      items.push({
-        productId: recommendation.serum.product.id,
-        productName: recommendation.serum.product.name,
-        category: cat,
-        skinType: recommendation.serum.product.skin_type,
-        fragranceOption,
-        price: PRODUCT_PRICES[cat],
-      });
-    }
-
-    if (selected.moisturizer && recommendation.moisturizer) {
-      const cat = getCategoryFromProduct(recommendation.moisturizer.product);
-      items.push({
-        productId: recommendation.moisturizer.product.id,
-        productName: recommendation.moisturizer.product.name,
-        category: cat,
-        skinType: recommendation.moisturizer.product.skin_type,
+        skinType: scored.product.skin_type,
         fragranceOption,
         price: PRODUCT_PRICES[cat],
       });
@@ -360,9 +325,7 @@ export default function ResultsPage() {
       if (!res.ok) throw new Error("Failed to create checkout session");
 
       const { url } = await res.json();
-      if (url) {
-        window.location.href = url;
-      }
+      if (url) window.location.href = url;
     } catch (err) {
       setCheckoutError(err instanceof Error ? err.message : "Checkout failed");
       setCheckoutLoading(false);
@@ -380,10 +343,11 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="ur-loading-screen">
-        <div className="ur-loading-content">
-          <h2 className="ur-loading-title">Analysing your skin profile...</h2>
-          <p className="ur-loading-desc">This won&apos;t take long</p>
+      <div className="rd-loading">
+        <div className="rd-loading-inner">
+          <div className="rd-loading-orb" />
+          <h2 className="rd-loading-title">Analysing your skin profile</h2>
+          <p className="rd-loading-desc">Matching botanicals to your skin...</p>
         </div>
       </div>
     );
@@ -391,11 +355,11 @@ export default function ResultsPage() {
 
   if (error) {
     return (
-      <div className="ur-loading-screen">
-        <div className="ur-loading-content">
-          <h2 className="ur-loading-title">Something went wrong</h2>
-          <p className="ur-loading-desc">{error}</p>
-          <button onClick={() => router.push("/quiz")} className="ur-btn-primary">
+      <div className="rd-loading">
+        <div className="rd-loading-inner">
+          <h2 className="rd-loading-title">Something went wrong</h2>
+          <p className="rd-loading-desc">{error}</p>
+          <button onClick={() => router.push("/quiz")} className="rd-btn-primary">
             Retake Quiz
           </button>
         </div>
@@ -415,7 +379,17 @@ export default function ResultsPage() {
   const topPriority = priorities.length > 0 ? priorities[0] : null;
   const customerName = typeof window !== "undefined" ? sessionStorage.getItem("customerName") : null;
   const botanicals = extractBotanicals(recommendation);
-  const hasAnyProduct = recommendation.serum || recommendation.cleanser || recommendation.moisturizer;
+
+  const availableCategories: string[] = [];
+  if (recommendation.cleanser) availableCategories.push("Cleanser");
+  if (recommendation.serum) availableCategories.push("Serum");
+  if (recommendation.moisturizer) availableCategories.push("Moisturizer");
+
+  const botanicalItems: BotanicalItem[] = botanicals.map((entry) => ({
+    id: entry.ingredient.id,
+    name: entry.ingredient.name,
+    scientificName: entry.ingredient.scientific_name ?? undefined,
+  }));
 
   const selectedItems = getSelectedItems();
   const selectedCount = selectedItems.length;
@@ -425,259 +399,265 @@ export default function ResultsPage() {
   const isBundle = selectedCount === 3;
 
   const PLAN_OPTIONS = [
-    { value: "one-time" as const, label: "One-Time Purchase", desc: "Full price" },
-    { value: "bi-monthly" as const, label: "Bi-Monthly", desc: "20% off, every 2 months" },
-    { value: "annual" as const, label: "Annual", desc: "20% off, billed yearly" },
+    { value: "one-time" as const, label: "One-Time", desc: "Full price" },
+    { value: "bi-monthly" as const, label: "Bi-Monthly", desc: "20% off" },
+    { value: "annual" as const, label: "Annual", desc: "20% off" },
+  ];
+
+  /* ─── Product detail for order panel ─── */
+
+  const productEntries: { key: keyof SelectedProducts; scored: ScoredProduct | null; cat: ProductCategory }[] = [
+    { key: "cleanser", scored: recommendation.cleanser, cat: "Cleanser" },
+    { key: "serum", scored: recommendation.serum, cat: "Serum" },
+    { key: "moisturizer", scored: recommendation.moisturizer, cat: "Moisturizer" },
   ];
 
   return (
-    <div className="ur-page" ref={pageRef}>
-      {/* ═══ Section 1: Skin Profile ═══ */}
-      <section className="ur-section ur-section-profile">
-        <div className="ur-parallax ur-profile-bg-accent" />
-        <div className="ur-section-inner">
-          <div className="ur-reveal">
-            <span className="ur-label">Your Skin Analysis</span>
-            <h1 className="ur-hero-title">
-              {customerName ? `${customerName}, Here\u2019s` : "Here\u2019s"} What We Found
-            </h1>
-          </div>
+    <div className="rd-page">
+      {/* ═══ Left Panel ═══ */}
+      <div className="rd-left">
+        {/* Header */}
+        <div className="rd-header">
+          <span className="rd-label">Your Results</span>
+          <h1 className="rd-title">
+            {customerName ? `${customerName}\u2019s` : "Your"} Skin Profile
+          </h1>
+        </div>
 
-          <div className="ur-profile-type ur-reveal">
-            <span className="ur-section-label">Your Skin Type</span>
-            <h2 className="ur-profile-type-name">{skinTypeLabel}</h2>
-            <p className="ur-profile-type-desc">{skinDescription}</p>
-          </div>
+        {/* 3D Botanical Carousel */}
+        <div className="rd-scene-header">
+          <span className="rd-label">Selected For Your Skin</span>
+          <h2 className="rd-scene-title">Key Botanicals</h2>
+        </div>
+        <ProductScene botanicals={botanicalItems} />
 
-          {concerns.length > 0 && (
-            <div className="ur-profile-concerns ur-reveal">
-              <span className="ur-section-label">Your Concerns</span>
-              <div className="ur-concerns-grid">
-                {concerns.map((concern) => (
-                  <div key={concern} className="ur-concern-card">
-                    <h3 className="ur-concern-name">{concern}</h3>
-                    <p className="ur-concern-desc">
-                      {CONCERN_EXPLANATIONS[concern] ?? "We\u2019ve noted this concern and factored it into your formulation."}
-                    </p>
-                  </div>
-                ))}
+        {/* Tab Navigation */}
+        <div className="rd-tabs">
+          <div className="rd-tabs-bar">
+            {TABS.map((tab, i) => (
+              <button
+                key={tab.key}
+                ref={(el) => { tabButtonsRef.current[i] = el; }}
+                type="button"
+                className={`rd-tab${activeTab === tab.key ? " rd-tab-active" : ""}`}
+                onClick={() => switchTab(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+            <div ref={tabIndicatorRef} className="rd-tab-indicator" />
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        <div ref={tabContentRef} className="rd-tab-content">
+          {/* ─── Analysis Tab ─── */}
+          {activeTab === "analysis" && (
+            <div className="rd-analysis">
+              <div className="rd-analysis-type">
+                <span className="rd-label-sm">Skin Type</span>
+                <h2 className="rd-analysis-type-name">{skinTypeLabel}</h2>
+                <p className="rd-analysis-type-desc">{skinDescription}</p>
               </div>
+
+              {concerns.length > 0 && (
+                <div className="rd-analysis-concerns">
+                  <span className="rd-label-sm">Your Concerns</span>
+                  <div className="rd-concerns-list">
+                    {concerns.map((concern) => (
+                      <div key={concern} className="rd-concern">
+                        <h3 className="rd-concern-name">{concern}</h3>
+                        <p className="rd-concern-desc">
+                          {CONCERN_EXPLANATIONS[concern] ?? "Factored into your formulation."}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {topPriority && (
+                <div className="rd-analysis-priority">
+                  <span className="rd-label-sm">Top Priority</span>
+                  <p className="rd-priority-text">
+                    <strong>{topPriority}</strong> drives the hero active in your serum at maximum concentration.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
-          {topPriority && (
-            <div className="ur-profile-priority ur-reveal">
-              <span className="ur-section-label">Your Top Priority</span>
-              <p className="ur-priority-text">
-                You ranked <strong>{topPriority}</strong> as your most important goal.
-                This drives the hero active in your serum at maximum concentration.
-              </p>
+          {/* ─── Regimen Tab ─── */}
+          {activeTab === "regimen" && (
+            <div className="rd-regimen">
+              {productEntries.map(({ key, scored, cat }) => {
+                if (!scored) return null;
+                const product = scored.product;
+                const actives = product.ingredients.filter(
+                  (i) =>
+                    i.function?.includes("Active") ||
+                    i.function?.includes("Phase-Shot") ||
+                    i.function?.includes("Extract")
+                );
+
+                return (
+                  <div
+                    key={key}
+                    className={`rd-product-card${""}`}
+                  >
+                    <div className="rd-product-top">
+                      <div>
+                        <span className="rd-product-cat">{cat}</span>
+                        <h3 className="rd-product-name">{product.name}</h3>
+                        <p className="rd-product-skin">For {product.skin_type}</p>
+                      </div>
+                      <span className="rd-product-price">&euro;{PRODUCT_PRICES[cat]}</span>
+                    </div>
+
+                    <div className="rd-product-actives">
+                      {actives.slice(0, 4).map((ing) => (
+                        <span key={ing.id} className="rd-active-tag">{ing.name}</span>
+                      ))}
+                    </div>
+
+                    <div className="rd-product-reasons">
+                      {scored.reasons.map((reason, i) => (
+                        <p key={i} className="rd-reason">{reason}</p>
+                      ))}
+                    </div>
+
+                    <div className="rd-product-fragrance">
+                      <span className="rd-label-xs">Fragrance</span>
+                      <span className="rd-fragrance-val">{FRAGRANCE_LABELS[fragranceOption]}</span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {recommendation.gaps.length > 0 && (
+                <div className="rd-gaps">
+                  {recommendation.gaps.map((gap, i) => (
+                    <p key={i} className="rd-gap">{gap}</p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
-      </section>
 
-      {/* ═══ Section 2: Key Botanicals ═══ */}
-      {botanicals.length > 0 && (
-        <section className="ur-section ur-section-botanicals">
-          <div className="ur-parallax ur-botanicals-bg-accent" />
-          <div className="ur-section-inner">
-            <div className="ur-reveal">
-              <span className="ur-label">Selected For Your Skin</span>
-              <h2 className="ur-section-title">Your Key Botanicals</h2>
-              <p className="ur-section-subtitle">
-                Eastern European botanical extracts selected for your skin profile
-              </p>
-            </div>
+        {/* Footer */}
+        <div className="rd-footer">
+          <button onClick={() => go("/quiz")} className="rd-btn-ghost">
+            Retake Quiz
+          </button>
+          <a href="/report" className="rd-report-link">Detailed Report</a>
+        </div>
+      </div>
 
-            <div className="ur-botanicals-grid ur-reveal">
-              {botanicals.map((entry) => (
-                <div key={entry.ingredient.id} className="ur-botanical-card">
-                  <span className="ur-botanical-category">{entry.category}</span>
-                  <h3 className="ur-botanical-name">{entry.ingredient.name}</h3>
-                  {entry.ingredient.scientific_name && (
-                    <p className="ur-botanical-scientific">
-                      {entry.ingredient.scientific_name}
-                    </p>
-                  )}
-                  {entry.ingredient.skincare_priorities && entry.ingredient.skincare_priorities.length > 0 && (
-                    <div className="ur-botanical-priorities">
-                      <span className="ur-botanical-priorities-label">Benefits</span>
-                      <p className="ur-botanical-priorities-value">
-                        {entry.ingredient.skincare_priorities.join(", ")}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ═══ Right Panel — Order Summary ═══ */}
+      <div className="rd-right">
+        <div className="rd-order">
+          <span className="rd-label">Your Order</span>
 
-      {/* ═══ Section 3: Your Products ═══ */}
-      <section className="ur-section ur-section-products" ref={stickyTriggerRef}>
-        <div className="ur-parallax ur-products-bg-accent" />
-        <div className="ur-section-inner">
-          <div className="ur-reveal">
-            <span className="ur-label">Crafted For You</span>
-            <h2 className="ur-section-title">
-              {customerName ? `${customerName}\u2019s` : "Your"} Personalised Regimen
-            </h2>
-            <p className="ur-section-subtitle">
-              Based on your {skinTypeLabel.toLowerCase()} skin profile
-              {recommendation.concerns.length > 0 &&
-                ` and your top ${recommendation.concerns.length} concerns`}
-            </p>
-          </div>
-
-          {hasAnyProduct ? (
-            <div className="ur-products-grid ur-reveal">
-              {recommendation.cleanser && (
-                <SerumCard
-                  result={recommendation.cleanser}
-                  fragranceOption={fragranceOption}
-                  selected={selected.cleanser}
-                  onToggleSelect={() => toggleProduct("cleanser")}
-                  showSelection
-                />
-              )}
-              {recommendation.serum && (
-                <SerumCard
-                  result={recommendation.serum}
-                  fragranceOption={fragranceOption}
-                  selected={selected.serum}
-                  onToggleSelect={() => toggleProduct("serum")}
-                  showSelection
-                />
-              )}
-              {recommendation.moisturizer && (
-                <SerumCard
-                  result={recommendation.moisturizer}
-                  fragranceOption={fragranceOption}
-                  selected={selected.moisturizer}
-                  onToggleSelect={() => toggleProduct("moisturizer")}
-                  showSelection
-                />
-              )}
-            </div>
-          ) : (
-            <div className="ur-no-products ur-reveal">
-              <p>We don&apos;t have products matching your profile yet. New formulations are in development.</p>
-            </div>
-          )}
-
-          {recommendation.gaps.length > 0 && (
-            <div className="ur-gaps ur-reveal">
-              {recommendation.gaps.map((gap, i) => (
-                <p key={i} className="ur-gap-item">{gap}</p>
-              ))}
-            </div>
-          )}
-
-          {/* ─── Pricing + Plan Selection ─── */}
-          {selectedCount > 0 && (
-            <div className="ur-checkout-panel ur-reveal">
-              <div className="ur-checkout-pricing">
-                <div className="ur-pricing-row">
-                  <span className="ur-pricing-label">
-                    {isBundle ? "Full Routine" : `${selectedCount} product${selectedCount > 1 ? "s" : ""}`}
+          {/* Product list */}
+          <div className="rd-order-items">
+            {productEntries.map(({ key, scored, cat }) => {
+              if (!scored) return null;
+              return (
+                <div key={key} className="rd-order-item">
+                  <button
+                    type="button"
+                    className={`rd-order-check${selected[key] ? " rd-order-check-on" : ""}`}
+                    onClick={() => toggleProduct(key)}
+                    aria-label={selected[key] ? `Remove ${cat}` : `Add ${cat}`}
+                  >
+                    {selected[key] && (
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+                  <div className="rd-order-item-info">
+                    <span className="rd-order-item-cat">{cat}</span>
+                    <span className="rd-order-item-name">{scored.product.name}</span>
+                  </div>
+                  <span className={`rd-order-item-price${!selected[key] ? " rd-order-item-price-off" : ""}`}>
+                    &euro;{PRODUCT_PRICES[cat]}
                   </span>
-                  <span className="ur-pricing-value">&euro;{subtotal}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Pricing */}
+          {selectedCount > 0 && (
+            <>
+              <div className="rd-order-pricing">
+                <div className="rd-price-row">
+                  <span>{isBundle ? "Full Routine" : `${selectedCount} product${selectedCount > 1 ? "s" : ""}`}</span>
+                  <span className="rd-price-val">&euro;{subtotal}</span>
                 </div>
                 {isBundle && (
-                  <p className="ur-pricing-note">
-                    Bundle saves you &euro;{(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE} vs individual prices
+                  <p className="rd-price-save">
+                    Bundle saves &euro;{(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE}
                   </p>
                 )}
-                <div className="ur-pricing-sub">
-                  <span className="ur-pricing-sub-label">With subscription</span>
-                  <span className="ur-pricing-sub-value">
-                    &euro;{subscriptionTotal}
-                    <span className="ur-pricing-freq"> / shipment</span>
-                  </span>
+                <div className="rd-price-row rd-price-sub">
+                  <span>With subscription</span>
+                  <span>&euro;{subscriptionTotal}<small> / shipment</small></span>
                 </div>
               </div>
 
-              <div className="ur-plan-selector">
-                <span className="ur-section-label">Choose Your Plan</span>
-                <div className="ur-plan-options">
-                  {PLAN_OPTIONS.map((option) => (
+              {/* Plan selector */}
+              <div className="rd-plan">
+                <span className="rd-label-sm">Plan</span>
+                <div className="rd-plan-btns">
+                  {PLAN_OPTIONS.map((opt) => (
                     <button
-                      key={option.value}
+                      key={opt.value}
                       type="button"
-                      className={`ur-plan-option${plan === option.value ? " ur-plan-option-active" : ""}`}
-                      onClick={() => setPlan(option.value)}
+                      className={`rd-plan-btn${plan === opt.value ? " rd-plan-btn-on" : ""}`}
+                      onClick={() => setPlan(opt.value)}
                     >
-                      <span className={`ur-plan-radio${plan === option.value ? " ur-plan-radio-active" : ""}`} />
-                      <span className="ur-plan-text">
-                        <span className="ur-plan-name">{option.label}</span>
-                        <span className="ur-plan-desc">{option.desc}</span>
-                      </span>
+                      <span className="rd-plan-btn-name">{opt.label}</span>
+                      <span className="rd-plan-btn-desc">{opt.desc}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="ur-checkout-summary">
+              {/* Total */}
+              <div className="rd-order-total">
                 {discount > 0 && (
-                  <div className="ur-summary-row">
-                    <span className="ur-summary-label">Discount</span>
-                    <span className="ur-summary-discount">-&euro;{discount.toFixed(2)}</span>
+                  <div className="rd-price-row">
+                    <span>Discount</span>
+                    <span className="rd-discount">-&euro;{discount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="ur-summary-row ur-summary-total">
-                  <span className="ur-summary-label">Total</span>
-                  <span className="ur-summary-value">&euro;{currentTotal}</span>
+                <div className="rd-price-row rd-total-row">
+                  <span>Total</span>
+                  <span className="rd-total-val">&euro;{currentTotal}</span>
                 </div>
-                {plan === "annual" && isBundle && (
-                  <p className="ur-summary-note">Billed as &euro;600 annually</p>
-                )}
               </div>
 
-              <div className="ur-checkout-actions">
+              {/* Actions */}
+              <div className="rd-order-actions">
                 <button
-                  className="ur-btn-primary"
+                  className="rd-btn-primary"
                   onClick={handleCheckout}
                   disabled={checkoutLoading}
                 >
-                  {checkoutLoading ? "Redirecting to Stripe..." : "Checkout"}
+                  {checkoutLoading ? "Redirecting..." : "Checkout"}
                 </button>
-                <button className="ur-btn-secondary" onClick={handleContinueToCart}>
-                  View Full Cart
+                <button className="rd-btn-secondary" onClick={handleContinueToCart}>
+                  View Cart
                 </button>
               </div>
-              {checkoutError && <p className="ur-checkout-error">{checkoutError}</p>}
-            </div>
+              {checkoutError && <p className="rd-checkout-err">{checkoutError}</p>}
+            </>
           )}
-
-          <div className="ur-footer-links ur-reveal">
-            <button onClick={() => go("/quiz")} className="ur-btn-secondary">
-              Retake Quiz
-            </button>
-            <a href="/report" className="ur-report-link">View detailed report</a>
-          </div>
         </div>
-      </section>
-
-      {/* ═══ Sticky Bottom Bar ═══ */}
-      {selectedCount > 0 && showStickyBar && (
-        <div className="ur-sticky-bar">
-          <div className="ur-sticky-inner">
-            <span className="ur-sticky-summary">
-              {selectedCount} product{selectedCount > 1 ? "s" : ""} — &euro;{currentTotal}
-              {plan !== "one-time" && <span className="ur-sticky-plan"> ({PLAN_OPTIONS.find(o => o.value === plan)?.label})</span>}
-            </span>
-            <button
-              className="ur-sticky-btn"
-              onClick={handleCheckout}
-              disabled={checkoutLoading}
-            >
-              {checkoutLoading ? "Redirecting..." : "Checkout"}
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -3955,696 +3955,900 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   Unified Results Page — Parallax + Reveal-on-Scroll
+   Results Dashboard — Split Panel + Three.js + Tabs
    ═══════════════════════════════════════════════════ */
 
-/* ─── Page wrapper ─── */
-.ur-page {
+/* ─── Page Layout ─── */
+.rd-page {
+  display: flex;
+  min-height: 100vh;
   background: var(--bg-primary);
 }
 
-/* ─── Loading / Error screen ─── */
-.ur-loading-screen {
+/* ─── Left Panel ─── */
+.rd-left {
+  flex: 1;
+  min-width: 0;
+  padding: 3rem 3rem 2rem;
+  overflow-y: auto;
+  max-height: 100vh;
+  scrollbar-width: none;
+}
+
+.rd-left::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Right Panel ─── */
+.rd-right {
+  width: 380px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg-cream);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.rd-right::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Loading ─── */
+.rd-loading {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--bg-primary);
+  width: 100%;
 }
 
-.ur-loading-content {
+.rd-loading-inner {
   text-align: center;
-  max-width: 480px;
-  padding: 1.5rem;
+  max-width: 400px;
+  padding: 2rem;
 }
 
-.ur-loading-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 300;
-  color: var(--text-primary);
-}
-
-.ur-loading-desc {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-top: 0.5rem;
-}
-
-/* ─── Sections ─── */
-.ur-section {
-  position: relative;
-  overflow: hidden;
-  padding: 6rem 1.5rem;
-}
-
-.ur-section:first-child {
-  padding-top: 7.5rem;
-}
-
-.ur-section-inner {
-  position: relative;
-  z-index: 2;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ─── Parallax background accents ─── */
-.ur-parallax {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.ur-profile-bg-accent {
-  width: 500px;
-  height: 500px;
+.rd-loading-orb {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 125, 60, 0.04) 0%, transparent 70%);
-  top: -100px;
-  right: -200px;
+  background: radial-gradient(circle, rgba(139, 125, 60, 0.25) 0%, transparent 70%);
+  margin: 0 auto 1.5rem;
+  animation: rd-pulse 2s ease-in-out infinite;
 }
 
-.ur-botanicals-bg-accent {
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 125, 60, 0.05) 0%, transparent 70%);
-  top: 50px;
-  left: -250px;
+@keyframes rd-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
 }
 
-.ur-products-bg-accent {
-  width: 700px;
-  height: 700px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 125, 60, 0.03) 0%, transparent 70%);
-  bottom: -200px;
-  right: -300px;
-}
-
-/* ─── Section dividers ─── */
-.ur-section-profile {
-  border-bottom: 1px solid var(--border);
-}
-
-.ur-section-botanicals {
-  background: var(--bg-cream);
-  border-bottom: 1px solid var(--border);
-}
-
-.ur-section-products {
-  padding-bottom: 8rem;
-}
-
-/* ─── Shared typography ─── */
-.ur-label {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: block;
-  text-align: center;
-}
-
-.ur-hero-title {
+.rd-loading-title {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
   color: var(--text-primary);
-  margin-top: 0.5rem;
-  text-align: center;
 }
 
-.ur-section-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-  font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  margin-top: 0.5rem;
-  text-align: center;
-}
-
-.ur-section-subtitle {
+.rd-loading-desc {
   font-family: "Satoshi", sans-serif;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  font-weight: 400;
-  line-height: 1.7;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
-  text-align: center;
-  max-width: 500px;
 }
 
-.ur-section-label {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 0.75rem;
+/* ─── Header ─── */
+.rd-header {
+  margin-bottom: 1.5rem;
+  padding-top: 5.5rem;
 }
 
-/* ─── Section 1: Skin Profile ─── */
-.ur-profile-type {
-  width: 100%;
-  margin-top: 3.5rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.ur-profile-type-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 300;
-  line-height: 1.1;
-  color: var(--text-primary);
-}
-
-.ur-profile-type-desc {
-  font-family: "Satoshi", sans-serif;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--text-secondary);
-  margin-top: 1rem;
-}
-
-.ur-profile-concerns {
-  width: 100%;
-  margin-top: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.ur-concerns-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.ur-concern-card {
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-cream);
-}
-
-.ur-concern-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-.ur-concern-desc {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.88rem;
-  font-weight: 400;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-top: 0.4rem;
-}
-
-.ur-profile-priority {
-  width: 100%;
-  margin-top: 3rem;
-}
-
-.ur-priority-text {
-  font-family: "Satoshi", sans-serif;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  font-weight: 400;
-  line-height: 1.8;
-  color: var(--text-secondary);
-}
-
-.ur-priority-text strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* ─── Section 2: Key Botanicals ─── */
-.ur-botanicals-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 1100px;
-  width: 100%;
-  margin-top: 3rem;
-}
-
-@media (max-width: 1000px) {
-  .ur-botanicals-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .ur-botanicals-grid {
-    grid-template-columns: 1fr;
-    max-width: 420px;
-  }
-}
-
-.ur-botanical-card {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.75rem;
-  background-color: var(--bg-primary);
-  display: flex;
-  flex-direction: column;
-}
-
-.ur-botanical-category {
+.rd-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--accent);
+  display: block;
 }
 
-.ur-botanical-name {
+.rd-title {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
-  font-weight: 400;
-  line-height: 1.15;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-top: 0.35rem;
+}
+
+/* ─── Scene Header ─── */
+.rd-scene-header {
+  margin-bottom: 0.75rem;
+}
+
+.rd-scene-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 300;
+  line-height: 1.1;
   color: var(--text-primary);
   margin-top: 0.25rem;
 }
 
-.ur-botanical-scientific {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 0.9rem;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--text-secondary);
-  margin-top: 0.15rem;
+/* ─── Three.js Scene ─── */
+.rd-scene-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, rgba(139, 125, 60, 0.06) 0%, transparent 70%);
+  margin-bottom: 1.5rem;
 }
 
-.ur-botanical-priorities {
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+.rd-scene-loading {
+  background: radial-gradient(ellipse at center, rgba(139, 125, 60, 0.04) 0%, transparent 70%);
 }
 
-.ur-botanical-priorities-label {
+.rd-scene-labels {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  pointer-events: auto;
+}
+
+.rd-scene-label {
   font-family: "Satoshi", sans-serif;
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.3s ease;
 }
 
-.ur-botanical-priorities-value {
+.rd-scene-label:hover,
+.rd-scene-label-active {
+  color: var(--accent);
+}
+
+/* ─── Scene Arrows ─── */
+.rd-scene-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(245, 240, 232, 0.85);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  z-index: 10;
+}
+
+.rd-scene-arrow:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(245, 240, 232, 0.95);
+}
+
+.rd-scene-arrow-left {
+  left: 12px;
+}
+
+.rd-scene-arrow-right {
+  right: 12px;
+}
+
+/* ─── Scene Dots ─── */
+.rd-scene-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.rd-scene-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.rd-scene-dot-active {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+
+/* ─── Orb HTML Labels ─── */
+.rd-orb-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.rd-orb-label-cat {
   font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rd-orb-label-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.9rem;
   font-weight: 400;
   color: var(--text-primary);
-  margin-top: 0.3rem;
+  line-height: 1.1;
 }
 
-/* ─── Section 3: Products ─── */
-.ur-products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 1100px;
-  width: 100%;
-  margin-top: 3rem;
-}
-
-@media (max-width: 900px) {
-  .ur-products-grid {
-    grid-template-columns: 1fr;
-    max-width: 420px;
-  }
-}
-
-.ur-no-products {
-  text-align: center;
-  max-width: 480px;
-  padding: 2rem 0;
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.9rem;
+.rd-orb-label-sci {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  font-style: italic;
   color: var(--text-secondary);
 }
 
-.ur-gaps {
-  max-width: 600px;
-  margin-top: 1.5rem;
-  text-align: center;
+/* ─── Tabs ─── */
+.rd-tabs {
+  margin-bottom: 1.5rem;
 }
 
-.ur-gap-item {
-  font-size: 0.85rem;
-  opacity: 0.5;
+.rd-tabs-bar {
+  position: relative;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.rd-tab {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.rd-tab:hover {
+  color: var(--text-primary);
+}
+
+.rd-tab-active {
+  color: var(--accent);
+}
+
+.rd-tab-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  will-change: transform, width;
+}
+
+/* ─── Tab Content ─── */
+.rd-tab-content {
+  min-height: 300px;
+}
+
+/* ─── Analysis Tab ─── */
+.rd-analysis {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rd-label-sm {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.rd-label-xs {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.rd-analysis-type-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.rd-analysis-type-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-secondary);
   margin-top: 0.5rem;
 }
 
-/* ─── Checkout Panel ─── */
-.ur-checkout-panel {
-  margin-top: 3rem;
-  max-width: 520px;
-  width: 100%;
+.rd-concerns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.ur-checkout-pricing {
-  padding: 2rem;
+.rd-concern {
+  padding: 1rem 1.25rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  background-color: var(--bg-cream);
+  border-radius: 6px;
+  background: var(--bg-cream);
 }
 
-.ur-pricing-row {
+.rd-concern-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.rd-concern-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+.rd-priority-text {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.rd-priority-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ─── Botanicals Tab ─── */
+.rd-botanicals-intro {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+.rd-botanicals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ── Botanical Card ── */
+.rd-botanical-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: var(--bg-cream);
+  transition: border-color 0.4s ease;
+}
+
+.rd-botanical-card:hover {
+  border-color: rgba(139, 125, 60, 0.4);
+}
+
+.rd-botanical-glow {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 182, 122, 0.15) 0%, transparent 60%);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rd-botanical-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  z-index: 1;
+  pointer-events: none;
+  animation: rd-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes rd-shimmer {
+  0% { left: -100%; }
+  50% { left: 150%; }
+  100% { left: 150%; }
+}
+
+.rd-botanical-content {
+  position: relative;
+  z-index: 2;
+}
+
+.rd-botanical-cat {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rd-botanical-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-top: 0.2rem;
+}
+
+.rd-botanical-sci {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-top: 0.1rem;
+}
+
+.rd-botanical-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.rd-botanical-tag {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: rgba(139, 125, 60, 0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* ─── Regimen Tab ─── */
+.rd-regimen {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rd-product-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-cream);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rd-product-card:hover,
+.rd-product-card-highlight {
+  border-color: rgba(139, 125, 60, 0.35);
+  box-shadow: 0 2px 20px rgba(139, 125, 60, 0.06);
+}
+
+.rd-product-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.rd-product-cat {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rd-product-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-top: 0.15rem;
+}
+
+.rd-product-skin {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+.rd-product-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.rd-product-actives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.rd-active-tag {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background: rgba(139, 125, 60, 0.06);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+.rd-product-reasons {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.rd-reason {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.rd-reason + .rd-reason {
+  margin-top: 0.25rem;
+}
+
+.rd-product-fragrance {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.rd-fragrance-val {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.rd-gaps {
+  padding: 0.75rem 0;
+}
+
+.rd-gap {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* ─── Footer ─── */
+.rd-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.rd-btn-ghost {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.rd-btn-ghost:hover {
+  color: var(--text-primary);
+}
+
+.rd-report-link {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.rd-report-link:hover {
+  color: var(--accent);
+}
+
+/* ═══ Right Panel — Order ═══ */
+.rd-order {
+  padding: 7.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* ─── Order items ─── */
+.rd-order-items {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rd-order-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.rd-order-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  color: #fff;
+  padding: 0;
+}
+
+.rd-order-check-on {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.rd-order-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rd-order-item-cat {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rd-order-item-name {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rd-order-item-price {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rd-order-item-price-off {
+  opacity: 0.3;
+  text-decoration: line-through;
+}
+
+/* ─── Pricing ─── */
+.rd-order-pricing {
+  margin-top: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.rd-price-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
 }
 
-.ur-pricing-label {
+.rd-price-val {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.rd-price-save {
   font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-top: 0.2rem;
+}
+
+.rd-price-sub {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.rd-price-sub small {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+}
+
+/* ─── Plan ─── */
+.rd-plan {
+  margin-top: 0.75rem;
+}
+
+.rd-plan-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rd-plan-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.rd-plan-btn:hover {
+  background: rgba(139, 125, 60, 0.03);
+}
+
+.rd-plan-btn-on {
+  border-color: var(--accent);
+  background: rgba(139, 125, 60, 0.06);
+}
+
+.rd-plan-btn-name {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
-.ur-pricing-value {
+.rd-plan-btn-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+/* ─── Total ─── */
+.rd-order-total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.rd-discount {
+  color: #5a8a3c;
+  font-weight: 500;
+}
+
+.rd-total-row {
+  margin-top: 0.35rem;
+}
+
+.rd-total-row span:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rd-total-val {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--text-primary);
 }
 
-.ur-pricing-note {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.75rem;
-  color: var(--accent);
-  margin-top: 0.25rem;
-}
-
-.ur-pricing-sub {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1rem;
+/* ─── Actions ─── */
+.rd-order-actions {
+  margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.ur-pricing-sub-label {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.ur-pricing-sub-value {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: var(--accent);
-}
-
-.ur-pricing-freq {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-}
-
-/* ─── Plan Selector ─── */
-.ur-plan-selector {
-  margin-top: 2rem;
-}
-
-.ur-plan-options {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.ur-plan-option {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-cream);
-  cursor: pointer;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-  text-align: left;
-  width: 100%;
-}
-
-.ur-plan-option:hover {
-  background: rgba(139, 125, 60, 0.04);
-}
-
-.ur-plan-option-active {
-  border-color: var(--accent);
-  background: rgba(139, 125, 60, 0.06);
-}
-
-.ur-plan-radio {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  position: relative;
-  transition: border-color 0.3s ease;
-}
-
-.ur-plan-radio-active {
-  border-color: var(--accent);
-}
-
-.ur-plan-radio-active::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.ur-plan-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.ur-plan-name {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ur-plan-desc {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin-top: 0.1rem;
-}
-
-/* ─── Checkout Summary ─── */
-.ur-checkout-summary {
-  margin-top: 1.5rem;
-  padding: 1.25rem 0;
-  border-top: 1px solid var(--border);
-}
-
-.ur-summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.ur-summary-label {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.ur-summary-discount {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #5a8a3c;
-}
-
-.ur-summary-total .ur-summary-label {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.ur-summary-value {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.8rem;
-  font-weight: 400;
-  color: var(--text-primary);
-}
-
-.ur-summary-note {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-align: right;
-  margin-top: -0.25rem;
-}
-
-/* ─── Checkout Actions ─── */
-.ur-checkout-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.ur-checkout-error {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  color: #b44;
-  margin-top: 0.75rem;
-  text-align: center;
-}
-
-/* ─── Buttons ─── */
-.ur-btn-primary {
-  display: inline-block;
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #fff;
-  background-color: var(--accent);
-  padding: 1rem 2.5rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.25s ease;
-  flex: 1;
-  text-align: center;
-}
-
-.ur-btn-primary:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-.ur-btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.ur-btn-secondary {
-  display: inline-block;
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  background: transparent;
-  padding: 1rem 2.5rem;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: border-color 0.3s ease, color 0.3s ease;
-}
-
-.ur-btn-secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* ─── Footer links ─── */
-.ur-footer-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.ur-report-link {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.ur-report-link:hover {
-  color: var(--text-primary);
-}
-
-/* ─── Sticky Bottom Bar ─── */
-.ur-sticky-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: var(--bg-cream);
-  border-top: 1px solid var(--border);
-  padding: 0.75rem 1.5rem;
-  animation: ur-slideUp 0.4s ease forwards;
-}
-
-@keyframes ur-slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.ur-sticky-inner {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.ur-sticky-summary {
-  font-family: "Satoshi", sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ur-sticky-plan {
-  font-weight: 400;
-  color: var(--text-secondary);
-}
-
-.ur-sticky-btn {
+.rd-btn-primary {
   font-family: "Satoshi", sans-serif;
   font-size: 0.65rem;
   font-weight: 600;
@@ -4652,54 +4856,106 @@ body {
   text-transform: uppercase;
   color: #fff;
   background-color: var(--accent);
-  padding: 0.75rem 2rem;
+  padding: 0.9rem 2rem;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+  text-align: center;
+  width: 100%;
 }
 
-.ur-sticky-btn:hover {
+.rd-btn-primary:hover {
   background-color: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
-.ur-sticky-btn:disabled {
+.rd-btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* ─── Responsive adjustments ─── */
-@media (max-width: 768px) {
-  .ur-section {
-    padding: 4rem 1.25rem;
-  }
+.rd-btn-secondary {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0.7rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
 
-  .ur-section:first-child {
-    padding-top: 6.5rem;
-  }
+.rd-btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
-  .ur-section-products {
-    padding-bottom: 6rem;
-  }
+.rd-checkout-err {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: #b44;
+  margin-top: 0.5rem;
+  text-align: center;
+}
 
-  .ur-checkout-actions {
+/* ═══ Responsive ═══ */
+@media (max-width: 900px) {
+  .rd-page {
     flex-direction: column;
   }
 
-  .ur-sticky-summary {
-    font-size: 0.75rem;
+  .rd-left {
+    max-height: none;
+    padding: 2rem 1.5rem;
   }
 
-  .ur-sticky-btn {
-    font-size: 0.6rem;
-    padding: 0.65rem 1.5rem;
+  .rd-right {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    max-height: none;
   }
 
-  .ur-concern-card {
-    background: var(--bg-primary);
+  .rd-order {
+    position: static;
   }
 
-  .ur-botanical-card {
-    background: var(--bg-cream);
+  .rd-scene-container {
+    height: 220px;
+  }
+
+  .rd-botanicals-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .rd-left {
+    padding: 1.5rem 1rem;
+  }
+
+  .rd-right {
+    padding: 0;
+  }
+
+  .rd-order {
+    padding: 1.5rem 1rem;
+  }
+
+  .rd-title {
+    font-size: 1.8rem;
+  }
+
+  .rd-scene-container {
+    height: 180px;
+    border-radius: 8px;
   }
 }
