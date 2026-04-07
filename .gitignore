@@ -17,7 +17,6 @@ fix-migration.sql
 generate-migration.js
 
 # Lock files (each sub-project has its own)
-app/package-lock.json
 recip3/package-lock.json
 recip3-test/package-lock.json
 
@@ -56,3 +55,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.env*.local
