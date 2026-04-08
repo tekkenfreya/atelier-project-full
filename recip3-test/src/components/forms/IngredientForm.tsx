@@ -44,7 +44,7 @@ type IngredientFormData = z.infer<typeof ingredientSchema>;
 
 interface IngredientFormProps {
   initialData?: any;
-  onSubmit: (data: IngredientFormData & { image_url?: string }) => Promise<void>;
+  onSubmit: (data: IngredientFormData & { image_url?: string; landscape_url?: string }) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -53,6 +53,8 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || "");
+  const [landscapeFile, setLandscapeFile] = useState<File | null>(null);
+  const [landscapePreview, setLandscapePreview] = useState<string>(initialData?.landscape_url || "");
   const [uploading, setUploading] = useState(false);
 
   const form = useForm<IngredientFormData>({
@@ -103,6 +105,23 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
     setImagePreview("");
   };
 
+  const handleLandscapeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image must be less than 5MB");
+        return;
+      }
+      setLandscapeFile(file);
+      setLandscapePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeLandscape = () => {
+    setLandscapeFile(null);
+    setLandscapePreview("");
+  };
+
   const uploadImage = async (): Promise<string | null> => {
     if (!imageFile) return initialData?.image_url || null;
 
@@ -132,10 +151,41 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
     }
   };
 
+  const uploadLandscape = async (): Promise<string | null> => {
+    if (!landscapeFile) return initialData?.landscape_url || null;
+
+    setUploading(true);
+    try {
+      const fileExt = landscapeFile.name.split(".").pop();
+      const fileName = `landscape_${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("ingredient-images")
+        .upload(fileName, landscapeFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from("ingredient-images")
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error("Error uploading landscape:", error);
+      toast.error("Failed to upload landscape image");
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (data: IngredientFormData) => {
     setLoading(true);
     try {
-      const imageUrl = await uploadImage();
+      const [imageUrl, landscapeUrl] = await Promise.all([
+        uploadImage(),
+        uploadLandscape(),
+      ]);
       // Transform empty strings to null for optional fields
       const cleanedData = {
         ...data,
@@ -152,6 +202,7 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
         quantity_unit: data.quantity_unit || null,
         comments: data.comments || null,
         image_url: imageUrl || undefined,
+        landscape_url: landscapeUrl || undefined,
       };
       await onSubmit(cleanedData);
     } finally {
@@ -380,6 +431,46 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
                   className="hidden"
                 />
                 <Upload className="h-8 w-8 text-muted-foreground" />
+              </label>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <FormLabel>Landscape Image</FormLabel>
+          <p className="text-xs text-muted-foreground mb-2">
+            Region/terrain photo for the extract origin map
+          </p>
+          <div className="mt-1">
+            {landscapePreview ? (
+              <div className="relative inline-block">
+                <img
+                  src={landscapePreview}
+                  alt="Landscape preview"
+                  className="h-32 w-48 object-cover rounded-lg border"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute -top-2 -right-2 h-6 w-6"
+                  onClick={removeLandscape}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <label className="flex items-center justify-center w-48 h-32 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLandscapeChange}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center gap-1">
+                  <Upload className="h-6 w-6 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Landscape</span>
+                </div>
               </label>
             )}
           </div>

@@ -22,7 +22,22 @@
       "Bash(npx supabase:*)",
       "Bash(cd:*)",
       "Bash(bash \"C:\\\\Users\\\\Egofoxxx\\\\.claude-personal\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.2\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\Egofoxxx\\\\Documents\\\\Development Area\\\\Web Development Kyrill\" 2>&1)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(node -e \":*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:prose.com)",
+      "Bash(find 'C:\\\\Users\\\\Egofoxxx\\\\Documents\\\\Development Area\\\\beautyProject-webapp' -name *.tsx -o -name layout.js -o -name layout.ts)",
+      "Bash(find 'C:/Users/Egofoxxx/Documents/Development Area/beautyProject-webapp/src' -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
+      "Bash(npx kill-port:*)",
+      "Bash(cargo:*)",
+      "Bash(lean-ctx:*)",
+      "Bash(git:*)",
+      "Bash(/mingw64/bin/git log:*)",
+      "Bash(/mingw64/bin/git status:*)",
+      "Bash(/mingw64/bin/git diff:*)",
+      "Bash(/mingw64/bin/git add:*)",
+      "Bash(/mingw64/bin/git commit:*)",
+      "Bash(/mingw64/bin/git:*)"
     ]
   }
 }
