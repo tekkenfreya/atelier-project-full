@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Table,
@@ -8,7 +9,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Eye, Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useTableSort } from "@/hooks/useTableSort";
@@ -22,7 +31,28 @@ interface IngredientsTableProps {
 
 const IngredientsTable = ({ ingredients, loading, isAdmin }: IngredientsTableProps) => {
   const navigate = useNavigate();
-  const { sortedData, sortKey, sortDirection, handleSort } = useTableSort(ingredients, "name");
+  const [search, setSearch] = useState("");
+  const [functionFilter, setFunctionFilter] = useState("all");
+
+  const functions = useMemo(() => {
+    const set = new Set<string>();
+    ingredients.forEach((ing) => {
+      if (ing.function) set.add(ing.function);
+    });
+    return [...set].sort();
+  }, [ingredients]);
+
+  const filtered = useMemo(() => {
+    return ingredients.filter((ing) => {
+      const matchesSearch = search === "" ||
+        ing.name?.toLowerCase().includes(search.toLowerCase()) ||
+        ing.scientific_name?.toLowerCase().includes(search.toLowerCase());
+      const matchesFunction = functionFilter === "all" || ing.function === functionFilter;
+      return matchesSearch && matchesFunction;
+    });
+  }, [ingredients, search, functionFilter]);
+
+  const { sortedData, sortKey, sortDirection, handleSort } = useTableSort(filtered, "name");
 
   if (loading) {
     return (
@@ -43,6 +73,34 @@ const IngredientsTable = ({ ingredients, loading, isAdmin }: IngredientsTablePro
   }
 
   return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search ingredients..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Select value={functionFilter} onValueChange={setFunctionFilter}>
+          <SelectTrigger className="w-[220px]">
+            <SelectValue placeholder="All functions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All functions</SelectItem>
+            {functions.map((fn) => (
+              <SelectItem key={fn} value={fn}>{fn}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {(search || functionFilter !== "all") && (
+          <span className="text-sm text-muted-foreground">
+            {sortedData.length} result{sortedData.length !== 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
     <div className="rounded-md border">
       <Table>
         <TableHeader>
@@ -141,6 +199,7 @@ const IngredientsTable = ({ ingredients, loading, isAdmin }: IngredientsTablePro
           ))}
         </TableBody>
       </Table>
+    </div>
     </div>
   );
 };
