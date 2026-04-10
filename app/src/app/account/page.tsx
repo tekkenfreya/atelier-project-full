@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { signIn, signUp, signOut, getUser } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import dynamic from "next/dynamic";
+import ExtractModal from "@/components/map/ExtractModal";
+
+const EasternEuropeMap = dynamic(() => import("@/components/map/EasternEuropeMap"), {
+  ssr: false,
+  loading: () => <div className="extract-map-container extract-map-loading">Loading map...</div>,
+});
+import { getExtractOrigin } from "@/data/extractOrigins";
+import type { ExtractOrigin } from "@/data/extractOrigins";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,6 +97,16 @@ export default function AccountPage() {
   const [dataLoading, setDataLoading] = useState(false);
   const [customerName, setCustomerName] = useState<string | null>(null);
 
+  // Extract map state
+  const [extractNames, setExtractNames] = useState<string[]>([]);
+  const [landscapeUrls, setLandscapeUrls] = useState<Record<string, string>>({});
+  const [selectedExtract, setSelectedExtract] = useState<{
+    origin: ExtractOrigin;
+    ingredientName: string;
+  } | null>(null);
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [hoveredExtract, setHoveredExtract] = useState<string | null>(null);
+
   // Settings state
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -126,6 +145,49 @@ export default function AccountPage() {
 
       if (quizResponse.data) {
         setQuizResults(quizResponse.data as QuizResult[]);
+
+        // Fetch botanical extracts for the latest quiz's recommended products
+        const latest = quizResponse.data[0] as QuizResult | undefined;
+        if (latest) {
+          const productNames = [
+            latest.recommended_cleanser,
+            latest.recommended_serum,
+            latest.recommended_moisturizer,
+          ].filter(Boolean) as string[];
+
+          if (productNames.length > 0) {
+            const { data: products } = await supabase
+              .from("products")
+              .select("id")
+              .in("name", productNames);
+
+            if (products && products.length > 0) {
+              const productIds = products.map((p: { id: string }) => p.id);
+              const { data: pivots } = await supabase
+                .from("product_ingredients")
+                .select("ingredient_id")
+                .in("product_id", productIds);
+
+              if (pivots && pivots.length > 0) {
+                const ingredientIds = pivots.map((pi: { ingredient_id: string }) => pi.ingredient_id);
+                const { data: ingredients } = await supabase
+                  .from("ingredients")
+                  .select("name, function, landscape_url")
+                  .in("id", ingredientIds)
+                  .ilike("function", "%extract%");
+
+                if (ingredients) {
+                  setExtractNames(ingredients.map((i: { name: string }) => i.name));
+                  const urls: Record<string, string> = {};
+                  ingredients.forEach((i: { name: string; landscape_url: string | null }) => {
+                    if (i.landscape_url) urls[i.name.toLowerCase()] = i.landscape_url;
+                  });
+                  setLandscapeUrls(urls);
+                }
+              }
+            }
+          }
+        }
       }
       if (ordersResponse.data) {
         setOrders(ordersResponse.data as CustomerOrder[]);
@@ -263,6 +325,35 @@ export default function AccountPage() {
     setPasswordSubmitting(false);
   }, [currentPassword, newPassword, passwordSubmitting, user?.email]);
 
+  // Memoize map data to avoid re-creating every render
+  const activeCountries = useMemo(() => {
+    const set = new Set<string>();
+    extractNames.forEach((name) => {
+      const origin = getExtractOrigin(name);
+      if (origin) set.add(origin.country);
+    });
+    return set;
+  }, [extractNames]);
+
+  const countryColors = useMemo(() => {
+    const colors: Record<string, string> = {};
+    // If a specific extract is hovered, use its color for its country
+    if (hoveredExtract) {
+      const hovered = getExtractOrigin(hoveredExtract);
+      if (hovered) {
+        colors[hovered.country] = hovered.color;
+      }
+    }
+    // Fill in remaining countries with their first extract's color
+    extractNames.forEach((name) => {
+      const origin = getExtractOrigin(name);
+      if (origin && !colors[origin.country]) {
+        colors[origin.country] = origin.color;
+      }
+    });
+    return colors;
+  }, [extractNames, hoveredExtract]);
+
   // Loading state
   if (loading) {
     return (
@@ -320,109 +411,87 @@ export default function AccountPage() {
     }
 
     return (
-      <div className="profile-page" ref={pageRef}>
-        {/* HERO */}
-        <section ref={heroRef} className="profile-hero">
-          <div className="profile-content">
-            <h1 className="profile-hero__title">
+      <div className="rd-page" ref={pageRef}>
+        {/* ═══ Left Panel ═══ */}
+        <div className="rd-left">
+          {/* HERO */}
+          <section ref={heroRef} className="profile-hero">
+            <h1 className="rd-title">
               Welcome back{customerName ? `, ${customerName}` : ""}
             </h1>
-            <p className="profile-hero__email">{user.email}</p>
-            {latestQuiz && (
-              <span className="profile-hero__skin-badge">
-                {capitalize(latestQuiz.skin_type)} Skin
-              </span>
-            )}
-          </div>
-        </section>
-
-        {/* YOUR REGIMEN */}
-        {latestQuiz && (
-          <section ref={regimenRef} className="profile-section">
-            <div className="profile-content">
-              <div className="profile-divider" />
-              <h2 className="profile-section__title">Your Regimen</h2>
-              <div className="profile-regimen">
-                {latestQuiz.recommended_serum && (
-                  <div className="profile-regimen__item">
-                    <span className="profile-regimen__label">SERUM</span>
-                    <span className="profile-regimen__name">{latestQuiz.recommended_serum}</span>
-                  </div>
-                )}
-                {latestQuiz.recommended_cleanser && (
-                  <div className="profile-regimen__item">
-                    <span className="profile-regimen__label">CLEANSER</span>
-                    <span className="profile-regimen__name">{latestQuiz.recommended_cleanser}</span>
-                  </div>
-                )}
-                {latestQuiz.recommended_moisturizer && (
-                  <div className="profile-regimen__item">
-                    <span className="profile-regimen__label">MOISTURIZER</span>
-                    <span className="profile-regimen__name">{latestQuiz.recommended_moisturizer}</span>
-                  </div>
-                )}
-              </div>
+            <div className="profile-hero__meta">
+              <span className="profile-hero__email">{user.email}</span>
+              {latestQuiz && (
+                <span className="profile-hero__skin-badge">
+                  {capitalize(latestQuiz.skin_type)} Skin
+                </span>
+              )}
             </div>
           </section>
-        )}
 
-        {/* SKIN PROFILE */}
-        {latestQuiz && (
-          <section ref={skinProfileRef} className="profile-section">
-            <div className="profile-content">
-              <div className="profile-divider" />
-              <h2 className="profile-section__title">Skin Profile</h2>
-              <div className="profile-skin">
-                <div className="profile-skin__block">
-                  <span className="profile-skin__label">Skin Type</span>
-                  <span className="profile-skin__type">
-                    {capitalize(latestQuiz.skin_type)}
-                  </span>
-                </div>
-                {latestQuiz.concerns.length > 0 && (
-                  <div className="profile-skin__block">
-                    <span className="profile-skin__label">Top Concerns</span>
-                    <div className="profile-concerns">
-                      {latestQuiz.concerns.slice(0, 3).map((concern) => (
-                        <span key={concern} className="profile-concern">
-                          {formatConcern(concern)}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {latestQuiz.fragrance_choice && (
-                  <div className="profile-skin__block">
-                    <span className="profile-skin__label">Fragrance</span>
-                    <span className="profile-skin__value">
-                      {FRAGRANCE_LABELS[latestQuiz.fragrance_choice] ?? latestQuiz.fragrance_choice}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* YOUR BOTANICALS */}
-        {latestQuiz && (
-          <section ref={botanicalsRef} className="profile-section">
-            <div className="profile-content">
+          {/* YOUR BOTANICALS — Extract Map */}
+          {latestQuiz && (
+            <section ref={botanicalsRef} className="profile-section">
               <div className="profile-divider" />
               <h2 className="profile-section__title">Your Botanicals</h2>
               <p className="profile-desc">
-                Eastern European botanical extracts selected for your skin.
+                Hover an ingredient to locate its origin.
               </p>
-              <a href="/report" className="profile-text-link">
-                Explore your ingredients
-              </a>
-            </div>
-          </section>
-        )}
 
-        {/* QUIZ HISTORY */}
-        <section ref={quizHistoryRef} className="profile-section">
-          <div className="profile-content">
+              <div className="profile-botanicals-layout">
+                {extractNames.length > 0 && (
+                  <div className="profile-extract-sidebar">
+                    {extractNames.map((name) => {
+                      const origin = getExtractOrigin(name);
+                      if (!origin) return null;
+                      return (
+                        <button
+                          key={name}
+                          type="button"
+                          className={`profile-extract-item${
+                            hoveredExtract === name ? " profile-extract-item-active" : ""
+                          }`}
+                          onClick={() => {
+                            setHoveredCountry(origin.country);
+                            setHoveredExtract(name);
+                            setSelectedExtract({ origin, ingredientName: name });
+                          }}
+                          onMouseEnter={() => {
+                            if (!selectedExtract) {
+                              setHoveredCountry(origin.country);
+                              setHoveredExtract(name);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (!selectedExtract) {
+                              setHoveredCountry(null);
+                              setHoveredExtract(null);
+                            }
+                          }}
+                        >
+                          <span className="profile-extract-item-name">{origin.name}</span>
+                          <span className="profile-extract-item-region">
+                            {origin.region ?? origin.country}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="profile-map-main">
+                  <EasternEuropeMap
+                    highlightedCountry={hoveredCountry}
+                    activeCountries={activeCountries}
+                    countryColors={countryColors}
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* QUIZ HISTORY */}
+          <section ref={quizHistoryRef} className="profile-section">
             <div className="profile-divider" />
             <h2 className="profile-section__title">Quiz History</h2>
             {quizResults.length > 0 ? (
@@ -450,12 +519,10 @@ export default function AccountPage() {
             ) : (
               <p className="profile-empty">No quiz results yet.</p>
             )}
-          </div>
-        </section>
+          </section>
 
-        {/* ORDERS */}
-        <section ref={ordersRef} className="profile-section">
-          <div className="profile-content">
+          {/* ORDERS */}
+          <section ref={ordersRef} className="profile-section">
             <div className="profile-divider" />
             <h2 className="profile-section__title">Orders</h2>
             {orders.length > 0 ? (
@@ -467,7 +534,7 @@ export default function AccountPage() {
                       {Array.isArray(order.items) ? order.items.length : 0}{" "}
                       item{Array.isArray(order.items) && order.items.length !== 1 ? "s" : ""}
                     </span>
-                    <span className="profile-row__detail">€{order.total.toFixed(2)}</span>
+                    <span className="profile-row__detail">&euro;{order.total.toFixed(2)}</span>
                     <span className="profile-row__detail profile-row__detail--muted">
                       {PLAN_LABELS[order.subscription_plan] ?? order.subscription_plan}
                     </span>
@@ -480,35 +547,10 @@ export default function AccountPage() {
             ) : (
               <p className="profile-empty">No orders yet.</p>
             )}
-          </div>
-        </section>
+          </section>
 
-        {/* ACTIONS */}
-        <section ref={actionsRef} className="profile-section">
-          <div className="profile-content">
-            <div className="profile-divider" />
-            <div className="profile-actions">
-              <button
-                type="button"
-                className="profile-btn profile-btn--primary"
-                onClick={() => router.push("/quiz")}
-              >
-                Retake Quiz
-              </button>
-              <button
-                type="button"
-                className="profile-btn profile-btn--outline"
-                onClick={() => router.push("/report")}
-              >
-                View Report
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* SETTINGS */}
-        <section ref={settingsRef} className="profile-section">
-          <div className="profile-content">
+          {/* SETTINGS */}
+          <section ref={settingsRef} className="profile-section">
             <div className="profile-divider" />
             <h2 className="profile-section__title">Settings</h2>
             <div className="profile-settings">
@@ -565,19 +607,101 @@ export default function AccountPage() {
                 </button>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* SIGN OUT */}
-        <footer ref={footerRef} className="profile-signout">
-          <button
-            type="button"
-            className="profile-signout__link"
-            onClick={handleSignOut}
-          >
-            Sign out
-          </button>
-        </footer>
+          {/* FOOTER */}
+          <footer ref={footerRef} className="profile-signout">
+            <button
+              type="button"
+              className="profile-signout__link"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </button>
+          </footer>
+        </div>
+
+        {/* ═══ Right Panel — Account Summary ═══ */}
+        <div className="rd-right">
+          <div className="rd-order">
+            <span className="rd-label">Your Regimen</span>
+
+            {latestQuiz && (
+              <div className="rd-order-items">
+                {latestQuiz.recommended_cleanser && (
+                  <div className="rd-order-item">
+                    <div className="rd-order-item-info">
+                      <span className="rd-order-item-cat">Cleanser</span>
+                      <span className="rd-order-item-name">{latestQuiz.recommended_cleanser}</span>
+                    </div>
+                  </div>
+                )}
+                {latestQuiz.recommended_serum && (
+                  <div className="rd-order-item">
+                    <div className="rd-order-item-info">
+                      <span className="rd-order-item-cat">Serum</span>
+                      <span className="rd-order-item-name">{latestQuiz.recommended_serum}</span>
+                    </div>
+                  </div>
+                )}
+                {latestQuiz.recommended_moisturizer && (
+                  <div className="rd-order-item">
+                    <div className="rd-order-item-info">
+                      <span className="rd-order-item-cat">Moisturizer</span>
+                      <span className="rd-order-item-name">{latestQuiz.recommended_moisturizer}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Skin Profile Summary */}
+            {latestQuiz && (
+              <div className="rd-order-pricing">
+                <div className="rd-price-row">
+                  <span>Skin Type</span>
+                  <span className="rd-price-val">{capitalize(latestQuiz.skin_type)}</span>
+                </div>
+                {latestQuiz.concerns.length > 0 && (
+                  <div className="rd-price-row rd-price-sub">
+                    <span>Concerns</span>
+                    <span>{latestQuiz.concerns.length}</span>
+                  </div>
+                )}
+                {latestQuiz.fragrance_choice && (
+                  <div className="rd-price-row rd-price-sub">
+                    <span>Fragrance</span>
+                    <span>{FRAGRANCE_LABELS[latestQuiz.fragrance_choice] ?? latestQuiz.fragrance_choice}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="rd-order-actions">
+              <button
+                className="rd-btn-primary"
+                onClick={() => router.push("/quiz")}
+              >
+                Retake Quiz
+              </button>
+              <button
+                className="rd-btn-secondary"
+                onClick={() => router.push("/report")}
+              >
+                View Report
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Extract Modal */}
+        <ExtractModal
+          extract={selectedExtract?.origin ?? null}
+          ingredientName={selectedExtract?.ingredientName ?? null}
+          landscapeUrl={selectedExtract ? (landscapeUrls[selectedExtract.ingredientName.toLowerCase()] ?? null) : null}
+          onClose={() => { setSelectedExtract(null); setHoveredCountry(null); setHoveredExtract(null); }}
+        />
       </div>
     );
   }

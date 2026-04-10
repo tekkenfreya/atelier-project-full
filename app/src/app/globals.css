@@ -3195,7 +3195,7 @@ body {
 
 /* Hero */
 .profile-hero {
-  padding: 4rem 0 6rem;
+  padding: 2rem 0 3rem;
 }
 
 .profile-hero--empty {
@@ -3231,36 +3231,42 @@ body {
   margin-bottom: 2.5rem;
 }
 
+.profile-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
 .profile-hero__email {
   font-family: "Satoshi", sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
-  margin-bottom: 1.25rem;
 }
 
 .profile-hero__skin-badge {
   display: inline-block;
   font-family: "Satoshi", sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
   border: 1px solid rgba(139, 125, 60, 0.25);
-  padding: 0.35rem 0.85rem;
+  padding: 0.3rem 0.75rem;
 }
 
 /* Section Layout */
 .profile-section {
-  padding: 5rem 0;
+  padding: 3rem 0;
 }
 
 .profile-section__title {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  font-weight: 300;
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-weight: 400;
   color: var(--text-primary);
-  margin-bottom: 2.5rem;
+  margin-bottom: 0.5rem;
   letter-spacing: -0.01em;
 }
 
@@ -3268,14 +3274,14 @@ body {
   width: 100%;
   height: 1px;
   background-color: var(--border);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .profile-desc {
   font-family: "Satoshi", sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   color: var(--text-secondary);
-  line-height: 1.7;
+  line-height: 1.6;
   max-width: 520px;
   margin-bottom: 1.25rem;
 }
@@ -3687,6 +3693,383 @@ body {
   }
 }
 
+/* ─── Extract Map (Leaflet) ─── */
+.extract-map-container {
+  position: relative;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-cream);
+}
+
+.extract-map-leaflet {
+  width: 100%;
+  height: 420px;
+}
+
+.extract-map-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Override Leaflet zoom controls to match brand */
+.extract-map-container .leaflet-control-zoom a {
+  background: var(--bg-cream);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+.extract-map-container .leaflet-control-zoom a:hover {
+  background: var(--bg-warm);
+}
+
+/* ─── Extract Map Section (Account Page) ─── */
+.profile-botanicals-layout {
+  display: flex;
+  gap: 0;
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-cream);
+}
+
+.profile-extract-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  max-height: 500px;
+  scrollbar-width: none;
+}
+
+.profile-extract-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-extract-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.25s ease;
+}
+
+.profile-extract-item:last-child {
+  border-bottom: none;
+}
+
+.profile-extract-item:hover {
+  background: var(--bg-warm);
+}
+
+.profile-extract-item-active {
+  background: var(--bg-warm);
+  border-left: 3px solid var(--accent);
+}
+
+.profile-extract-item-name {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.profile-extract-item-active .profile-extract-item-name {
+  color: var(--accent);
+}
+
+.profile-extract-item-region {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+}
+
+.profile-map-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-map-main .extract-map-leaflet {
+  height: 500px;
+}
+
+.profile-map-main .extract-map-container {
+  border: none;
+  border-radius: 0;
+}
+
+/* ─── Extract Map Section Responsive ─── */
+@media (max-width: 768px) {
+  .profile-botanicals-layout {
+    flex-direction: column-reverse;
+  }
+
+  .profile-extract-sidebar {
+    width: 100%;
+    max-height: 200px;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+
+  .profile-extract-item {
+    width: auto;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    padding: 0.6rem 0.85rem;
+  }
+
+  .profile-map-main .extract-map-leaflet {
+    height: 300px;
+  }
+}
+
+/* ─── Extract Modal ─── */
+.extract-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 23, 20, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.extract-modal {
+  position: relative;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  max-width: 860px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.extract-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.extract-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 0.25rem;
+  z-index: 5;
+  transition: color 0.3s ease;
+}
+
+.extract-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.extract-modal-layout {
+  display: flex;
+  min-height: 420px;
+}
+
+/* Visual area: stacked layers for cross-dissolve */
+.extract-modal-visual {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  min-height: 420px;
+}
+
+.extract-modal-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.extract-modal-layer .extract-map-leaflet {
+  height: 280px;
+}
+
+.extract-modal-layer .extract-map-container {
+  border: none;
+  border-radius: 0;
+}
+
+.extract-modal-image-layer {
+  pointer-events: none;
+  padding: 0;
+}
+
+.extract-modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.extract-modal-placeholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.extract-modal-placeholder-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.extract-modal-placeholder-name {
+  position: relative;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.extract-modal-placeholder-region {
+  position: relative;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.extract-modal-map-label {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.extract-modal-map-country {
+  display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.extract-modal-map-region {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+.extract-modal-details {
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.extract-modal-eyebrow {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.extract-modal-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-top: 0.35rem;
+}
+
+.extract-modal-ingredient {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-top: 0.35rem;
+}
+
+.extract-modal-origin {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-cream);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.extract-modal-origin-label {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.extract-modal-origin-value {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-top: 0.2rem;
+}
+
+.extract-modal-desc {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-top: 1.25rem;
+}
+
+/* ─── Extract Modal Responsive ─── */
+@media (max-width: 700px) {
+  .extract-modal-layout {
+    flex-direction: column;
+  }
+
+  .extract-modal-visual {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    min-height: 300px;
+  }
+
+  .extract-modal-details {
+    padding: 2rem 1.5rem;
+  }
+}
+
 /* ─── Report Page ─── */
 .report-container {
   min-height: 100vh;
@@ -3960,8 +4343,10 @@ body {
 
 /* ─── Page Layout ─── */
 .rd-page {
+  --navbar-h: 5rem;
   display: flex;
   min-height: 100vh;
+  padding-top: var(--navbar-h);
   background: var(--bg-primary);
 }
 
@@ -3969,9 +4354,9 @@ body {
 .rd-left {
   flex: 1;
   min-width: 0;
-  padding: 3rem 3rem 2rem;
+  padding: 2.5rem 3rem 2rem;
   overflow-y: auto;
-  max-height: 100vh;
+  max-height: calc(100vh - var(--navbar-h));
   scrollbar-width: none;
 }
 
@@ -3981,13 +4366,13 @@ body {
 
 /* ─── Right Panel ─── */
 .rd-right {
-  width: 380px;
+  width: 340px;
   flex-shrink: 0;
   border-left: 1px solid var(--border);
   background: var(--bg-cream);
-  height: 100vh;
+  height: calc(100vh - var(--navbar-h));
   position: sticky;
-  top: 0;
+  top: var(--navbar-h);
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -4639,7 +5024,7 @@ body {
 
 /* ═══ Right Panel — Order ═══ */
 .rd-order {
-  padding: 7.5rem 2rem 2rem;
+  padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -4919,9 +5304,10 @@ body {
 
   .rd-right {
     width: 100%;
+    height: auto;
+    position: static;
     border-left: none;
     border-top: 1px solid var(--border);
-    max-height: none;
   }
 
   .rd-order {
