@@ -15,6 +15,9 @@ interface ExtractModalProps {
   extract: ExtractOrigin | null;
   ingredientName: string | null;
   landscapeUrl: string | null;
+  availableCountries?: string[];
+  activeCountry?: string | null;
+  onCountryChange?: (country: string) => void;
   onClose: () => void;
 }
 
@@ -26,6 +29,9 @@ export default function ExtractModal({
   extract,
   ingredientName,
   landscapeUrl,
+  availableCountries = [],
+  activeCountry = null,
+  onCountryChange,
   onClose,
 }: ExtractModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -37,12 +43,11 @@ export default function ExtractModal({
   const [zoomTarget, setZoomTarget] = useState<string | null>(null);
   const [dissolving, setDissolving] = useState(false);
 
-  // Modal entrance + sequence timer
+  const currentCountry = activeCountry ?? extract?.country ?? null;
+
+  // Modal entrance — runs once per open
   useEffect(() => {
     if (!extract || !overlayRef.current || !panelRef.current) return;
-
-    setZoomTarget(null);
-    setDissolving(false);
 
     gsap.fromTo(
       overlayRef.current,
@@ -54,12 +59,24 @@ export default function ExtractModal({
       { opacity: 0, y: 30, scale: 0.97 },
       { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power4.out", delay: 0.1 }
     );
+  }, [extract]);
 
-    // Step 1: After 1.5s, trigger Leaflet zoom into the country
+  // Zoom + dissolve sequence — re-runs when the selected country changes
+  useEffect(() => {
+    if (!extract || !currentCountry) return;
+
+    setZoomTarget(null);
+    setDissolving(false);
+
+    if (mapLayerRef.current) {
+      gsap.set(mapLayerRef.current, { opacity: 1 });
+    }
+    if (imageLayerRef.current) {
+      gsap.set(imageLayerRef.current, { opacity: 0 });
+    }
+
     timerRef.current = setTimeout(() => {
-      setZoomTarget(extract.country);
-
-      // Step 2: Mid-zoom (~2s in), start cross-dissolve as tiles blur out
+      setZoomTarget(currentCountry);
       timer2Ref.current = setTimeout(() => {
         setDissolving(true);
       }, 2000);
@@ -69,7 +86,7 @@ export default function ExtractModal({
       if (timerRef.current) clearTimeout(timerRef.current);
       if (timer2Ref.current) clearTimeout(timer2Ref.current);
     };
-  }, [extract]);
+  }, [extract, currentCountry]);
 
   // Cross-dissolve animation
   useEffect(() => {
@@ -129,10 +146,12 @@ export default function ExtractModal({
 
   if (!extract || !ingredientName) return null;
 
-  const isoCode = KEY_TO_ISO[extract.country];
-  const countryLabel = (isoCode ? COUNTRY_NAMES[isoCode] : null) ?? extract.country;
+  const displayCountry = currentCountry ?? extract.country;
+  const isoCode = KEY_TO_ISO[displayCountry];
+  const countryLabel = (isoCode ? COUNTRY_NAMES[isoCode] : null) ?? displayCountry;
 
   const imagePath = landscapeUrl;
+  const showChips = availableCountries.length > 1;
 
   return (
     <div
@@ -165,9 +184,11 @@ export default function ExtractModal({
             {/* Map layer */}
             <div ref={mapLayerRef} className="extract-modal-layer">
               <EasternEuropeMap
-                highlightedCountry={extract.country}
-                activeCountries={new Set([extract.country])}
-                countryColors={{ [extract.country]: extract.color }}
+                highlightedCountry={displayCountry}
+                activeCountries={new Set(availableCountries.length ? availableCountries : [displayCountry])}
+                countryColors={Object.fromEntries(
+                  (availableCountries.length ? availableCountries : [displayCountry]).map((c) => [c, extract.color])
+                )}
                 zoomToCountry={zoomTarget}
               />
               <div className="extract-modal-map-label">
@@ -218,6 +239,26 @@ export default function ExtractModal({
                 {extract.region ? `${extract.region}, ` : ""}{countryLabel}
               </span>
             </div>
+
+            {showChips && (
+              <div className="extract-modal-chips">
+                {availableCountries.map((c) => {
+                  const iso = KEY_TO_ISO[c];
+                  const label = (iso ? COUNTRY_NAMES[iso] : null) ?? c;
+                  const active = c === displayCountry;
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`extract-modal-chip${active ? " extract-modal-chip-active" : ""}`}
+                      onClick={() => onCountryChange?.(c)}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             <p className="extract-modal-desc">{extract.description}</p>
           </div>

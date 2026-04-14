@@ -16,8 +16,70 @@ const EasternEuropeMap = dynamic(() => import("@/components/map/EasternEuropeMap
 });
 import { getExtractOrigin } from "@/data/extractOrigins";
 import type { ExtractOrigin } from "@/data/extractOrigins";
+import { COUNTRY_NAMES, KEY_TO_ISO } from "@/data/countryData";
 
 gsap.registerPlugin(ScrollTrigger);
+
+interface ResolvedExtract {
+  ingredientName: string;
+  origin: ExtractOrigin;
+  landscapesByCountry: Record<string, string>;
+  legacyLandscapeUrl: string | null;
+  allCountries: string[];
+}
+
+interface DbExtractRow {
+  name: string;
+  country_of_origin: string[] | null;
+  origin_description: string | null;
+  landscape_url: string | null;
+  country_landscapes: Record<string, string> | null;
+}
+
+function pickLandscape(
+  extract: ResolvedExtract,
+  countryKey: string | null
+): string | null {
+  if (countryKey && extract.landscapesByCountry[countryKey]) {
+    return extract.landscapesByCountry[countryKey];
+  }
+  const anyCountryUrl = Object.values(extract.landscapesByCountry)[0];
+  return anyCountryUrl ?? extract.legacyLandscapeUrl;
+}
+
+const DEFAULT_EXTRACT_COLOR = "#8b7d3c";
+
+function resolveExtract(ing: DbExtractRow): ResolvedExtract | null {
+  const dbCountries = (ing.country_of_origin ?? []).filter(Boolean);
+  const staticData = getExtractOrigin(ing.name);
+
+  const countryLandscapes = ing.country_landscapes ?? {};
+
+  if (dbCountries.length > 0) {
+    return {
+      ingredientName: ing.name,
+      origin: {
+        name: staticData?.name ?? ing.name,
+        country: dbCountries[0],
+        region: staticData?.region,
+        description: ing.origin_description ?? staticData?.description ?? "",
+        color: staticData?.color ?? DEFAULT_EXTRACT_COLOR,
+      },
+      landscapesByCountry: countryLandscapes,
+      legacyLandscapeUrl: ing.landscape_url,
+      allCountries: dbCountries,
+    };
+  }
+
+  if (!staticData) return null;
+  return {
+    ingredientName: ing.name,
+    origin: staticData,
+    landscapesByCountry: countryLandscapes,
+    legacyLandscapeUrl: ing.landscape_url,
+    allCountries: [staticData.country],
+  };
+}
 
 type AuthMode = "login" | "signup";
 
@@ -98,11 +160,12 @@ export default function AccountPage() {
   const [customerName, setCustomerName] = useState<string | null>(null);
 
   // Extract map state
-  const [extractNames, setExtractNames] = useState<string[]>([]);
-  const [landscapeUrls, setLandscapeUrls] = useState<Record<string, string>>({});
-  const [selectedExtract, setSelectedExtract] = useState<{
-    origin: ExtractOrigin;
-    ingredientName: string;
+  const [extracts, setExtracts] = useState<ResolvedExtract[]>([]);
+  const [selectedExtract, setSelectedExtract] = useState<ResolvedExtract | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [countryPicker, setCountryPicker] = useState<{
+    country: string;
+    extracts: ResolvedExtract[];
   } | null>(null);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [hoveredExtract, setHoveredExtract] = useState<string | null>(null);
@@ -172,17 +235,15 @@ export default function AccountPage() {
                 const ingredientIds = pivots.map((pi: { ingredient_id: string }) => pi.ingredient_id);
                 const { data: ingredients } = await supabase
                   .from("ingredients")
-                  .select("name, function, landscape_url")
+                  .select("name, function, landscape_url, country_of_origin, origin_description, country_landscapes")
                   .in("id", ingredientIds)
                   .ilike("function", "%extract%");
 
                 if (ingredients) {
-                  setExtractNames(ingredients.map((i: { name: string }) => i.name));
-                  const urls: Record<string, string> = {};
-                  ingredients.forEach((i: { name: string; landscape_url: string | null }) => {
-                    if (i.landscape_url) urls[i.name.toLowerCase()] = i.landscape_url;
-                  });
-                  setLandscapeUrls(urls);
+                  const resolved = (ingredients as DbExtractRow[])
+                    .map(resolveExtract)
+                    .filter((r): r is ResolvedExtract => r !== null);
+                  setExtracts(resolved);
                 }
               }
             }
@@ -284,6 +345,7 @@ export default function AccountPage() {
     setPassword("");
     setQuizResults([]);
     setOrders([]);
+    setExtracts([]);
   }, []);
 
   const handlePasswordChange = useCallback(async () => {
@@ -328,31 +390,89 @@ export default function AccountPage() {
   // Memoize map data to avoid re-creating every render
   const activeCountries = useMemo(() => {
     const set = new Set<string>();
-    extractNames.forEach((name) => {
-      const origin = getExtractOrigin(name);
-      if (origin) set.add(origin.country);
+    extracts.forEach((e) => {
+      e.allCountries.forEach((c) => set.add(c));
     });
     return set;
-  }, [extractNames]);
+  }, [extracts]);
 
   const countryColors = useMemo(() => {
     const colors: Record<string, string> = {};
-    // If a specific extract is hovered, use its color for its country
+    // If a specific extract is hovered, its color takes precedence for all its countries
     if (hoveredExtract) {
-      const hovered = getExtractOrigin(hoveredExtract);
+      const hovered = extracts.find((e) => e.ingredientName === hoveredExtract);
       if (hovered) {
-        colors[hovered.country] = hovered.color;
+        hovered.allCountries.forEach((c) => {
+          colors[c] = hovered.origin.color;
+        });
       }
     }
     // Fill in remaining countries with their first extract's color
-    extractNames.forEach((name) => {
-      const origin = getExtractOrigin(name);
-      if (origin && !colors[origin.country]) {
-        colors[origin.country] = origin.color;
-      }
+    extracts.forEach((e) => {
+      e.allCountries.forEach((c) => {
+        if (!colors[c]) colors[c] = e.origin.color;
+      });
     });
     return colors;
-  }, [extractNames, hoveredExtract]);
+  }, [extracts, hoveredExtract]);
+
+  // How many extracts per country — drives density shading
+  const countryExtractCount = useMemo(() => {
+    const counts: Record<string, number> = {};
+    extracts.forEach((e) => {
+      e.allCountries.forEach((c) => {
+        counts[c] = (counts[c] ?? 0) + 1;
+      });
+    });
+    return counts;
+  }, [extracts]);
+
+  const countryOpacity = useMemo(() => {
+    const op: Record<string, number> = {};
+    Object.entries(countryExtractCount).forEach(([c, n]) => {
+      op[c] = Math.min(0.35 + 0.15 * n, 0.85);
+    });
+    return op;
+  }, [countryExtractCount]);
+
+  // Countries indexed to the extracts they host — for click-country picker
+  const extractsByCountryMap = useMemo(() => {
+    const map: Record<string, ResolvedExtract[]> = {};
+    extracts.forEach((e) => {
+      e.allCountries.forEach((c) => {
+        if (!map[c]) map[c] = [];
+        map[c].push(e);
+      });
+    });
+    return map;
+  }, [extracts]);
+
+  // Grouped sidebar — primary country is each extract's first country
+  const extractsByCountry = useMemo(() => {
+    const map = new Map<string, ResolvedExtract[]>();
+    extracts.forEach((e) => {
+      const key = e.origin.country;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(e);
+    });
+    return Array.from(map.entries()).map(([countryKey, items]) => ({
+      countryKey,
+      countryLabel: COUNTRY_NAMES[KEY_TO_ISO[countryKey]] ?? countryKey,
+      items,
+    }));
+  }, [extracts]);
+
+  const handleCountryClick = useCallback((countryKey: string) => {
+    const list = extractsByCountryMap[countryKey] ?? [];
+    if (list.length === 0) return;
+    if (list.length === 1) {
+      setSelectedCountry(countryKey);
+      setSelectedExtract(list[0]);
+      setCountryPicker(null);
+      return;
+    }
+    setCountryPicker({ country: countryKey, extracts: list });
+  }, [extractsByCountryMap]);
 
   // Loading state
   if (loading) {
@@ -439,51 +559,87 @@ export default function AccountPage() {
               </p>
 
               <div className="profile-botanicals-layout">
-                {extractNames.length > 0 && (
+                {extracts.length > 0 && (
                   <div className="profile-extract-sidebar">
-                    {extractNames.map((name) => {
-                      const origin = getExtractOrigin(name);
-                      if (!origin) return null;
-                      return (
-                        <button
-                          key={name}
-                          type="button"
-                          className={`profile-extract-item${
-                            hoveredExtract === name ? " profile-extract-item-active" : ""
-                          }`}
-                          onClick={() => {
-                            setHoveredCountry(origin.country);
-                            setHoveredExtract(name);
-                            setSelectedExtract({ origin, ingredientName: name });
-                          }}
-                          onMouseEnter={() => {
-                            if (!selectedExtract) {
-                              setHoveredCountry(origin.country);
-                              setHoveredExtract(name);
-                            }
-                          }}
-                          onMouseLeave={() => {
-                            if (!selectedExtract) {
-                              setHoveredCountry(null);
-                              setHoveredExtract(null);
-                            }
-                          }}
-                        >
-                          <span className="profile-extract-item-name">{origin.name}</span>
-                          <span className="profile-extract-item-region">
-                            {origin.region ?? origin.country}
-                          </span>
-                        </button>
-                      );
-                    })}
+                    {extractsByCountry.map(({ countryKey, countryLabel, items }) => (
+                      <div key={countryKey} className="profile-extract-group">
+                        <div className="profile-extract-group-header">{countryLabel}</div>
+                        {items.map((e) => {
+                          const { ingredientName, origin } = e;
+                          return (
+                            <button
+                              key={ingredientName}
+                              type="button"
+                              className={`profile-extract-item${
+                                hoveredExtract === ingredientName ? " profile-extract-item-active" : ""
+                              }`}
+                              onClick={() => {
+                                setHoveredCountry(origin.country);
+                                setHoveredExtract(ingredientName);
+                                setSelectedCountry(origin.country);
+                                setSelectedExtract(e);
+                              }}
+                              onMouseEnter={() => {
+                                if (!selectedExtract) {
+                                  setHoveredCountry(origin.country);
+                                  setHoveredExtract(ingredientName);
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                if (!selectedExtract) {
+                                  setHoveredCountry(null);
+                                  setHoveredExtract(null);
+                                }
+                              }}
+                            >
+                              <span className="profile-extract-item-name">{origin.name}</span>
+                              <span className="profile-extract-item-region">
+                                {origin.region ?? origin.country}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ))}
                   </div>
                 )}
 
                 <div className="profile-map-main">
+                  {countryPicker && (
+                    <div className="profile-country-picker">
+                      <div className="profile-country-picker-header">
+                        {COUNTRY_NAMES[KEY_TO_ISO[countryPicker.country]] ?? countryPicker.country}
+                        <button
+                          type="button"
+                          className="profile-country-picker-close"
+                          onClick={() => setCountryPicker(null)}
+                          aria-label="Close"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      {countryPicker.extracts.map((e) => (
+                        <button
+                          key={e.ingredientName}
+                          type="button"
+                          className="profile-country-picker-item"
+                          onClick={() => {
+                            setSelectedCountry(countryPicker.country);
+                            setSelectedExtract(e);
+                            setCountryPicker(null);
+                          }}
+                        >
+                          {e.origin.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <EasternEuropeMap
                     highlightedCountry={hoveredCountry}
                     activeCountries={activeCountries}
                     countryColors={countryColors}
+                    countryOpacity={countryOpacity}
+                    onCountryClick={handleCountryClick}
                   />
                 </div>
               </div>
@@ -699,8 +855,16 @@ export default function AccountPage() {
         <ExtractModal
           extract={selectedExtract?.origin ?? null}
           ingredientName={selectedExtract?.ingredientName ?? null}
-          landscapeUrl={selectedExtract ? (landscapeUrls[selectedExtract.ingredientName.toLowerCase()] ?? null) : null}
-          onClose={() => { setSelectedExtract(null); setHoveredCountry(null); setHoveredExtract(null); }}
+          landscapeUrl={selectedExtract ? pickLandscape(selectedExtract, selectedCountry) : null}
+          availableCountries={selectedExtract?.allCountries ?? []}
+          activeCountry={selectedCountry}
+          onCountryChange={(c) => setSelectedCountry(c)}
+          onClose={() => {
+            setSelectedExtract(null);
+            setSelectedCountry(null);
+            setHoveredCountry(null);
+            setHoveredExtract(null);
+          }}
         />
       </div>
     );

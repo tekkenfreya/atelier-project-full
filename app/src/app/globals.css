@@ -3800,6 +3800,115 @@ body {
 .profile-map-main {
   flex: 1;
   min-width: 0;
+  position: relative;
+}
+
+.profile-extract-group + .profile-extract-group {
+  border-top: 1px solid var(--border);
+}
+
+.profile-extract-group-header {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.85rem 1.15rem 0.35rem;
+  background: var(--bg-warm);
+}
+
+.profile-country-picker {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  min-width: 200px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.profile-country-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.85rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: var(--bg-warm);
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-country-picker-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+
+.profile-country-picker-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 0.85rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-country-picker-item:last-child {
+  border-bottom: none;
+}
+
+.profile-country-picker-item:hover {
+  background: var(--bg-warm);
+  color: var(--accent);
+}
+
+.extract-modal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+
+.extract-modal-chip {
+  padding: 0.35rem 0.75rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.extract-modal-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.extract-modal-chip-active {
+  color: var(--bg-primary);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .profile-map-main .extract-map-leaflet {

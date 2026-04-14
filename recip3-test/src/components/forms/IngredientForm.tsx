@@ -26,6 +26,10 @@ import { toast } from "sonner";
 import { Upload, X } from "lucide-react";
 import { EXTRACT_COUNTRIES } from "@/data/extractCountries";
 
+const COUNTRY_LABEL: Record<string, string> = Object.fromEntries(
+  EXTRACT_COUNTRIES.map((c) => [c.key, c.label])
+);
+
 const ingredientSchema = z.object({
   name: z.string().min(1, "Ingredient name is required"),
   scientific_name: z.string().optional().or(z.literal("")),
@@ -48,7 +52,10 @@ type IngredientFormData = z.infer<typeof ingredientSchema>;
 
 interface IngredientFormProps {
   initialData?: any;
-  onSubmit: (data: IngredientFormData & { image_url?: string; landscape_url?: string }) => Promise<void>;
+  onSubmit: (data: IngredientFormData & {
+    image_url?: string;
+    country_landscapes?: Record<string, string>;
+  }) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -57,8 +64,10 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || "");
-  const [landscapeFile, setLandscapeFile] = useState<File | null>(null);
-  const [landscapePreview, setLandscapePreview] = useState<string>(initialData?.landscape_url || "");
+  const [countryLandscapeFiles, setCountryLandscapeFiles] = useState<Record<string, File>>({});
+  const [countryLandscapePreviews, setCountryLandscapePreviews] = useState<Record<string, string>>(
+    initialData?.country_landscapes ?? {}
+  );
   const [uploading, setUploading] = useState(false);
 
   const form = useForm<IngredientFormData>({
@@ -114,21 +123,34 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
     setImagePreview("");
   };
 
-  const handleLandscapeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCountryLandscapeChange = (
+    country: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("Image must be less than 5MB");
-        return;
-      }
-      setLandscapeFile(file);
-      setLandscapePreview(URL.createObjectURL(file));
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
     }
+    setCountryLandscapeFiles((prev) => ({ ...prev, [country]: file }));
+    setCountryLandscapePreviews((prev) => ({
+      ...prev,
+      [country]: URL.createObjectURL(file),
+    }));
   };
 
-  const removeLandscape = () => {
-    setLandscapeFile(null);
-    setLandscapePreview("");
+  const removeCountryLandscape = (country: string) => {
+    setCountryLandscapeFiles((prev) => {
+      const next = { ...prev };
+      delete next[country];
+      return next;
+    });
+    setCountryLandscapePreviews((prev) => {
+      const next = { ...prev };
+      delete next[country];
+      return next;
+    });
   };
 
   const uploadImage = async (): Promise<string | null> => {
@@ -160,29 +182,62 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
     }
   };
 
-  const uploadLandscape = async (): Promise<string | null> => {
-    if (!landscapeFile) return initialData?.landscape_url || null;
+  const uploadCountryLandscapes = async (
+    selectedCountries: string[]
+  ): Promise<Record<string, string>> => {
+    const existing: Record<string, string> = { ...(initialData?.country_landscapes ?? {}) };
+
+    // Drop entries for countries the user deselected or cleared
+    const result: Record<string, string> = {};
+    selectedCountries.forEach((c) => {
+      if (countryLandscapePreviews[c]) {
+        result[c] = existing[c] ?? "";
+      }
+    });
+
+    const pendingCountries = Object.keys(countryLandscapeFiles).filter((c) =>
+      selectedCountries.includes(c)
+    );
+    if (pendingCountries.length === 0) {
+      // No new uploads — reuse any existing URLs preserved above
+      selectedCountries.forEach((c) => {
+        if (existing[c] && !result[c]) result[c] = existing[c];
+      });
+      return result;
+    }
 
     setUploading(true);
     try {
-      const fileExt = landscapeFile.name.split(".").pop();
-      const fileName = `landscape_${Math.random()}.${fileExt}`;
+      await Promise.all(
+        pendingCountries.map(async (country) => {
+          const file = countryLandscapeFiles[country];
+          const fileExt = file.name.split(".").pop();
+          const fileName = `landscape_${country}_${Math.random()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("ingredient-images")
-        .upload(fileName, landscapeFile);
+          const { error: uploadError } = await supabase.storage
+            .from("ingredient-images")
+            .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+          if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage
-        .from("ingredient-images")
-        .getPublicUrl(fileName);
+          const { data } = supabase.storage
+            .from("ingredient-images")
+            .getPublicUrl(fileName);
 
-      return data.publicUrl;
+          result[country] = data.publicUrl;
+        })
+      );
+
+      // Preserve existing URLs for countries with no new upload
+      selectedCountries.forEach((c) => {
+        if (!result[c] && existing[c]) result[c] = existing[c];
+      });
+
+      return result;
     } catch (error) {
-      console.error("Error uploading landscape:", error);
-      toast.error("Failed to upload landscape image");
-      return null;
+      console.error("Error uploading country landscape:", error);
+      toast.error("Failed to upload one or more landscape images");
+      return result;
     } finally {
       setUploading(false);
     }
@@ -191,11 +246,15 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
   const handleSubmit = async (data: IngredientFormData) => {
     setLoading(true);
     try {
-      const [imageUrl, landscapeUrl] = await Promise.all([
+      const selectedCountries = isExtract ? (data.country_of_origin || []) : [];
+
+      const [imageUrl, countryLandscapes] = await Promise.all([
         uploadImage(),
-        uploadLandscape(),
+        isExtract
+          ? uploadCountryLandscapes(selectedCountries)
+          : Promise.resolve({} as Record<string, string>),
       ]);
-      // Transform empty strings to null for optional fields
+
       const cleanedData = {
         ...data,
         scientific_name: data.scientific_name || null,
@@ -210,10 +269,10 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
         amount_in_stock: data.amount_in_stock || null,
         quantity_unit: data.quantity_unit || null,
         comments: data.comments || null,
-        country_of_origin: isExtract ? (data.country_of_origin || []) : [],
+        country_of_origin: selectedCountries,
         origin_description: isExtract ? (data.origin_description || null) : null,
         image_url: imageUrl || undefined,
-        landscape_url: landscapeUrl || undefined,
+        country_landscapes: isExtract ? countryLandscapes : {},
       };
       await onSubmit(cleanedData);
     } finally {
@@ -447,46 +506,6 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
           </div>
         </div>
 
-        <div>
-          <FormLabel>Landscape Image</FormLabel>
-          <p className="text-xs text-muted-foreground mb-2">
-            Region/terrain photo for the extract origin map
-          </p>
-          <div className="mt-1">
-            {landscapePreview ? (
-              <div className="relative inline-block">
-                <img
-                  src={landscapePreview}
-                  alt="Landscape preview"
-                  className="h-32 w-48 object-cover rounded-lg border"
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  className="absolute -top-2 -right-2 h-6 w-6"
-                  onClick={removeLandscape}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <label className="flex items-center justify-center w-48 h-32 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary transition-colors">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLandscapeChange}
-                  className="hidden"
-                />
-                <div className="flex flex-col items-center gap-1">
-                  <Upload className="h-6 w-6 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Landscape</span>
-                </div>
-              </label>
-            )}
-          </div>
-        </div>
-
         {isExtract && (
           <div className="space-y-4 rounded-lg border border-dashed p-4">
             <div>
@@ -544,6 +563,71 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <FormField
+              control={form.control}
+              name="country_of_origin"
+              render={({ field }) => {
+                const selected = field.value || [];
+                return (
+                  <FormItem>
+                    <FormLabel>Country Landscapes</FormLabel>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      Upload a landscape photo for each selected country. Shown in the customer modal when that country is chosen.
+                    </p>
+                    {selected.length === 0 ? (
+                      <p className="text-xs text-muted-foreground italic">
+                        Select one or more countries above to upload landscape photos.
+                      </p>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {selected.map((countryKey: string) => {
+                          const preview = countryLandscapePreviews[countryKey];
+                          const label = COUNTRY_LABEL[countryKey] ?? countryKey;
+                          return (
+                            <div key={countryKey} className="space-y-1">
+                              <span className="text-sm font-medium">{label}</span>
+                              {preview ? (
+                                <div className="relative inline-block">
+                                  <img
+                                    src={preview}
+                                    alt={`${label} landscape`}
+                                    className="h-32 w-48 object-cover rounded-lg border"
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="icon"
+                                    className="absolute -top-2 -right-2 h-6 w-6"
+                                    onClick={() => removeCountryLandscape(countryKey)}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ) : (
+                                <label className="flex items-center justify-center w-48 h-32 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary transition-colors">
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleCountryLandscapeChange(countryKey, e)}
+                                    className="hidden"
+                                  />
+                                  <div className="flex flex-col items-center gap-1">
+                                    <Upload className="h-6 w-6 text-muted-foreground" />
+                                    <span className="text-xs text-muted-foreground">Landscape</span>
+                                  </div>
+                                </label>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
         )}

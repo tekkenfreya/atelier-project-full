@@ -11,6 +11,7 @@ interface EasternEuropeMapProps {
   onCountryClick?: (countryId: string) => void;
   activeCountries?: Set<string>;
   countryColors?: Record<string, string>;
+  countryOpacity?: Record<string, number>;
   zoomToCountry?: string | null;
 }
 
@@ -57,19 +58,21 @@ function getCountryStyle(
   countryKey: string,
   highlighted: string | null,
   activeSet: Set<string>,
-  colors: Record<string, string>
+  colors: Record<string, string>,
+  opacityMap: Record<string, number>
 ): L.PathOptions {
   if (countryKey === highlighted) {
     const color = colors[countryKey];
     if (color) {
-      return { fillColor: color, fillOpacity: 0.75, color, weight: 2.5 };
+      return { fillColor: color, fillOpacity: 0.8, color, weight: 2.5 };
     }
     return HIGHLIGHT_STYLE;
   }
   if (activeSet.has(countryKey)) {
     const color = colors[countryKey];
     if (color) {
-      return { fillColor: color, fillOpacity: 0.35, color: "#c4b9a0", weight: 1.2 };
+      const fillOpacity = opacityMap[countryKey] ?? 0.35;
+      return { fillColor: color, fillOpacity, color: "#c4b9a0", weight: 1.2 };
     }
     return ACTIVE_STYLE;
   }
@@ -81,6 +84,7 @@ export default function EasternEuropeMap({
   onCountryClick,
   activeCountries = new Set(),
   countryColors = {},
+  countryOpacity = {},
   zoomToCountry = null,
 }: EasternEuropeMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +94,7 @@ export default function EasternEuropeMap({
 
   const activeKey = useMemo(() => [...activeCountries].sort().join(","), [activeCountries]);
   const colorsKey = useMemo(() => Object.entries(countryColors).map(([k, v]) => `${k}:${v}`).join(","), [countryColors]);
+  const opacityKey = useMemo(() => Object.entries(countryOpacity).map(([k, v]) => `${k}:${v}`).join(","), [countryOpacity]);
 
   // Initialize map
   useEffect(() => {
@@ -130,7 +135,7 @@ export default function EasternEuropeMap({
           const countryKey = ISO_TO_KEY[iso];
 
           const style = isEE
-            ? getCountryStyle(countryKey, null, activeCountries, countryColors)
+            ? getCountryStyle(countryKey, null, activeCountries, countryColors, countryOpacity)
             : NON_EE_STYLE;
 
           const layer = L.geoJSON(feature, { style }).addTo(map);
@@ -144,7 +149,7 @@ export default function EasternEuropeMap({
 
             layer.on("mouseout", () => {
               layer.setStyle(
-                getCountryStyle(countryKey, highlightedCountry, activeCountries, countryColors)
+                getCountryStyle(countryKey, highlightedCountry, activeCountries, countryColors, countryOpacity)
               );
             });
 
@@ -172,14 +177,14 @@ export default function EasternEuropeMap({
     if (!loaded) return;
 
     Object.entries(layersRef.current).forEach(([key, layer]) => {
-      layer.setStyle(getCountryStyle(key, highlightedCountry, activeCountries, countryColors));
+      layer.setStyle(getCountryStyle(key, highlightedCountry, activeCountries, countryColors, countryOpacity));
       if (key === highlightedCountry) {
         layer.bringToFront();
       }
     });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightedCountry, loaded, activeKey, colorsKey]);
+  }, [highlightedCountry, loaded, activeKey, colorsKey, opacityKey]);
 
   // Zoom to country on demand
   useEffect(() => {
