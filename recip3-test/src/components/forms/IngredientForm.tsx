@@ -19,10 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload, X } from "lucide-react";
+import { EXTRACT_COUNTRIES } from "@/data/extractCountries";
 
 const ingredientSchema = z.object({
   name: z.string().min(1, "Ingredient name is required"),
@@ -38,6 +40,8 @@ const ingredientSchema = z.object({
   amount_in_stock: z.coerce.number().optional().nullable(),
   quantity_unit: z.string().optional().or(z.literal("")),
   comments: z.string().optional().or(z.literal("")),
+  country_of_origin: z.array(z.string()).optional(),
+  origin_description: z.string().optional().or(z.literal("")),
 });
 
 type IngredientFormData = z.infer<typeof ingredientSchema>;
@@ -73,8 +77,13 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
       amount_in_stock: initialData?.amount_in_stock ?? undefined,
       quantity_unit: initialData?.quantity_unit || "",
       comments: initialData?.comments || "",
+      country_of_origin: initialData?.country_of_origin || [],
+      origin_description: initialData?.origin_description || "",
     },
   });
+
+  const functionValue = form.watch("function") || "";
+  const isExtract = functionValue.toLowerCase().includes("extract");
 
   useEffect(() => {
     fetchSuppliers();
@@ -201,6 +210,8 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
         amount_in_stock: data.amount_in_stock || null,
         quantity_unit: data.quantity_unit || null,
         comments: data.comments || null,
+        country_of_origin: isExtract ? (data.country_of_origin || []) : [],
+        origin_description: isExtract ? (data.origin_description || null) : null,
         image_url: imageUrl || undefined,
         landscape_url: landscapeUrl || undefined,
       };
@@ -475,6 +486,67 @@ export const IngredientForm = ({ initialData, onSubmit, onCancel }: IngredientFo
             )}
           </div>
         </div>
+
+        {isExtract && (
+          <div className="space-y-4 rounded-lg border border-dashed p-4">
+            <div>
+              <FormLabel>Extract Origin</FormLabel>
+              <p className="text-xs text-muted-foreground">
+                Shown only for botanical extracts. Countries selected here are highlighted on the customer dashboard origin map.
+              </p>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="country_of_origin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country of Origin</FormLabel>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {EXTRACT_COUNTRIES.map((country) => {
+                      const selected = (field.value || []).includes(country.key);
+                      return (
+                        <Badge
+                          key={country.key}
+                          variant={selected ? "default" : "outline"}
+                          className="cursor-pointer select-none"
+                          onClick={() => {
+                            const current = field.value || [];
+                            const updated = selected
+                              ? current.filter((k: string) => k !== country.key)
+                              : [...current, country.key];
+                            field.onChange(updated);
+                          }}
+                        >
+                          {country.label}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="origin_description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Origin Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Describe the region, harvest, or sourcing story..."
+                      rows={4}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         <FormField
           control={form.control}
