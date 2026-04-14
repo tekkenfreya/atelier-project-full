@@ -37,7 +37,14 @@
       "Bash(/mingw64/bin/git diff:*)",
       "Bash(/mingw64/bin/git add:*)",
       "Bash(/mingw64/bin/git commit:*)",
-      "Bash(/mingw64/bin/git:*)"
+      "Bash(/mingw64/bin/git:*)",
+      "Bash(python3 -m json.tool)",
+      "Bash(app\")",
+      "Bash(/usr/bin/git status:*)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(rm \"app/src/app/account/botanicals/page.tsx\")",
+      "Bash(rmdir \"app/src/app/account/botanicals\")",
+      "Bash(npx eslint:*)"
     ]
   }
 }

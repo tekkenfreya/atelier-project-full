@@ -76,8 +76,19 @@ Before making any change, check in order:
 - Never duplicate type definitions across files; import from the canonical source
 
 ### CSS Class Prefix Convention
-- Feature-scoped CSS classes use a `.<feature>-*` prefix pattern in `globals.css` (e.g., `.quiz-container`, `.quiz-topbar`)
+- Feature-scoped CSS classes use a `.<feature>-*` prefix pattern (e.g., `.quiz-container`, `.quiz-topbar`)
 - All feature styles are CSS-first — no inline styles for layout or theming
+
+### Co-located CSS for new feature sections (App Router)
+- `app/src/app/globals.css` is very large (6k+ lines). Tailwind v4's processor has been observed silently dropping rules appended deep into this file, resulting in classes that exist in the file but never reach the browser.
+- For any **new substantial section or page-specific feature** (e.g., a pinned hero, a dedicated atlas page), create a co-located CSS file next to the page or component and import it directly:
+  ```
+  // app/src/app/account/page.tsx
+  import "./hero.css";
+  ```
+- Co-located CSS is compiled into a separate route-scoped chunk by Next.js App Router and is immune to the globals.css drop-out problem.
+- Reserve `globals.css` for genuinely global tokens (variables, typography base, resets) and legacy feature blocks already living there. Do not pile new section styles into it.
+- Symptom of the bug to watch for: CSS classes are visibly present in `globals.css` (grep confirms), but DevTools shows the element getting no matching rules and elements render with default block flow (svgs expanding to viewport, no flex, etc.). When this happens, move the offending rules to a co-located file — don't blame browser/build cache.
 
 ### Matching Engine Module (`src/lib/matching-engine/`)
 - Pure logic module — no React, no UI, no side effects except Supabase reads

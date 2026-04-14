@@ -3195,7 +3195,7 @@ body {
 
 /* Hero */
 .profile-hero {
-  padding: 2rem 0 3rem;
+  padding: 1rem 0 1.5rem;
 }
 
 .profile-hero--empty {
@@ -3258,7 +3258,7 @@ body {
 
 /* Section Layout */
 .profile-section {
-  padding: 3rem 0;
+  padding: 2rem 0;
 }
 
 .profile-section__title {
@@ -3911,6 +3911,1083 @@ body {
   border-color: var(--accent);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   RITUAL JOURNAL — editorial customer dashboard
+   ═══════════════════════════════════════════════════════════ */
+
+.journal-page {
+  min-height: 100vh;
+  padding-top: 5rem;
+  background: #f5f0e8;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(212, 196, 168, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(139, 125, 60, 0.08) 0%, transparent 60%);
+}
+
+.journal-ornament {
+  width: 120px;
+  height: 12px;
+  color: var(--accent);
+}
+
+.journal-eyebrow {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+
+/* ─── Legacy journal hero (unused) ─── */
+.journal-hero {
+  display: none;
+}
+
+.journal-hero-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin: 0 0 2rem;
+}
+
+.journal-hero-name {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.journal-hero-sub {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-top: 1.5rem;
+}
+
+/* ─── Spreads ─── */
+.journal-spread {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.journal-spread--wide {
+  max-width: 1400px;
+}
+
+.journal-spread--quiet {
+  text-align: center;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.journal-spread-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.journal-spread-num {
+  display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+}
+
+.journal-spread-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+}
+
+.journal-spread-lede {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.journal-spread-count {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: 1.5rem;
+}
+
+/* ─── Pinned Ritual scroll cards ─── */
+.ritual-pin {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.ritual-pin-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+}
+
+.ritual-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ritual-cards {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.ritual-card {
+  position: absolute;
+  width: 300px;
+  height: 420px;
+  padding: 2.5rem 2rem;
+  background: var(--bg-cream);
+  border: 1px solid var(--border);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 24px 48px -24px rgba(50, 40, 20, 0.15);
+  will-change: transform, opacity;
+}
+
+#ritual-card-1 { left: calc(50% - 320px); }
+#ritual-card-2 { left: calc(50% - 150px); z-index: 2; }
+#ritual-card-3 { left: calc(50% + 20px); }
+
+.ritual-card-num {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.ritual-card-bottle {
+  width: 90px;
+  height: 130px;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  margin-bottom: 1.75rem;
+}
+
+.ritual-card-bottle .rd-bottle-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ritual-card-cat {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.85rem;
+}
+
+.ritual-card-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0 0 0.9rem;
+}
+
+.ritual-card-tagline {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 220px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .ritual-pin {
+    height: auto;
+  }
+  .ritual-cards {
+    flex-direction: column;
+    height: auto;
+    gap: 1.5rem;
+  }
+  .ritual-card {
+    position: static;
+    width: 100%;
+    max-width: 340px;
+    left: auto;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ─── Ritual grid (fallback — unused now) ─── */
+.journal-ritual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.journal-ritual-card {
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.journal-ritual-card:last-child {
+  border-right: none;
+}
+
+.journal-ritual-num {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.journal-ritual-bottle {
+  width: 80px;
+  height: 120px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journal-ritual-bottle .rd-bottle-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.journal-ritual-cat {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.journal-ritual-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0 0 0.9rem;
+}
+
+.journal-ritual-tagline {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 220px;
+  margin: 0;
+}
+
+/* ─── Botanicals ─── */
+.journal-botanicals {
+  display: flex;
+  gap: 0;
+  min-height: 560px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.journal-botanicals-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  max-height: 560px;
+  scrollbar-width: none;
+}
+
+.journal-botanicals-sidebar::-webkit-scrollbar { display: none; }
+
+.journal-botanicals-group + .journal-botanicals-group {
+  border-top: 1px solid var(--border);
+}
+
+.journal-botanicals-group-header {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 1.1rem 1.4rem 0.5rem;
+}
+
+.journal-botanicals-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  padding: 0.9rem 1.4rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.25s ease, padding-left 0.25s ease;
+}
+
+.journal-botanicals-item:last-child {
+  border-bottom: none;
+}
+
+.journal-botanicals-item:hover {
+  background: rgba(139, 125, 60, 0.05);
+  padding-left: 1.7rem;
+}
+
+.journal-botanicals-item-active {
+  background: rgba(139, 125, 60, 0.08);
+  padding-left: 1.7rem;
+}
+
+.journal-botanicals-item-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.journal-botanicals-item-active .journal-botanicals-item-name {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.journal-botanicals-item-region {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.journal-botanicals-map {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.journal-botanicals-map .extract-map-leaflet {
+  height: 560px;
+}
+
+.journal-botanicals-map .extract-map-container {
+  border: none;
+  border-radius: 0;
+}
+
+/* ─── Profile prose ─── */
+.journal-profile {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.journal-profile-prose {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--text-primary);
+  margin: 0 0 3rem;
+}
+
+.journal-profile-prose em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.journal-profile-meta {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.journal-profile-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.journal-profile-meta-label {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.journal-profile-meta-value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+/* ─── Quiet actions ─── */
+.journal-quiet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.journal-quiet-link {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  transition: color 0.25s ease;
+  list-style: none;
+}
+
+.journal-quiet-link:hover {
+  color: var(--accent);
+}
+
+.journal-quiet-link::-webkit-details-marker {
+  display: none;
+}
+
+.journal-account-details {
+  width: 100%;
+  max-width: 420px;
+}
+
+.journal-account-details[open] summary {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.journal-account-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.journal-account-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "Satoshi", sans-serif;
+}
+
+.journal-account-label {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.journal-account-value {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.journal-account-password {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.journal-account-input {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.journal-account-input:focus {
+  border-color: var(--accent);
+}
+
+.journal-account-error {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: #a63b3b;
+  margin: 0;
+}
+
+.journal-account-success {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin: 0;
+}
+
+.journal-account-btn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.5rem;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.journal-account-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Footer ─── */
+.journal-footer {
+  text-align: center;
+  padding: 3rem 2rem 4rem;
+}
+
+.journal-signout {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.journal-signout:hover {
+  color: var(--accent);
+}
+
+/* ─── Atlas teaser on /account ─── */
+.journal-atlas-teaser {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  display: block;
+  padding: 3rem 2.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.journal-atlas-teaser::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(139, 125, 60, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 75% 70%, rgba(212, 160, 160, 0.07) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.journal-atlas-teaser:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -20px rgba(139, 125, 60, 0.15);
+}
+
+.journal-atlas-teaser-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.journal-atlas-teaser-eyebrow {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.journal-atlas-teaser-num {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.journal-atlas-teaser-num em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.journal-atlas-teaser-dots {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.journal-atlas-teaser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+
+.journal-atlas-teaser-cta {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: color 0.25s ease;
+}
+
+.journal-atlas-teaser:hover .journal-atlas-teaser-cta {
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOTANICAL ATLAS — /account/botanicals
+   ═══════════════════════════════════════════════════════════ */
+
+.botanicals-page {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-primary);
+}
+
+.botanicals-page--loading {
+  align-items: center;
+  justify-content: center;
+}
+
+.botanicals-loading {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.botanicals-sidebar {
+  width: 380px;
+  flex-shrink: 0;
+  padding: 2rem 2rem 1.5rem;
+  border-right: 1px solid var(--border);
+  background: #f5f0e8;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  scrollbar-width: thin;
+}
+
+.botanicals-back {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: color 0.25s ease;
+}
+
+.botanicals-back:hover {
+  color: var(--accent);
+}
+
+.botanicals-sidebar-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.botanicals-eyebrow {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.botanicals-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.botanicals-donut-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 1rem;
+  color: var(--text-primary);
+}
+
+.botanicals-donut {
+  width: 160px;
+  height: 160px;
+}
+
+.botanicals-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.botanicals-tab {
+  flex: 1;
+  padding: 0.75rem 0;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+  margin-bottom: -1px;
+}
+
+.botanicals-tab:hover {
+  color: var(--text-primary);
+}
+
+.botanicals-tab-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.botanicals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.botanicals-region {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.botanicals-region:last-child { border-bottom: none; }
+
+.botanicals-region-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.75rem 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.botanicals-region-header:hover .botanicals-region-name {
+  color: var(--accent);
+}
+
+.botanicals-region-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.botanicals-region-name {
+  flex: 1;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  transition: color 0.2s ease;
+}
+
+.botanicals-region-count {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.botanicals-region-arrow {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.botanicals-region-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-left: 1.7rem;
+}
+
+.botanicals-ing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.55rem 0.6rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.botanicals-ing:hover {
+  background: rgba(139, 125, 60, 0.07);
+}
+
+.botanicals-ing-active {
+  background: rgba(139, 125, 60, 0.1);
+}
+
+.botanicals-ing-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.botanicals-ing-active .botanicals-ing-name {
+  color: var(--accent);
+}
+
+.botanicals-ing-region {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+}
+
+.botanicals-ing--flat {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+
+.botanicals-ing--flat .botanicals-ing-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.botanicals-ing-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Map side */
+.botanicals-map-wrap {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: #dde7ec;
+}
+
+.botanicals-map-wrap .extract-map-container,
+.botanicals-map-wrap .extract-map-leaflet {
+  height: 100% !important;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+}
+
+.botanicals-legend {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 253, 248, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 180px;
+  z-index: 5;
+}
+
+.botanicals-legend-title {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.3rem;
+}
+
+.botanicals-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+.botanicals-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.botanicals-legend-more {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .botanicals-page {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  .botanicals-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: none;
+  }
+  .botanicals-map-wrap {
+    height: 60vh;
+  }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .journal-ritual-grid {
+    grid-template-columns: 1fr;
+  }
+  .journal-ritual-card {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .journal-ritual-card:last-child {
+    border-bottom: none;
+  }
+  .journal-botanicals {
+    flex-direction: column;
+    min-height: 0;
+  }
+  .journal-botanicals-sidebar {
+    width: 100%;
+    max-height: 220px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .journal-botanicals-map .extract-map-leaflet {
+    height: 380px;
+  }
+  .journal-profile-meta {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .journal-spread {
+    padding: 4rem 1.5rem;
+  }
+}
+
 .profile-map-main .extract-map-leaflet {
   height: 500px;
 }
@@ -4463,7 +5540,7 @@ body {
 .rd-left {
   flex: 1;
   min-width: 0;
-  padding: 2.5rem 3rem 2rem;
+  padding: 2.5rem 3.5rem 3rem;
   overflow-y: auto;
   max-height: calc(100vh - var(--navbar-h));
   scrollbar-width: none;
@@ -5136,7 +6213,6 @@ body {
   padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
 }
 
 /* ─── Order items ─── */
@@ -5150,9 +6226,55 @@ body {
 .rd-order-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
+  gap: 1rem;
+  padding: 0.9rem 0;
   border-bottom: 1px solid var(--border);
+}
+
+.rd-order-item-bottle {
+  width: 38px;
+  height: 56px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rd-bottle-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rd-price-block {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.rd-price-label {
+  display: block;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+
+.rd-concern-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.rd-concern-pill {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
 }
 
 .rd-order-check {
@@ -5335,8 +6457,9 @@ body {
 
 /* ─── Actions ─── */
 .rd-order-actions {
-  margin-top: auto;
-  padding-top: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

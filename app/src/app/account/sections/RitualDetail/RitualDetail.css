@@ -1,0 +1,198 @@
+/* ═══ Ritual detail — pinned flip cards (juno home-services pattern) ═══ */
+@keyframes rdFloating {
+  0%   { transform: translate(-50%, -50%); }
+  50%  { transform: translate(-50%, -55%); }
+  100% { transform: translate(-50%, -50%); }
+}
+
+.rd-section {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.rd-header {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+  line-height: 1.1;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0 auto;
+  max-width: 1100px;
+  transform: translateY(300%);
+  will-change: transform;
+}
+
+.rd-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  z-index: 1;
+}
+
+.rd-rack {
+  position: relative;
+  width: 75%;
+  max-width: 1100px;
+  height: 100%;
+  padding-top: 32svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+}
+
+.rd-card {
+  flex: 1;
+  position: relative;
+  aspect-ratio: 5 / 7;
+  perspective: 1000px;
+  opacity: 0;
+  will-change: transform;
+}
+
+#rd-card-1 { transform: translateX(100%) translateY(-100%) rotate(-5deg) scale(0.25); z-index: 2; }
+#rd-card-2 { transform: translateX(0%) translateY(-100%) rotate(0deg) scale(0.25); z-index: 1; }
+#rd-card-3 { transform: translateX(-100%) translateY(-100%) rotate(5deg) scale(0.25); z-index: 0; }
+
+.rd-card-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  animation: rdFloating 2s infinite ease-in-out;
+}
+
+#rd-card-1 .rd-card-wrapper { animation-delay: 0s; }
+#rd-card-2 .rd-card-wrapper { animation-delay: 0.25s; }
+#rd-card-3 .rd-card-wrapper { animation-delay: 0.5s; }
+
+.rd-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.rd-card-front,
+.rd-card-back {
+  position: absolute;
+  inset: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 30px 60px -30px rgba(50, 40, 20, 0.25);
+}
+
+.rd-card-front {
+  background: var(--bg-cream);
+  align-items: center;
+  text-align: center;
+}
+
+.rd-card-back {
+  background: var(--bg-warm, #eee4d3);
+  transform: rotateY(180deg);
+}
+
+.rd-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rd-card-row--bot { transform: rotate(180deg); }
+
+.rd-card-bottle {
+  width: 55%;
+  max-width: 80px;
+  aspect-ratio: 48 / 72;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  margin: 0 auto;
+}
+
+.rd-card-bottle svg { width: 100%; height: 100%; display: block; }
+
+.rd-card-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+  padding: 0 0.5rem;
+}
+
+.rd-card-ingredients {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+}
+
+.rd-card-ingredients ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.rd-card-ingredients li {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.rd-card-ingredients li:not(:last-child)::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.4;
+  margin: 0.5rem auto 0;
+}
+
+.rd-card-empty {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .rd-rack { width: 90%; gap: 1rem; }
+}
