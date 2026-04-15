@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import type { User } from "@supabase/supabase-js";
 
 import { useAccountData } from "./hooks/useAccountData";
@@ -12,9 +13,16 @@ import {
   FRAGRANCE_LABELS,
 } from "./lib/format";
 import type { RitualCategory } from "./lib/types";
+import type { ResolvedExtract } from "@/lib/extracts";
+import ExtractModal from "@/components/map/ExtractModal";
 import "./Dashboard.css";
 
-type SectionId = "overview" | "ritual" | "orders" | "extracts" | "profile";
+const EasternEuropeMap = dynamic(
+  () => import("@/components/map/EasternEuropeMap"),
+  { ssr: false, loading: () => <div className="account-map__loading">Loading map...</div> },
+);
+
+type SectionId = "overview" | "ritual" | "orders" | "atlas" | "extracts" | "profile";
 
 interface DashboardProps {
   user: User;
@@ -26,6 +34,7 @@ const NAV: { id: SectionId; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "ritual", label: "Ritual" },
   { id: "orders", label: "Orders" },
+  { id: "atlas", label: "Atlas" },
   { id: "extracts", label: "Extracts" },
   { id: "profile", label: "Profile" },
 ];
@@ -33,6 +42,34 @@ const NAV: { id: SectionId; label: string }[] = [
 export default function Dashboard({ user, customerName, onSignOut }: DashboardProps) {
   const { quizResults, orders, extracts, extractsByCategory, loading } = useAccountData(user.id);
   const [active, setActive] = useState<SectionId>("overview");
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [selectedExtract, setSelectedExtract] = useState<ResolvedExtract | null>(null);
+
+  const activeCountries = useMemo(() => {
+    const set = new Set<string>();
+    extracts.forEach((e) => e.allCountries.forEach((c) => set.add(c)));
+    return set;
+  }, [extracts]);
+
+  const countryColors = useMemo(() => {
+    const colors: Record<string, string> = {};
+    extracts.forEach((e) => {
+      e.allCountries.forEach((c) => {
+        if (!colors[c]) colors[c] = e.origin.color;
+      });
+    });
+    return colors;
+  }, [extracts]);
+
+  const selectedLandscape = useMemo(() => {
+    if (!selectedExtract) return null;
+    const first = selectedExtract.allCountries[0];
+    return (
+      (first && selectedExtract.landscapesByCountry[first]) ||
+      selectedExtract.legacyLandscapeUrl ||
+      null
+    );
+  }, [selectedExtract]);
 
   const latestQuiz = quizResults.length > 0 ? quizResults[0] : null;
   const displayName = customerName ?? user.email?.split("@")[0] ?? "";
@@ -245,6 +282,52 @@ export default function Dashboard({ user, customerName, onSignOut }: DashboardPr
           </section>
         )}
 
+        {active === "atlas" && (
+          <section className="account-section">
+            <header className="account-section__header">
+              <h1 className="account-section__title">Atlas</h1>
+              <p className="account-section__subtitle">
+                Where your extracts are sourced. Click a country or extract for details.
+              </p>
+            </header>
+            <div className="account-atlas">
+              <div className="account-atlas__map">
+                <EasternEuropeMap
+                  highlightedCountry={hoveredCountry}
+                  activeCountries={activeCountries}
+                  countryColors={countryColors}
+                />
+              </div>
+              <ul className="account-atlas__list">
+                {extracts.length === 0 ? (
+                  <li className="account-empty-inline">No extracts mapped.</li>
+                ) : (
+                  extracts.map((e) => (
+                    <li key={e.ingredientName}>
+                      <button
+                        type="button"
+                        className="account-atlas__item"
+                        onMouseEnter={() => setHoveredCountry(e.origin.country)}
+                        onMouseLeave={() => setHoveredCountry(null)}
+                        onClick={() => setSelectedExtract(e)}
+                      >
+                        <span
+                          className="account-atlas__swatch"
+                          style={{ backgroundColor: e.origin.color }}
+                        />
+                        <span className="account-atlas__name">{e.ingredientName}</span>
+                        <span className="account-atlas__country">
+                          {e.allCountries.join(", ")}
+                        </span>
+                      </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          </section>
+        )}
+
         {active === "extracts" && (
           <section className="account-section">
             <header className="account-section__header">
@@ -312,6 +395,18 @@ export default function Dashboard({ user, customerName, onSignOut }: DashboardPr
           </section>
         )}
       </main>
+
+      <ExtractModal
+        extract={selectedExtract?.origin ?? null}
+        ingredientName={selectedExtract?.ingredientName ?? null}
+        landscapeUrl={selectedLandscape}
+        availableCountries={selectedExtract?.allCountries ?? []}
+        activeCountry={selectedExtract?.allCountries[0] ?? null}
+        onClose={() => {
+          setSelectedExtract(null);
+          setHoveredCountry(null);
+        }}
+      />
     </div>
   );
 }

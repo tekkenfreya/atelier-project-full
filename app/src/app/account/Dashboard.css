@@ -267,6 +267,91 @@
   font-size: 0.95rem;
 }
 
+.account-atlas {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.account-atlas__map {
+  height: 520px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--bg-cream);
+}
+
+.account-map__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(61, 58, 46, 0.6);
+  font-size: 0.9rem;
+}
+
+.account-atlas__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 520px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--bg-cream);
+  padding: 0.5rem;
+}
+
+.account-atlas__item {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.account-atlas__item:hover {
+  background-color: rgba(139, 125, 60, 0.1);
+}
+
+.account-atlas__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.account-atlas__country {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .account-atlas {
+    grid-template-columns: 1fr;
+  }
+  .account-atlas__map {
+    height: 360px;
+  }
+  .account-atlas__list {
+    max-height: none;
+  }
+}
+
 .account-empty-inline {
   font-size: 0.95rem;
   color: rgba(61, 58, 46, 0.7);
