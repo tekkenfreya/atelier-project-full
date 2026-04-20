@@ -15,6 +15,7 @@ scratch.md
 migration.sql
 fix-migration.sql
 generate-migration.js
+.claude/settings.local.json
 
 # Lock files (each sub-project has its own)
 recip3/package-lock.json
