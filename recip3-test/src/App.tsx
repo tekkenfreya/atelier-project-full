@@ -27,6 +27,7 @@ import IngredientStockLevels from "./pages/reports/IngredientStockLevels";
 import StartupProjectCompletion from "./pages/reports/StartupProjectCompletion";
 import Settings from "./pages/Settings";
 import MySubscriptions from "./pages/MySubscriptions";
+import PrintLabel from "./pages/PrintLabel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -276,6 +277,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <MySubscriptions />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/print"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PrintLabel />
                   </Layout>
                 </ProtectedRoute>
               }
