@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { resolveExtract, type ResolvedExtract, type DbExtractRow } from "@/lib/extracts";
-import type { CustomerOrder, QuizResult } from "../lib/types";
+import { resolveExtract, type ResolvedExtract, type DbExtractRow } from "@/features/atlas/extracts";
+import type { CustomerOrder, QuizResult } from "./types";
 
 interface AccountData {
   quizResults: QuizResult[];

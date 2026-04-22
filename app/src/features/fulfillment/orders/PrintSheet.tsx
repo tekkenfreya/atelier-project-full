@@ -1,4 +1,4 @@
-import type { CustomerOrder, OrderItemExtended } from "@/app/account/lib/types";
+import type { CustomerOrder, OrderItemExtended } from "@/features/customer/types";
 
 interface PrintSheetProps {
   order: CustomerOrder;

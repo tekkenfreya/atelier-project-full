@@ -1,4 +1,4 @@
-import type { ResolvedExtract } from "@/lib/extracts";
+import type { ResolvedExtract } from "@/features/atlas/extracts";
 
 interface ExtractsProps {
   extracts: ResolvedExtract[];

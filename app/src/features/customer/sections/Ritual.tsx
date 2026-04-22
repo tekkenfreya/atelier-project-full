@@ -1,6 +1,6 @@
-import type { ResolvedExtract } from "@/lib/extracts";
-import type { QuizResult, RitualCategory } from "../lib/types";
-import { formatDate, formatConcern, FRAGRANCE_LABELS } from "../lib/format";
+import type { ResolvedExtract } from "@/features/atlas/extracts";
+import type { QuizResult, RitualCategory } from "../types";
+import { formatDate, formatConcern, FRAGRANCE_LABELS } from "../format";
 
 interface RitualRow {
   category: RitualCategory;

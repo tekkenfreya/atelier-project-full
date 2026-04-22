@@ -1,5 +1,5 @@
-import type { QuizResult } from "../lib/types";
-import { formatShortDate } from "../lib/format";
+import type { QuizResult } from "../types";
+import { formatShortDate } from "../format";
 
 interface OverviewProps {
   latestQuiz: QuizResult;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import type Stripe from "stripe";
-import type { ProductCategory } from "@/lib/matching-engine/types";
+import type { ProductCategory } from "@/features/consultation/types";
 
 interface CheckoutCartItem {
   productName: string;

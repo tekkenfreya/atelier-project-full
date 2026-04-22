@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import { formatDate } from "../lib/format";
+import { formatDate } from "../format";
 
 interface ProfileProps {
   user: User;

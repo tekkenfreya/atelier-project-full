@@ -1,5 +1,5 @@
-import type { CustomerOrder } from "../lib/types";
-import { formatShortDate, PLAN_LABELS } from "../lib/format";
+import type { CustomerOrder } from "../types";
+import { formatShortDate, PLAN_LABELS } from "../format";
 
 interface OrdersProps {
   orders: CustomerOrder[];

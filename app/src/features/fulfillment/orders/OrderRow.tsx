@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import type { CustomerOrder } from "@/app/account/lib/types";
+import type { CustomerOrder } from "@/features/customer/types";
 import PrintSheet from "./PrintSheet";
 
 interface OrderRowProps {

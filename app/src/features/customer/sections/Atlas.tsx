@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import type { ResolvedExtract } from "@/lib/extracts";
+import type { ResolvedExtract } from "@/features/atlas/extracts";
 
 const EasternEuropeMap = dynamic(
   () => import("@/components/map/EasternEuropeMap"),

@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 
-import { useAccountData } from "./hooks/useAccountData";
-import { isAdmin } from "@/lib/admin";
-import type { RitualCategory } from "./lib/types";
-import type { ResolvedExtract } from "@/lib/extracts";
+import { useAccountData } from "./useAccountData";
+import { isAdmin } from "@/features/admin/guards";
+import type { RitualCategory } from "./types";
+import type { ResolvedExtract } from "@/features/atlas/extracts";
 import ExtractModal from "@/components/map/ExtractModal";
 
 import Overview from "./sections/Overview";

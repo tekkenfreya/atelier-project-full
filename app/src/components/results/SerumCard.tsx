@@ -1,4 +1,4 @@
-import type { ScoredProduct, FragranceOption, ProductCategory } from "@/lib/matching-engine/types";
+import type { ScoredProduct, FragranceOption, ProductCategory } from "@/features/consultation/types";
 import { PRODUCT_PRICES } from "@/types/cart";
 
 interface SerumCardProps {

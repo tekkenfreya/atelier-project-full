@@ -1,4 +1,4 @@
-import type { FragranceOption, ProductCategory } from "@/lib/matching-engine/types";
+import type { FragranceOption, ProductCategory } from "@/features/consultation/types";
 
 export interface CartItem {
   productId: string;

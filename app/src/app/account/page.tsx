@@ -4,8 +4,8 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { getUser, signOut } from "@/lib/auth";
-import Dashboard from "./Dashboard";
-import LoginForm from "./LoginForm";
+import Dashboard from "@/features/customer/Dashboard";
+import LoginForm from "@/features/customer/LoginForm";
 
 function isSafeRedirect(value: string | null): value is string {
   return !!value && value.startsWith("/") && !value.startsWith("//");

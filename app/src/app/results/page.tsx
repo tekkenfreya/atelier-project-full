@@ -12,7 +12,7 @@ import type {
   ProductCategory,
   SkinType,
   Ingredient,
-} from "@/lib/matching-engine/types";
+} from "@/features/consultation/types";
 import type { AnswerValue } from "@/data/quizQuestions";
 import type { CartItem } from "@/types/cart";
 import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";

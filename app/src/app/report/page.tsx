@@ -8,7 +8,7 @@ import type {
   DebugRecommendation,
   DebugCategoryResult,
   FragranceOption,
-} from "@/lib/matching-engine/types";
+} from "@/features/consultation/types";
 
 const ENGINE_QUESTIONS = new Set([10, 11, 12, 16, 24, 29, 31]);
 

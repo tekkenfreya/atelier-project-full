@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { recommendDebug } from "@/lib/matching-engine/recommend";
-import type { QuizAnswers } from "@/lib/matching-engine/types";
+import { recommendDebug } from "@/features/consultation/recommend";
+import type { QuizAnswers } from "@/features/consultation/types";
 
 export async function POST(req: NextRequest) {
   try {

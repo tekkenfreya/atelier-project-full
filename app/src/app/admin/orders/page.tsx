@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { getUser } from "@/lib/auth";
-import { isAdmin } from "@/lib/admin";
-import type { CustomerOrder } from "@/app/account/lib/types";
-import OrderRow from "./OrderRow";
-import "./admin-orders.css";
+import { isAdmin } from "@/features/admin/guards";
+import type { CustomerOrder } from "@/features/customer/types";
+import OrderRow from "@/features/fulfillment/orders/OrderRow";
+import "@/features/fulfillment/orders/admin-orders.css";
 
 type Tab = "pending" | "fulfilled";
 

@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
-import type { Ingredient, ProductCategory } from "@/lib/matching-engine/types";
+import type { Ingredient, ProductCategory } from "@/features/consultation/types";
 
 interface BotanicalCardProps {
   ingredient: Ingredient;
