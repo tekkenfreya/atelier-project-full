@@ -31,4 +31,20 @@ export interface CustomerOrder {
   total: number;
   status: string;
   created_at: string;
+  printed_at?: string | null;
+  fulfilled_at?: string | null;
+  next_shipment_at?: string | null;
+  shipping_name?: string | null;
+  shipping_email?: string | null;
+  shipping_address?: string | null;
+  shipping_city?: string | null;
+  shipping_country?: string | null;
+  shipping_postal_code?: string | null;
+  user_id?: string | null;
+}
+
+export interface OrderItemExtended extends OrderItem {
+  productId: string;
+  skinType?: string;
+  fragranceOption?: string;
 }
