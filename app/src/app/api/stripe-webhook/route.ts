@@ -67,7 +67,19 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   const shipping = session.collected_information?.shipping_details;
   const customerEmail = session.customer_details?.email ?? session.customer_email ?? null;
-  const totalEuros = session.amount_total != null ? session.amount_total / 100 : null;
+  const totalEuros = session.amount_total != null ? session.amount_total / 100 : 0;
+  const subtotalEuros =
+    session.amount_subtotal != null ? session.amount_subtotal / 100 : totalEuros;
+
+  if (!userId) {
+    console.error(
+      "[stripe-webhook] no userId in session metadata — customer_orders.user_id is NOT NULL; aborting",
+      session.id,
+    );
+    throw new Error(
+      "no userId in session metadata (customer_orders.user_id is NOT NULL)",
+    );
+  }
 
   // Idempotency check: did a webhook already create this order?
   const { data: existing } = await getSupabaseAdmin()
@@ -85,9 +97,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const { data: inserted, error: insertErr } = await getSupabaseAdmin()
       .from("customer_orders")
       .insert({
-        user_id: userId || null,
+        user_id: userId,
         items,
         subscription_plan: plan,
+        subtotal: subtotalEuros,
         total: totalEuros,
         status: "paid",
         shipping_name: shipping?.name ?? customerName,
@@ -103,7 +116,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     if (insertErr || !inserted) {
       console.error("[stripe-webhook] insert customer_orders failed", insertErr);
-      throw insertErr ?? new Error("insert failed");
+      throw new Error(
+        `customer_orders insert failed: ${insertErr?.message ?? "unknown"} (code=${insertErr?.code ?? "?"}, details=${insertErr?.details ?? "?"})`,
+      );
     }
     orderId = inserted.id as string;
     console.log("[stripe-webhook] created order", orderId, "for session", session.id);
@@ -122,7 +137,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   });
 
   if (fulfillErr) {
-    console.error("[stripe-webhook] fulfill_order_with_barcodes failed", fulfillErr);
+    console.error(
+      "[stripe-webhook] fulfill_order_with_barcodes failed",
+      fulfillErr.message,
+      fulfillErr.details,
+      fulfillErr.code,
+    );
     // Not throwing — order exists; admin can retry from fulfillment-studio
     return;
   }
@@ -165,8 +185,13 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ received: true });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "handler failed";
-    console.error("[stripe-webhook] handler error:", msg);
+    const msg =
+      err instanceof Error
+        ? err.message
+        : typeof err === "object" && err !== null && "message" in err
+          ? String((err as { message: unknown }).message)
+          : JSON.stringify(err);
+    console.error("[stripe-webhook] handler error:", msg, err);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
