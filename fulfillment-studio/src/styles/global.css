@@ -1170,6 +1170,111 @@ button:focus {
   text-transform: lowercase;
 }
 
+.fs-btn--danger {
+  background: transparent;
+  border-color: rgba(212, 106, 90, 0.3);
+  color: rgba(212, 106, 90, 0.85);
+}
+
+.fs-btn--danger:hover:not(:disabled) {
+  background: rgba(212, 106, 90, 0.08);
+  border-color: var(--err);
+  color: var(--err);
+}
+
+.fs-btn--danger-strong {
+  background: var(--err);
+  border-color: var(--err);
+  color: var(--bg-0);
+  font-weight: 500;
+}
+
+.fs-btn--danger-strong:hover:not(:disabled) {
+  background: #b85848;
+  border-color: #b85848;
+}
+
+/* ================================================================
+   Danger zone (collapsible)
+   ================================================================ */
+
+.fs-danger {
+  margin-top: 1.5rem;
+  border: 1px solid rgba(212, 106, 90, 0.18);
+  border-radius: 4px;
+  background: rgba(212, 106, 90, 0.03);
+}
+
+.fs-danger__summary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(212, 106, 90, 0.7);
+  list-style: none;
+  user-select: none;
+}
+
+.fs-danger__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fs-danger__summary::before {
+  content: "› ";
+  display: inline-block;
+  transition: transform 0.2s ease;
+  color: rgba(212, 106, 90, 0.5);
+}
+
+.fs-danger[open] .fs-danger__summary::before {
+  transform: rotate(90deg);
+}
+
+.fs-danger__body {
+  padding: 0.5rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-top: 1px solid rgba(212, 106, 90, 0.15);
+}
+
+.fs-danger__row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+}
+
+.fs-danger__row:not(:last-child) {
+  border-bottom: 1px solid rgba(212, 106, 90, 0.1);
+}
+
+.fs-danger__copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fs-danger__title {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-0);
+  letter-spacing: 0.005em;
+}
+
+.fs-danger__desc {
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
 /* ================================================================
    Print-only area
    ================================================================ */

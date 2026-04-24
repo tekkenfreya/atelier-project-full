@@ -140,6 +140,23 @@ export async function fulfillOrder(
   return (data ?? []) as FulfilledItem[];
 }
 
+export async function cancelOrder(orderId: string, reason: string): Promise<number> {
+  const { data, error } = await supabase.rpc("cancel_order", {
+    p_order_id: orderId,
+    p_reason: reason,
+  });
+  if (error) throw error;
+  return (data as number) ?? 0;
+}
+
+export async function deleteOrderForTest(orderId: string): Promise<number> {
+  const { data, error } = await supabase.rpc("delete_order_for_test", {
+    p_order_id: orderId,
+  });
+  if (error) throw error;
+  return (data as number) ?? 0;
+}
+
 export async function markOrderPrinted(orderId: string): Promise<void> {
   const { error } = await supabase
     .from("customer_orders")

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabase";
 import {
+  cancelOrder,
+  deleteOrderForTest,
   fulfillOrder,
   isAdmin,
   listIssuers,
@@ -154,6 +156,45 @@ export default function App() {
     await markOrderPrinted(selected.id);
     window.print();
     await loadAll();
+  }, [selected, loadAll]);
+
+  const handleCancelOrder = useCallback(async () => {
+    if (!selected) return;
+    const reason = window.prompt(
+      `Cancel order ${selected.id.slice(0, 8)} for ${selected.shipping_name ?? "unknown"}?\n\nThis voids every GTIN on the order (cannot be reused — GS1 rule).\nDoes NOT refund the Stripe charge — do that separately.\n\nEnter a reason to confirm:`,
+    );
+    if (!reason || !reason.trim()) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await cancelOrder(selected.id, reason.trim());
+      await loadAll();
+      setSelectedId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "cancel failed");
+    } finally {
+      setBusy(false);
+    }
+  }, [selected, loadAll]);
+
+  const handleDeleteTestOrder = useCallback(async () => {
+    if (!selected) return;
+    const expected = selected.id.slice(0, 8);
+    const typed = window.prompt(
+      `DESTRUCTIVE — TEST ONLY.\n\nWipes order ${expected}, deletes product records, and returns ${selected.items?.length ?? 0} GTINs to the pool as available.\n\nNever use in production (GS1 forbids reusing issued GTINs).\n\nType "${expected}" to confirm:`,
+    );
+    if (typed !== expected) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await deleteOrderForTest(selected.id);
+      await loadAll();
+      setSelectedId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "delete failed");
+    } finally {
+      setBusy(false);
+    }
   }, [selected, loadAll]);
 
   // --- Render gates ---
@@ -507,6 +548,49 @@ export default function App() {
                   </div>
                 )}
               </div>
+
+              <details className="fs-danger">
+                <summary className="fs-danger__summary">Danger zone</summary>
+                <div className="fs-danger__body">
+                  <div className="fs-danger__row">
+                    <div className="fs-danger__copy">
+                      <span className="fs-danger__title">Cancel order</span>
+                      <span className="fs-danger__desc">
+                        Voids the {selectedItems.length || selected.items.length} GTIN
+                        {(selectedItems.length || selected.items.length) === 1 ? "" : "s"}{" "}
+                        (never reissued) and marks the order cancelled. Use when a
+                        customer refunds. Stripe refund is separate.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="fs-btn fs-btn--danger"
+                      onClick={handleCancelOrder}
+                      disabled={busy}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  <div className="fs-danger__row">
+                    <div className="fs-danger__copy">
+                      <span className="fs-danger__title">Delete (test only)</span>
+                      <span className="fs-danger__desc">
+                        Wipes the order and returns its GTINs to the pool as available.
+                        For pre-launch testing — never use once real customers exist.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="fs-btn fs-btn--danger-strong"
+                      onClick={handleDeleteTestOrder}
+                      disabled={busy}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </details>
             </div>
           )}
         </section>

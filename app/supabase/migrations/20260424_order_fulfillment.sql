@@ -230,6 +230,99 @@ BEGIN
 END;
 $func$;
 
+-- ---------- Order cancellation + test deletion -----------------------------
+
+-- cancel_order: production-safe cancel. Voids every GTIN attached to the
+-- order (they can never be reused — GS1 rule), marks the order cancelled,
+-- preserves the audit trail + product records. Does NOT refund the Stripe
+-- payment — admin handles that separately in the Stripe dashboard.
+CREATE OR REPLACE FUNCTION public.cancel_order(
+  p_order_id uuid,
+  p_reason   text
+)
+RETURNS int
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $func$
+DECLARE
+  v_gtins text[];
+  v_count int;
+BEGIN
+  IF NOT public.is_admin(auth.uid()) THEN
+    RAISE EXCEPTION 'cancel_order: admin required';
+  END IF;
+
+  SELECT array_agg(gtin) INTO v_gtins
+  FROM public.gtin_pool
+  WHERE order_id = p_order_id AND status <> 'voided';
+
+  v_count := COALESCE(array_length(v_gtins, 1), 0);
+
+  IF v_gtins IS NOT NULL THEN
+    UPDATE public.gtin_pool
+    SET status = 'voided',
+        voided_at = now(),
+        voided_reason = p_reason
+    WHERE gtin = ANY(v_gtins);
+
+    INSERT INTO public.gtin_audit_log (gtin, event, order_id, actor, metadata)
+    SELECT g, 'voided', p_order_id, auth.uid(),
+           jsonb_build_object('reason', p_reason, 'via', 'cancel_order')
+    FROM unnest(v_gtins) g;
+  END IF;
+
+  UPDATE public.customer_orders
+  SET status = 'cancelled',
+      fulfilled_at = NULL
+  WHERE id = p_order_id;
+
+  RETURN v_count;
+END;
+$func$;
+
+-- delete_order_for_test: DESTRUCTIVE. Returns every GTIN attached to the
+-- order back into the pool as 'available' (so they can be reissued), deletes
+-- the product records + audit entries + order row. NEVER call in production
+-- once real customers exist — GS1 rules forbid reusing a GTIN that has
+-- appeared on a physical label.
+CREATE OR REPLACE FUNCTION public.delete_order_for_test(p_order_id uuid)
+RETURNS int
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $func$
+DECLARE
+  v_gtins text[];
+  v_count int;
+BEGIN
+  IF NOT public.is_admin(auth.uid()) THEN
+    RAISE EXCEPTION 'delete_order_for_test: admin required';
+  END IF;
+
+  SELECT array_agg(gtin) INTO v_gtins
+  FROM public.gtin_pool
+  WHERE order_id = p_order_id;
+
+  v_count := COALESCE(array_length(v_gtins, 1), 0);
+
+  IF v_gtins IS NOT NULL THEN
+    DELETE FROM public.gtin_product_records WHERE gtin = ANY(v_gtins);
+    DELETE FROM public.gtin_audit_log
+      WHERE gtin = ANY(v_gtins) AND order_id = p_order_id;
+
+    UPDATE public.gtin_pool
+    SET status = 'available',
+        order_id = NULL,
+        item_ref = NULL,
+        reserved_at = NULL,
+        used_at = NULL,
+        activated_at = NULL,
+        voided_at = NULL,
+        voided_reason = NULL
+    WHERE gtin = ANY(v_gtins);
+  END IF;
+
+  DELETE FROM public.customer_orders WHERE id = p_order_id;
+
+  RETURN v_count;
+END;
+$func$;
+
 -- ---------- Grants ----------------------------------------------------------
 
 GRANT EXECUTE ON FUNCTION public.compose_inci_for_product(uuid)
@@ -239,4 +332,8 @@ GRANT EXECUTE ON FUNCTION public.default_net_content(text)
 GRANT EXECUTE ON FUNCTION public.fulfill_order_with_barcodes(uuid, uuid)
   TO authenticated;
 GRANT EXECUTE ON FUNCTION public.reset_issuer(uuid)
+  TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cancel_order(uuid, text)
+  TO authenticated;
+GRANT EXECUTE ON FUNCTION public.delete_order_for_test(uuid)
   TO authenticated;
