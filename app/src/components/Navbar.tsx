@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import "./Navbar.css";
 
 export default function Navbar() {
   const router = useRouter();

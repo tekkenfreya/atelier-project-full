@@ -1,0 +1,883 @@
+/* ================================================================
+   EDITORIAL LUXURY — master theme override
+   Applied after globals.css from ClientLayout.
+   Typography: Fraunces (serif display) + Inter (chrome) + JetBrains Mono (data)
+   Palette preserved: cream + gold + olive
+   ================================================================ */
+
+:root {
+  --ed-serif: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --ed-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --ed-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --ed-ink: #3d3a2e;
+  --ed-ink-soft: rgba(61, 58, 46, 0.72);
+  --ed-ink-mute: rgba(61, 58, 46, 0.55);
+  --ed-ink-ghost: rgba(61, 58, 46, 0.32);
+  --ed-paper: #f5f0e8;
+  --ed-paper-bright: #faf7f2;
+  --ed-paper-white: #ffffff;
+  --ed-gold: #8b7d3c;
+  --ed-gold-hi: #a6954a;
+  --ed-line: rgba(61, 58, 46, 0.1);
+  --ed-line-strong: rgba(61, 58, 46, 0.2);
+}
+
+/* --------------------------------------------------------------------
+   Global type reset — applied to existing class patterns
+   Using higher specificity + selector nesting to beat globals.css
+   -------------------------------------------------------------------- */
+
+body {
+  font-family: var(--ed-sans);
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* ================================================================
+   QUIZ
+   ================================================================ */
+
+.quiz-container {
+  background: var(--ed-paper);
+}
+
+.quiz-topbar-counter,
+.quiz-intro-label,
+.quiz-complete-label,
+.quiz-section-num,
+.quiz-progress-section,
+.quiz-progress-text {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+  font-weight: 400 !important;
+}
+
+.quiz-intro-title,
+.quiz-sex-title,
+.quiz-section-title,
+.quiz-complete-title,
+.quiz-question-title {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+  line-height: 1.05 !important;
+}
+
+.quiz-intro-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem) !important;
+}
+
+.quiz-sex-title,
+.quiz-section-title,
+.quiz-complete-title,
+.quiz-question-title {
+  font-size: clamp(1.75rem, 4vw, 2.8rem) !important;
+}
+
+.quiz-intro-desc,
+.quiz-sex-subtitle,
+.quiz-section-desc,
+.quiz-complete-desc,
+.quiz-question-subtitle {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.08rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+  max-width: 52ch;
+}
+
+.quiz-name-label {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+.quiz-name-input,
+.quiz-other-field,
+.quiz-textarea {
+  font-family: var(--ed-sans) !important;
+  font-size: 1.05rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.005em !important;
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line-strong) !important;
+  border-radius: 3px !important;
+  color: var(--ed-ink) !important;
+}
+
+.quiz-name-input:focus,
+.quiz-other-field:focus,
+.quiz-textarea:focus {
+  border-color: var(--ed-gold) !important;
+}
+
+/* Intro section cards */
+.quiz-intro-section-card {
+  background: var(--ed-paper-bright) !important;
+  border: 1px solid var(--ed-line) !important;
+  border-radius: 4px !important;
+  padding: 1.75rem 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  transition: border-color 0.3s ease, transform 0.35s cubic-bezier(0.65, 0, 0.35, 1) !important;
+}
+
+.quiz-intro-section-card:hover {
+  border-color: rgba(139, 125, 60, 0.35) !important;
+  transform: translateY(-3px);
+}
+
+.quiz-intro-section-num {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.2em !important;
+  color: var(--ed-gold) !important;
+}
+
+.quiz-intro-section-name {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-size: 1.25rem !important;
+  letter-spacing: -0.005em !important;
+  color: var(--ed-ink) !important;
+}
+
+.quiz-intro-section-count {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+/* Select cards (SingleSelect/MultiSelect) */
+.quiz-select-card {
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line-strong) !important;
+  border-radius: 4px !important;
+  padding: 1.1rem 1.35rem !important;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease !important;
+}
+
+.quiz-select-card:hover {
+  border-color: var(--ed-gold) !important;
+  background: var(--ed-paper-bright) !important;
+}
+
+.quiz-select-card.selected {
+  background: rgba(139, 125, 60, 0.06) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+.quiz-select-label {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 400 !important;
+  color: var(--ed-ink) !important;
+  letter-spacing: 0.003em !important;
+}
+
+/* Yes/No buttons */
+.quiz-yes-no-btn {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.005em !important;
+  border: 1px solid var(--ed-line-strong) !important;
+  border-radius: 4px !important;
+  background: var(--ed-paper-white) !important;
+  color: var(--ed-ink) !important;
+}
+
+.quiz-yes-no-btn:hover {
+  border-color: var(--ed-gold) !important;
+  background: var(--ed-paper-bright) !important;
+}
+
+.quiz-yes-no-btn.selected {
+  background: rgba(139, 125, 60, 0.08) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+/* Scale */
+.quiz-scale-segment {
+  border: 1px solid var(--ed-line-strong) !important;
+  background: var(--ed-paper-white) !important;
+  font-family: var(--ed-mono) !important;
+  font-weight: 500 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.quiz-scale-segment.selected {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+  color: var(--ed-paper) !important;
+}
+
+.quiz-scale-labels span {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+/* CTA + nav buttons */
+.quiz-cta-btn,
+.quiz-nav-next {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+  background: var(--ed-ink) !important;
+  border: 1px solid var(--ed-ink) !important;
+  color: var(--ed-paper) !important;
+  padding: 1rem 2rem !important;
+  transition: background 0.3s ease, border-color 0.3s ease, gap 0.3s ease !important;
+}
+
+.quiz-cta-btn:hover,
+.quiz-nav-next:hover:not(.disabled) {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+.quiz-sex-btn {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.005em !important;
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line-strong) !important;
+  border-radius: 4px !important;
+  color: var(--ed-ink) !important;
+  padding: 1.1rem 1.5rem !important;
+}
+
+.quiz-sex-btn:hover {
+  border-color: var(--ed-gold) !important;
+  background: var(--ed-paper-bright) !important;
+}
+
+.quiz-sex-btn-subtle {
+  color: var(--ed-ink-soft) !important;
+  font-style: italic !important;
+  font-family: var(--ed-serif) !important;
+}
+
+.quiz-progress-bar {
+  background: var(--ed-line) !important;
+}
+
+.quiz-progress-fill {
+  background: var(--ed-gold) !important;
+}
+
+.quiz-why-toggle {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+.quiz-why-text {
+  font-family: var(--ed-serif) !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.quiz-char-count {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.2em !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+/* ================================================================
+   RESULTS
+   ================================================================ */
+
+.results-container {
+  background: var(--ed-paper);
+}
+
+.results-label {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.32em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+  font-weight: 400 !important;
+}
+
+.results-title {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-size: clamp(2.5rem, 6vw, 4.5rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+}
+
+.results-subtitle {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.results-card {
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line) !important;
+  border-radius: 6px !important;
+  padding: 2rem 1.75rem 2.25rem !important;
+  transition: border-color 0.3s ease, transform 0.4s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.4s ease !important;
+}
+
+.results-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 125, 60, 0.25) !important;
+  box-shadow: 0 30px 60px -30px rgba(61, 58, 46, 0.2) !important;
+}
+
+.results-card-category {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.66rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+}
+
+.results-card-name {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.55rem !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ed-ink) !important;
+  line-height: 1.15 !important;
+}
+
+.results-card-skin,
+.results-card-label {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+.results-card-actives li,
+.results-card-reasons li {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.85rem !important;
+  font-weight: 300 !important;
+  line-height: 1.5 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.results-card-price {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-size: 1.3rem !important;
+  color: var(--ed-ink) !important;
+  letter-spacing: -0.01em !important;
+}
+
+.results-btn {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+  background: var(--ed-ink) !important;
+  border: 1px solid var(--ed-ink) !important;
+  color: var(--ed-paper) !important;
+  padding: 1rem 1.8rem !important;
+  transition: background 0.3s ease, border-color 0.3s ease !important;
+}
+
+.results-btn:hover {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+.results-btn-secondary {
+  background: transparent !important;
+  color: var(--ed-ink) !important;
+}
+
+.results-btn-secondary:hover {
+  background: var(--ed-paper-bright) !important;
+  color: var(--ed-ink) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+.results-pricing-value {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-size: 2rem !important;
+  color: var(--ed-ink) !important;
+}
+
+.results-pricing-label {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.24em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+.results-pricing-note,
+.results-pricing-sub-label {
+  font-family: var(--ed-serif) !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  font-size: 0.9rem !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.results-fragrance-display {
+  font-family: var(--ed-serif) !important;
+  font-style: italic !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+/* ================================================================
+   ACCOUNT
+   ================================================================ */
+
+.account-dashboard,
+.account-container,
+.account-empty {
+  background: var(--ed-paper);
+}
+
+.account-sidebar,
+.account-sidebar__brand,
+.account-sidebar__nav {
+  background: var(--ed-paper) !important;
+  border-color: var(--ed-line) !important;
+}
+
+.account-sidebar__brand-eyebrow {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.28em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+}
+
+.account-sidebar__brand-name {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.65rem !important;
+  letter-spacing: -0.015em !important;
+  color: var(--ed-ink) !important;
+}
+
+.account-sidebar__navbtn {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.92rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em !important;
+  color: var(--ed-ink-soft) !important;
+  border-radius: 3px !important;
+  transition: background 0.25s ease, color 0.25s ease !important;
+}
+
+.account-sidebar__navbtn:hover {
+  background: var(--ed-paper-bright) !important;
+  color: var(--ed-ink) !important;
+}
+
+.account-sidebar__navbtn--active {
+  background: rgba(139, 125, 60, 0.08) !important;
+  color: var(--ed-ink) !important;
+  font-weight: 500 !important;
+}
+
+.account-linkbtn {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+.account-linkbtn:hover {
+  color: var(--ed-gold) !important;
+}
+
+.account-empty__title {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+}
+
+.account-empty__subtitle {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.08rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+.account-btn,
+.account-btn--primary {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+  background: var(--ed-ink) !important;
+  border: 1px solid var(--ed-ink) !important;
+  color: var(--ed-paper) !important;
+  padding: 1rem 2rem !important;
+}
+
+.account-btn--primary:hover,
+.account-btn:hover {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+/* Account main content: target all common section headers / titles / eyebrows */
+.account-main h1,
+.account-main h2,
+.account-main h3 {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--ed-ink) !important;
+}
+
+.account-main h1 {
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2rem, 5vw, 3rem) !important;
+}
+
+/* Common card-like containers inside account */
+[class*="account-card"],
+[class*="account-panel"],
+[class*="account-section__card"],
+[class*="overview-card"],
+[class*="ritual-card"],
+[class*="orders-card"],
+[class*="extracts-card"] {
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line) !important;
+  border-radius: 6px !important;
+}
+
+.account-loading {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.24em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+/* ================================================================
+   CART + CHECKOUT + CONFIRMATION
+   ================================================================ */
+
+.cart-container,
+.checkout-container,
+.confirmation-container {
+  background: var(--ed-paper);
+}
+
+[class*="cart-title"],
+[class*="checkout-title"],
+[class*="confirmation-title"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+}
+
+[class*="cart-subtitle"],
+[class*="checkout-subtitle"],
+[class*="confirmation-subtitle"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.08rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+[class*="cart-label"],
+[class*="checkout-label"],
+[class*="confirmation-label"] {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+  font-weight: 400 !important;
+}
+
+[class*="cart-item"],
+[class*="checkout-line"] {
+  border-color: var(--ed-line) !important;
+}
+
+[class*="cart-item-name"],
+[class*="checkout-line-name"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-size: 1.15rem !important;
+  color: var(--ed-ink) !important;
+}
+
+[class*="cart-item-category"],
+[class*="checkout-line-category"] {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+[class*="cart-item-price"],
+[class*="checkout-line-price"],
+[class*="checkout-total"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  color: var(--ed-ink) !important;
+  letter-spacing: -0.005em !important;
+}
+
+[class*="cart-btn"],
+[class*="checkout-btn"],
+[class*="confirmation-btn"] {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+}
+
+[class*="cart-btn-primary"],
+[class*="checkout-btn-primary"],
+[class*="confirmation-btn-primary"] {
+  background: var(--ed-ink) !important;
+  border: 1px solid var(--ed-ink) !important;
+  color: var(--ed-paper) !important;
+}
+
+[class*="cart-btn-primary"]:hover,
+[class*="checkout-btn-primary"]:hover,
+[class*="confirmation-btn-primary"]:hover {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+[class*="checkout-input"],
+[class*="cart-input"] {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 300 !important;
+  border: 1px solid var(--ed-line-strong) !important;
+  border-radius: 3px !important;
+  background: var(--ed-paper-white) !important;
+}
+
+[class*="checkout-input"]:focus,
+[class*="cart-input"]:focus {
+  border-color: var(--ed-gold) !important;
+  outline: none !important;
+}
+
+/* ================================================================
+   REPORT + ANALYSIS
+   ================================================================ */
+
+.report-container,
+.analysis-container {
+  background: var(--ed-paper);
+}
+
+[class*="report-title"],
+[class*="analysis-title"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.25rem, 5.5vw, 3.6rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+}
+
+[class*="report-subtitle"],
+[class*="analysis-subtitle"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+[class*="report-label"],
+[class*="analysis-label"] {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+}
+
+[class*="report-section"] h2,
+[class*="analysis-section"] h2,
+[class*="report-h"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  font-size: 1.6rem !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ed-ink) !important;
+}
+
+[class*="report-card"],
+[class*="analysis-card"] {
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line) !important;
+  border-radius: 6px !important;
+}
+
+[class*="report-btn"],
+[class*="analysis-btn"] {
+  font-family: var(--ed-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+  background: var(--ed-ink) !important;
+  border: 1px solid var(--ed-ink) !important;
+  color: var(--ed-paper) !important;
+  padding: 1rem 1.8rem !important;
+}
+
+[class*="report-btn"]:hover,
+[class*="analysis-btn"]:hover {
+  background: var(--ed-gold) !important;
+  border-color: var(--ed-gold) !important;
+}
+
+/* ================================================================
+   INGREDIENTS
+   ================================================================ */
+
+.ingredients-container {
+  background: var(--ed-paper);
+}
+
+[class*="ingredients-title"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.25rem, 5.5vw, 3.6rem) !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ed-ink) !important;
+}
+
+[class*="ingredients-subtitle"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1.08rem !important;
+  line-height: 1.6 !important;
+  color: var(--ed-ink-soft) !important;
+}
+
+[class*="ingredients-label"] {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-gold) !important;
+}
+
+[class*="ingredient-card"],
+[class*="ingredients-card"] {
+  background: var(--ed-paper-white) !important;
+  border: 1px solid var(--ed-line) !important;
+  border-radius: 6px !important;
+}
+
+[class*="ingredient-name"] {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+  color: var(--ed-ink) !important;
+  letter-spacing: -0.005em !important;
+}
+
+[class*="ingredient-function"],
+[class*="ingredient-category"] {
+  font-family: var(--ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--ed-ink-mute) !important;
+}
+
+/* ================================================================
+   Generic fallbacks for any heading inside a page wrapper
+   (catches stragglers not covered by specific selectors)
+   ================================================================ */
+
+[class$="-container"] h1,
+[class*="-page"] h1 {
+  font-family: var(--ed-serif) !important;
+  font-weight: 300 !important;
+}
+
+[class$="-container"] h2,
+[class*="-page"] h2 {
+  font-family: var(--ed-serif) !important;
+  font-weight: 400 !important;
+}
+
+/* ================================================================
+   Focus states — consistent across app
+   ================================================================ */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--ed-gold) !important;
+  outline-offset: 2px !important;
+}

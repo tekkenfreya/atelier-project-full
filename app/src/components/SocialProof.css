@@ -1,0 +1,172 @@
+/* ================================================================
+   Social proof — editorial testimonial triptych
+   ================================================================ */
+
+.lux-proof {
+  background: var(--bg-primary, #f5f0e8);
+  padding: 7rem 2.5rem 8rem;
+  position: relative;
+}
+
+.lux-proof::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 3.5rem;
+  background: linear-gradient(to bottom, transparent, rgba(61, 58, 46, 0.35));
+}
+
+/* --- Press line --- */
+
+.lux-proof__press {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 5rem;
+  margin-bottom: 5rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.1);
+  position: relative;
+}
+
+.lux-proof__press-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.lux-proof__press-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.75rem 3.5rem;
+}
+
+.lux-proof__press-logo {
+  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.45rem;
+  letter-spacing: 0.01em;
+  color: rgba(61, 58, 46, 0.65);
+  font-variation-settings: "opsz" 144, "SOFT" 40;
+  transition: color 0.3s ease;
+}
+
+.lux-proof__press-logo:hover {
+  color: var(--accent, #8b7d3c);
+}
+
+/* --- Testimonial grid --- */
+
+.lux-proof__grid {
+  list-style: none;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.lux-proof__card {
+  position: relative;
+  padding: 3rem 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-left: 1px solid rgba(61, 58, 46, 0.14);
+}
+
+.lux-proof__grid li:first-child .lux-proof__card {
+  border-left: none;
+}
+
+.lux-proof__quote-mark {
+  position: absolute;
+  top: 0.25rem;
+  left: 1.75rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--accent, #8b7d3c);
+  opacity: 0.8;
+}
+
+.lux-proof__grid li:first-child .lux-proof__quote-mark {
+  left: 0;
+}
+
+.lux-proof__quote {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-variation-settings: "opsz" 72, "SOFT" 40;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--text-primary, #3d3a2e);
+  flex: 1;
+}
+
+.lux-proof__attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(61, 58, 46, 0.12);
+}
+
+.lux-proof__attribution-name {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--text-primary, #3d3a2e);
+}
+
+.lux-proof__attribution-role {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 900px) {
+  .lux-proof {
+    padding: 5rem 1.5rem 6rem;
+  }
+  .lux-proof__press-label {
+    font-size: 0.62rem;
+  }
+  .lux-proof__press-logo {
+    font-size: 1.2rem;
+  }
+  .lux-proof__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .lux-proof__card {
+    border-left: none;
+    border-bottom: 1px solid rgba(61, 58, 46, 0.1);
+    padding: 2.5rem 0;
+  }
+  .lux-proof__grid li:last-child .lux-proof__card {
+    border-bottom: none;
+  }
+  .lux-proof__quote-mark {
+    left: 0 !important;
+    font-size: 3rem;
+  }
+  .lux-proof__quote {
+    font-size: 1.2rem;
+  }
+}

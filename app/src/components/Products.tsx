@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "./Products.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,89 +12,91 @@ interface Product {
   number: string;
   category: string;
   name: string;
+  blurb: string;
   description: string;
   price: string;
-  placeholder: string;
+  notes: string[];
+  hue: string;
 }
 
 const PRODUCTS: Product[] = [
   {
     number: "01",
-    category: "Daily Cleanser",
+    category: "Cleanser",
     name: "The Purifying Wash",
+    blurb: "Dissolves the day.",
     description:
-      "A gentle, pH-balanced cleanser that dissolves impurities without stripping your skin's natural moisture barrier. Custom-formulated with botanicals selected for your skin type.",
+      "A gentle, pH-balanced cleanser that removes impurities without stripping your barrier. Custom-formulated for your skin's profile.",
     price: "€23",
-    placeholder: "cleanser",
+    notes: ["Chamomile", "Oat", "Glycerin"],
+    hue: "sage",
   },
   {
     number: "02",
-    category: "Active Serum",
+    category: "Serum",
     name: "The Concentrated Elixir",
+    blurb: "The potent middle.",
     description:
-      "A potent blend of targeted actives that penetrate deep to address your specific skin concerns, from fine lines to uneven tone. Your most powerful step.",
+      "Targeted actives that penetrate deep to address your specific concerns — fine lines, tone, radiance. The most considered step in the ritual.",
     price: "€50",
-    placeholder: "serum",
+    notes: ["Niacinamide", "Peptide", "Bakuchiol"],
+    hue: "rose",
   },
   {
     number: "03",
-    category: "Daily Moisturiser",
+    category: "Moisturiser",
     name: "The Nourishing Veil",
+    blurb: "A quiet seal.",
     description:
-      "A rich yet weightless moisturiser that locks in hydration and protects your skin throughout the day. Adapts to your environment and skin needs.",
+      "Weightless hydration that adapts to your environment. Locks in the serum, softens the skin, finishes the ritual.",
     price: "€41",
-    placeholder: "moisturiser",
+    notes: ["Ceramide", "Squalane", "Shea"],
+    hue: "amber",
   },
 ];
 
 export default function Products() {
+  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
-  const headerLabelRef = useRef<HTMLParagraphElement>(null);
-  const headerTitleRef = useRef<HTMLHeadingElement>(null);
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const eyebrowRef = useRef<HTMLSpanElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(headerLabelRef.current, { y: 15 });
-      gsap.set(headerTitleRef.current, { y: 20 });
+      gsap.set([eyebrowRef.current, titleRef.current, descRef.current], {
+        y: 18,
+        opacity: 0,
+      });
+      gsap.set(cardRefs.current, { y: 40, opacity: 0 });
 
-      gsap.to(headerLabelRef.current, {
-        opacity: 1,
+      gsap.to([eyebrowRef.current, titleRef.current, descRef.current], {
         y: 0,
-        duration: 0.7,
-        ease: "power2.out",
+        opacity: 1,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.out",
         scrollTrigger: {
-          trigger: headerLabelRef.current,
-          start: "top 85%",
+          trigger: sectionRef.current,
+          start: "top 75%",
           once: true,
         },
       });
 
-      gsap.to(headerTitleRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headerTitleRef.current,
-          start: "top 85%",
-          once: true,
-        },
-      });
-
-      rowRefs.current.forEach((row) => {
-        if (!row) return;
-        gsap.set(row, { y: 40 });
-        gsap.to(row, {
-          opacity: 1,
+      cardRefs.current.forEach((el, i) => {
+        if (!el) return;
+        gsap.to(el, {
           y: 0,
-          duration: 0.9,
-          ease: "power2.out",
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: row,
-            start: "top 80%",
+            trigger: el,
+            start: "top 85%",
             once: true,
           },
+          delay: i * 0.1,
         });
       });
     }, sectionRef);
@@ -101,50 +105,65 @@ export default function Products() {
   }, []);
 
   return (
-    <section className="products" id="products" ref={sectionRef}>
-      <div className="products-header">
-        <p className="products-label" ref={headerLabelRef}>
-          The Collection
-        </p>
-        <h2 className="products-title" ref={headerTitleRef}>
-          Three Steps, Infinite Formulas
+    <section className="lux-prod" id="products" ref={sectionRef}>
+      <header className="lux-prod__header">
+        <span className="lux-prod__eyebrow" ref={eyebrowRef}>
+          THE COLLECTION · No. 01–03
+        </span>
+        <h2 className="lux-prod__title" ref={titleRef}>
+          <span>Three bottles,</span>
+          <span className="lux-prod__title-italic">infinite formulas.</span>
         </h2>
-      </div>
+        <p className="lux-prod__desc" ref={descRef}>
+          A complete ritual: wash, serum, veil. Each personalised from a shared
+          consultation, so the three work in harmony on your skin alone.
+        </p>
+      </header>
 
-      {PRODUCTS.map((product, i) => (
-        <div key={product.number}>
-          <div
-            className={`product-row ${i % 2 !== 0 ? "reverse" : ""}`}
-            ref={(el) => { rowRefs.current[i] = el; }}
+      <div className="lux-prod__triptych">
+        {PRODUCTS.map((p, i) => (
+          <article
+            key={p.number}
+            className={`lux-prod__card lux-prod__card--${p.hue}`}
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
+            onClick={() => router.push("/quiz")}
           >
-            <div className="product-image-wrapper">
-              <div className="product-image-inner">
-                <span className="product-number">{product.number}</span>
-                <span className="product-image-placeholder">
-                  {product.placeholder}
-                </span>
+            <div className="lux-prod__card-frame">
+              <header className="lux-prod__card-head">
+                <span className="lux-prod__card-num">№{p.number}</span>
+                <span className="lux-prod__card-cat">{p.category}</span>
+              </header>
+
+              <div className="lux-prod__card-bottle" aria-hidden>
+                <div className="lux-prod__bottle" />
               </div>
-            </div>
 
-            <div className="product-info">
-              <span className="product-category">{product.category}</span>
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-description">{product.description}</p>
-              <p className="product-price">{product.price}</p>
-              <a href="#" className="product-link">
-                Discover
-                <span className="product-link-arrow" />
-              </a>
-            </div>
-          </div>
+              <div className="lux-prod__card-body">
+                <span className="lux-prod__card-blurb">{p.blurb}</span>
+                <h3 className="lux-prod__card-name">{p.name}</h3>
+                <p className="lux-prod__card-desc">{p.description}</p>
 
-          {i < PRODUCTS.length - 1 && (
-            <div className="product-divider">
-              <div className="product-divider-line" />
+                <ul className="lux-prod__card-notes">
+                  {p.notes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <footer className="lux-prod__card-foot">
+                <span className="lux-prod__card-price">
+                  from <span className="lux-prod__card-price-v">{p.price}</span>
+                </span>
+                <span className="lux-prod__card-cta">
+                  begin the consultation →
+                </span>
+              </footer>
             </div>
-          )}
-        </div>
-      ))}
+          </article>
+        ))}
+      </div>
     </section>
   );
 }

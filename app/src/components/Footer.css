@@ -1,0 +1,251 @@
+/* ================================================================
+   Footer — editorial, quiet, trust-through-typography
+   ================================================================ */
+
+.lux-foot {
+  background: #1a1714;
+  color: #f5efe4;
+  padding: 5.5rem 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.lux-foot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(245, 239, 228, 0.2), transparent);
+}
+
+.lux-foot__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* --- Top: brand + newsletter --- */
+
+.lux-foot__top {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 4rem;
+  padding-bottom: 3.5rem;
+  border-bottom: 1px solid rgba(245, 239, 228, 0.1);
+}
+
+.lux-foot__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 420px;
+}
+
+.lux-foot__logo {
+  filter: brightness(0) invert(1) opacity(0.95);
+  height: auto;
+  width: auto;
+  max-width: 160px;
+}
+
+.lux-foot__tagline {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(245, 239, 228, 0.7);
+  max-width: 38ch;
+}
+
+.lux-foot__newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lux-foot__news-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 228, 0.55);
+}
+
+.lux-foot__news-row {
+  display: flex;
+  border-bottom: 1px solid rgba(245, 239, 228, 0.3);
+  padding-bottom: 0.6rem;
+  gap: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.lux-foot__news-row:focus-within {
+  border-bottom-color: #d4b06a;
+}
+
+.lux-foot__news-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  color: #f5efe4;
+  letter-spacing: 0.005em;
+}
+
+.lux-foot__news-input::placeholder {
+  color: rgba(245, 239, 228, 0.4);
+  font-style: italic;
+}
+
+.lux-foot__news-input:focus {
+  outline: none;
+}
+
+.lux-foot__news-btn {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.5rem;
+  color: rgba(245, 239, 228, 0.7);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.25s ease;
+}
+
+.lux-foot__news-btn:hover:not(:disabled) {
+  color: #d4b06a;
+  transform: translateX(4px);
+}
+
+.lux-foot__news-btn:disabled {
+  color: #d4b06a;
+}
+
+.lux-foot__news-note {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.78rem;
+  color: rgba(245, 239, 228, 0.5);
+}
+
+/* --- Columns --- */
+
+.lux-foot__columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(245, 239, 228, 0.1);
+}
+
+.lux-foot__col h4 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 228, 0.55);
+  margin-bottom: 1.2rem;
+}
+
+.lux-foot__col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.lux-foot__col a {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-size: 1rem;
+  color: rgba(245, 239, 228, 0.82);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.lux-foot__col a:hover {
+  color: #d4b06a;
+}
+
+/* --- Bottom --- */
+
+.lux-foot__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.lux-foot__copy {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: rgba(245, 239, 228, 0.5);
+}
+
+.lux-foot__small {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: rgba(245, 239, 228, 0.5);
+}
+
+.lux-foot__small a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.lux-foot__small a:hover {
+  color: #d4b06a;
+}
+
+.lux-foot__dot {
+  opacity: 0.5;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 900px) {
+  .lux-foot {
+    padding: 3.5rem 1.25rem 1.5rem;
+  }
+  .lux-foot__top {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .lux-foot__columns {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+  .lux-foot__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .lux-foot__columns {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}

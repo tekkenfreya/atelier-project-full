@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 
 import { useAccountData } from "./useAccountData";
-import { isAdmin } from "@/features/admin/guards";
 import type { RitualCategory } from "./types";
 import type { ResolvedExtract } from "@/features/atlas/extracts";
 import ExtractModal from "@/components/map/ExtractModal";
 
 import Overview from "./sections/Overview";
+import OverviewRail from "./sections/OverviewRail";
 import Ritual from "./sections/Ritual";
 import Orders from "./sections/Orders";
 import Atlas from "./sections/Atlas";
@@ -17,6 +17,7 @@ import Extracts from "./sections/Extracts";
 import Profile from "./sections/Profile";
 
 import "./Dashboard.css";
+import "./Dashboard.editorial.css";
 
 type SectionId = "overview" | "ritual" | "orders" | "atlas" | "extracts" | "profile";
 
@@ -26,13 +27,13 @@ interface DashboardProps {
   onSignOut: () => void;
 }
 
-const NAV: { id: SectionId; label: string }[] = [
-  { id: "overview", label: "Overview" },
-  { id: "ritual", label: "Ritual" },
-  { id: "orders", label: "Orders" },
-  { id: "atlas", label: "Atlas" },
-  { id: "extracts", label: "Extracts" },
-  { id: "profile", label: "Profile" },
+const NAV: { id: SectionId; label: string; num: string }[] = [
+  { id: "overview", label: "Overview", num: "01" },
+  { id: "ritual", label: "Ritual", num: "02" },
+  { id: "orders", label: "Orders", num: "03" },
+  { id: "atlas", label: "Atlas", num: "04" },
+  { id: "extracts", label: "Extracts", num: "05" },
+  { id: "profile", label: "Profile", num: "06" },
 ];
 
 export default function Dashboard({ user, customerName, onSignOut }: DashboardProps) {
@@ -40,17 +41,6 @@ export default function Dashboard({ user, customerName, onSignOut }: DashboardPr
   const [active, setActive] = useState<SectionId>("overview");
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [selectedExtract, setSelectedExtract] = useState<ResolvedExtract | null>(null);
-  const [admin, setAdmin] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    isAdmin(user.id).then((result) => {
-      if (!cancelled) setAdmin(result);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [user.id]);
 
   const latestQuiz = quizResults.length > 0 ? quizResults[0] : null;
   const displayName = customerName ?? user.email?.split("@")[0] ?? "";
@@ -125,46 +115,58 @@ export default function Dashboard({ user, customerName, onSignOut }: DashboardPr
     );
   }
 
+  const memberSince = quizResults.length > 0
+    ? new Date(quizResults[quizResults.length - 1].created_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+    : null;
+
   return (
-    <div className="account-dashboard">
-      <aside className="account-sidebar">
-        <div className="account-sidebar__brand">
-          <span className="account-sidebar__brand-eyebrow">Account</span>
-          <span className="account-sidebar__brand-name">{displayName}</span>
-        </div>
-        <nav className="account-sidebar__nav">
-          {NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={
-                "account-sidebar__navbtn" +
-                (active === item.id ? " account-sidebar__navbtn--active" : "")
-              }
-              onClick={() => setActive(item.id)}
-            >
-              {item.label}
+    <div className="acc-shell">
+      <aside className="acc-aside">
+        <div className="acc-aside__inner">
+          <header className="acc-aside__brand">
+            <span className="acc-aside__eyebrow">Atelier · Member</span>
+            <h2 className="acc-aside__name">{displayName}</h2>
+            {memberSince && (
+              <span className="acc-aside__since">since {memberSince}</span>
+            )}
+          </header>
+
+          <div className="acc-aside__rule" />
+
+          <nav className="acc-aside__nav" aria-label="Account sections">
+            {NAV.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`acc-navitem ${active === item.id ? "is-active" : ""}`}
+                onClick={() => setActive(item.id)}
+              >
+                <span className="acc-navitem__num">{item.num}</span>
+                <span className="acc-navitem__label">{item.label}</span>
+                <span className="acc-navitem__rail" aria-hidden />
+              </button>
+            ))}
+          </nav>
+
+          <footer className="acc-aside__foot">
+            <button type="button" className="acc-signout" onClick={onSignOut}>
+              Sign out →
             </button>
-          ))}
-        </nav>
-        <div className="account-sidebar__footer">
-          {admin && (
-            <a href="/admin/orders" className="account-linkbtn">
-              Admin dashboard
-            </a>
-          )}
-          <button type="button" className="account-linkbtn" onClick={onSignOut}>
-            Sign out
-          </button>
+          </footer>
         </div>
       </aside>
 
-      <main className="account-main">
+      <div className={`acc-stage ${active === "overview" ? "has-rail" : ""}`}>
+      <main className="acc-main">
         {active === "overview" && (
           <Overview
             latestQuiz={latestQuiz}
             quizCount={quizResults.length}
             ordersCount={orders.length}
+            displayName={displayName}
+            orders={orders}
+            extracts={extracts}
+            onSwitchSection={(s) => setActive(s)}
           />
         )}
         {active === "ritual" && (
@@ -190,6 +192,10 @@ export default function Dashboard({ user, customerName, onSignOut }: DashboardPr
           <Profile user={user} customerName={customerName} onSignOut={onSignOut} />
         )}
       </main>
+      {active === "overview" && (
+        <OverviewRail latestQuiz={latestQuiz} orders={orders} />
+      )}
+      </div>
 
       <ExtractModal
         extract={selectedExtract?.origin ?? null}

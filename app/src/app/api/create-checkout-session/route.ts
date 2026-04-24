@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import type Stripe from "stripe";
-import type { ProductCategory } from "@/features/consultation/types";
+import type { FragranceOption, ProductCategory } from "@/features/consultation/types";
 
 interface CheckoutCartItem {
+  productId: string;
   productName: string;
   category: ProductCategory;
   price: number;
+  skinType?: string;
+  fragranceOption?: FragranceOption;
 }
 
 interface CheckoutRequestBody {
   items: CheckoutCartItem[];
   plan: "one-time" | "bi-monthly" | "annual";
   email?: string;
+  userId?: string;
+  customerName?: string;
 }
 
 const SUBSCRIPTION_DISCOUNT = 0.2;
@@ -44,7 +49,7 @@ function getItemPriceCents(item: CheckoutCartItem, isBundle: boolean, isSubscrip
 export async function POST(req: NextRequest) {
   try {
     const body: CheckoutRequestBody = await req.json();
-    const { items, plan, email } = body;
+    const { items, plan, email, userId, customerName } = body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -93,15 +98,44 @@ export async function POST(req: NextRequest) {
       };
     });
 
+    // Metadata string values cap at 500 chars each; items as compact JSON
+    const itemsMetadata = JSON.stringify(
+      items.map((item) => ({
+        pid: item.productId,
+        n: item.productName,
+        c: item.category,
+        p: item.price,
+        s: item.skinType ?? null,
+        f: item.fragranceOption ?? null,
+      })),
+    );
+
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: isSubscription ? "subscription" : "payment",
       line_items: lineItems,
       success_url: `${origin}/confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart`,
       shipping_address_collection: {
-        allowed_countries: ["US", "CA", "GB", "NL", "DE", "FR", "BE", "AT", "CH", "IT", "ES"],
+        allowed_countries: ["US", "CA", "GB", "NL", "DE", "FR", "BE", "AT", "CH", "IT", "ES", "BG"],
+      },
+      metadata: {
+        plan,
+        items: itemsMetadata,
+        userId: userId ?? "",
+        customerName: customerName ?? "",
       },
     };
+
+    if (isSubscription) {
+      sessionParams.subscription_data = {
+        metadata: {
+          plan,
+          items: itemsMetadata,
+          userId: userId ?? "",
+          customerName: customerName ?? "",
+        },
+      };
+    }
 
     if (email) {
       sessionParams.customer_email = email;

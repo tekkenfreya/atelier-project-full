@@ -87,7 +87,7 @@ export default function Bottle({ gtin, symbology, productName, subtitle }: Bottl
   });
 
   return (
-    <group ref={group} position={[0, -0.3, 0]}>
+    <group ref={group} position={[0, -0.2, 0]} scale={0.55}>
       {/* Body */}
       <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[1, 1, 2.6, 96, 1, false]} />

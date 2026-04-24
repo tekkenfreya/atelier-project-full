@@ -16,7 +16,7 @@ export default function Scene({ gtin, symbology, productName, subtitle }: SceneP
     <Canvas
       shadows
       dpr={[1, 2]}
-      camera={{ position: [0, 0.4, 5.5], fov: 32 }}
+      camera={{ position: [0, 0.2, 6], fov: 28 }}
       gl={{
         antialias: true,
         alpha: false,
@@ -56,10 +56,10 @@ export default function Scene({ gtin, symbology, productName, subtitle }: SceneP
       />
 
       <ContactShadows
-        position={[0, -1.31, 0]}
-        opacity={0.55}
-        scale={8}
-        blur={2.4}
+        position={[0, -0.92, 0]}
+        opacity={0.5}
+        scale={5}
+        blur={2.2}
         far={2}
         color={"#000000"}
       />

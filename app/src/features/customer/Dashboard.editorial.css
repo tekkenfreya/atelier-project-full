@@ -1,0 +1,1110 @@
+/* ================================================================
+   ACCOUNT · editorial restructure
+   New .acc-* class system overrides the legacy .account-* layout.
+   Targets /account page only. Co-located to avoid globals.css.
+   ================================================================ */
+
+/* Neutralize legacy styles by stripping backgrounds on bare page */
+.acc-shell {
+  min-height: 100vh;
+  background: #f5f0e8;
+  color: #3d3a2e;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  font-family: "Inter", system-ui, sans-serif;
+  position: relative;
+}
+
+/* ================================================================
+   Sidebar
+   ================================================================ */
+
+.acc-aside {
+  border-right: 1px solid rgba(61, 58, 46, 0.08);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.acc-aside__inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1.5rem;
+}
+
+/* --- Brand --- */
+
+.acc-aside__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem 0 0.75rem;
+}
+
+.acc-aside__eyebrow {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #8b7d3c;
+}
+
+.acc-aside__name {
+  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-weight: 300;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: #3d3a2e;
+  margin: 0.1rem 0 0.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.acc-aside__since {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.acc-aside__rule {
+  height: 1px;
+  background: rgba(61, 58, 46, 0.1);
+  margin: 0;
+}
+
+/* --- Nav --- */
+
+.acc-aside__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.acc-navitem {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0.55rem 0.3rem 0.55rem 0.75rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: baseline;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.acc-navitem:hover {
+  color: #3d3a2e;
+}
+
+.acc-navitem.is-active {
+  color: #3d3a2e;
+}
+
+.acc-navitem__num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: rgba(61, 58, 46, 0.4);
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.acc-navitem.is-active .acc-navitem__num {
+  color: #8b7d3c;
+}
+
+.acc-navitem__label {
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.2;
+  transition: letter-spacing 0.25s ease;
+}
+
+.acc-navitem:hover .acc-navitem__label {
+  letter-spacing: 0.02em;
+}
+
+.acc-navitem.is-active .acc-navitem__label {
+  font-weight: 500;
+}
+
+.acc-navitem__rail {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background: #8b7d3c;
+  transition: height 0.25s ease;
+}
+
+.acc-navitem.is-active .acc-navitem__rail {
+  height: 18px;
+}
+
+/* --- Foot --- */
+
+.acc-aside__foot {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+.acc-signout {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.acc-signout:hover {
+  color: #8b7d3c;
+}
+
+/* ================================================================
+   Main + section shell
+   ================================================================ */
+
+.acc-stage {
+  padding: 4rem 3rem 6rem;
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4rem;
+  min-width: 0;
+}
+
+.acc-stage.has-rail {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 4rem;
+}
+
+.acc-main {
+  max-width: 760px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.acc-stage.has-rail .acc-main {
+  max-width: none;
+}
+
+.acc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Neutralize legacy .account-section styles if applied */
+.acc-section.account-section,
+.acc-main .account-section {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.acc-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+.acc-section__eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8b7d3c;
+}
+
+.acc-section__title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #3d3a2e;
+  margin: 0;
+}
+
+.acc-section__title-italic {
+  font-style: italic;
+  color: #8b7d3c;
+}
+
+.acc-section__lede {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(61, 58, 46, 0.72);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* ================================================================
+   Facts strip (overview metadata row)
+   ================================================================ */
+
+.acc-facts {
+  display: flex;
+  align-items: stretch;
+  padding: 1.25rem 1.5rem;
+  background: #faf7f2;
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 4px;
+  gap: 0;
+}
+
+.acc-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  padding: 0 1rem;
+  min-width: 0;
+}
+
+.acc-fact:first-child { padding-left: 0; }
+.acc-fact:last-child { padding-right: 0; }
+
+.acc-fact__k {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.5);
+}
+
+.acc-fact__v {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: #3d3a2e;
+  letter-spacing: -0.005em;
+}
+
+.acc-fact__v--num {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.acc-fact__v--date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: rgba(61, 58, 46, 0.75);
+}
+
+.acc-facts__rule {
+  width: 1px;
+  background: rgba(61, 58, 46, 0.1);
+  align-self: stretch;
+  margin: 0.3rem 0;
+}
+
+/* ================================================================
+   Ledger block (prose moment)
+   ================================================================ */
+
+.acc-ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 640px;
+}
+
+.acc-ledger__h {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+  margin: 0;
+}
+
+.acc-ledger__p {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: rgba(61, 58, 46, 0.85);
+  margin: 0;
+}
+
+.acc-ledger__p em {
+  font-style: italic;
+  color: #8b7d3c;
+}
+
+.acc-ledger__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ================================================================
+   Buttons (quieter than the old giant primary/secondary pair)
+   ================================================================ */
+
+.acc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.15rem;
+  background: transparent;
+  border: 1px solid rgba(61, 58, 46, 0.25);
+  border-radius: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3d3a2e;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.acc-btn:hover {
+  background: #3d3a2e;
+  border-color: #3d3a2e;
+  color: #f5f0e8;
+}
+
+.acc-btn--primary {
+  background: #3d3a2e;
+  border-color: #3d3a2e;
+  color: #f5f0e8;
+}
+
+.acc-btn--primary:hover {
+  background: #8b7d3c;
+  border-color: #8b7d3c;
+}
+
+.acc-btn--ghost {
+  border-color: rgba(61, 58, 46, 0.12);
+  color: rgba(61, 58, 46, 0.7);
+}
+
+.acc-btn--ghost:hover {
+  background: transparent;
+  border-color: rgba(61, 58, 46, 0.4);
+  color: #3d3a2e;
+}
+
+/* ================================================================
+   Blocks (generic content block with eyebrow + link + body)
+   ================================================================ */
+
+.acc-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.acc-block__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+.acc-block__eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.6);
+}
+
+.acc-block__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8b7d3c;
+  cursor: pointer;
+  transition: letter-spacing 0.25s ease, color 0.25s ease;
+}
+
+.acc-block__link:hover {
+  letter-spacing: 0.22em;
+  color: #a6954a;
+}
+
+.acc-block__empty {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: rgba(61, 58, 46, 0.55);
+  padding: 1.25rem 0;
+  margin: 0;
+}
+
+/* ================================================================
+   Ingredient chips (Your formula · signatures)
+   ================================================================ */
+
+.acc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.acc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.85rem 0.5rem 0.7rem;
+  background: #faf7f2;
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 999px;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.acc-chip:hover {
+  border-color: rgba(139, 125, 60, 0.32);
+  transform: translateY(-1px);
+}
+
+.acc-chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.acc-chip__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: -0.005em;
+  color: #3d3a2e;
+}
+
+.acc-chip__country {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.5);
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(61, 58, 46, 0.1);
+}
+
+/* ================================================================
+   Order rows (recent orders)
+   ================================================================ */
+
+.acc-orders {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #ffffff;
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.acc-orderline {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: 1.25rem;
+  align-items: baseline;
+  padding: 0.95rem 1.25rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.06);
+  transition: background 0.2s ease;
+}
+
+.acc-orderline:last-child {
+  border-bottom: none;
+}
+
+.acc-orderline:hover {
+  background: #faf7f2;
+}
+
+.acc-orderline__date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: rgba(61, 58, 46, 0.85);
+}
+
+.acc-orderline__items {
+  font-family: "Inter", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: #3d3a2e;
+}
+
+.acc-orderline__plan {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.acc-orderline__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(61, 58, 46, 0.1);
+  border-radius: 999px;
+  background: #faf7f2;
+}
+
+.acc-orderline__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(61, 58, 46, 0.4);
+}
+
+.acc-orderline__status.is-pending {
+  color: rgba(61, 58, 46, 0.75);
+}
+
+.acc-orderline__status.is-fulfilled {
+  color: #6d8754;
+  border-color: rgba(109, 135, 84, 0.3);
+  background: rgba(109, 135, 84, 0.08);
+}
+
+.acc-orderline__status.is-fulfilled .acc-orderline__dot {
+  background: #6d8754;
+}
+
+.acc-orderline__total {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #3d3a2e;
+  letter-spacing: -0.005em;
+  text-align: right;
+  min-width: 60px;
+}
+
+/* ================================================================
+   Footnote (closing editorial touch)
+   ================================================================ */
+
+.acc-footnote {
+  padding-top: 2rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(61, 58, 46, 0.08);
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.88rem;
+  color: rgba(61, 58, 46, 0.5);
+  text-align: center;
+}
+
+.acc-footnote__em {
+  font-style: normal;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.5);
+}
+
+/* ================================================================
+   Coexistence with legacy .account-* sections (Ritual, Orders, Atlas…)
+   They still render inside .acc-main — harmonise their appearance.
+   ================================================================ */
+
+.acc-main .account-section {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  background: transparent !important;
+}
+
+.acc-main .account-section__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.acc-main .account-section__title {
+  font-family: "Fraunces", Georgia, serif !important;
+  font-weight: 300 !important;
+  font-variation-settings: "opsz" 144 !important;
+  font-size: clamp(2rem, 4.5vw, 3rem) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.05 !important;
+  color: #3d3a2e !important;
+}
+
+.acc-main .account-section__subtitle {
+  font-family: "Fraunces", Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  font-size: 1.05rem !important;
+  line-height: 1.65 !important;
+  color: rgba(61, 58, 46, 0.72) !important;
+  max-width: 52ch;
+}
+
+/* Refine card grids inside legacy sections */
+.acc-main .account-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  background: #faf7f2 !important;
+  border: 1px solid rgba(61, 58, 46, 0.08) !important;
+  border-radius: 4px !important;
+}
+
+.acc-main .account-card {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  position: relative;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.45rem !important;
+}
+
+.acc-main .account-card:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  width: 1px;
+  background: rgba(61, 58, 46, 0.1);
+}
+
+.acc-main .account-card__label {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: rgba(61, 58, 46, 0.5) !important;
+}
+
+.acc-main .account-card__value {
+  font-family: "Fraunces", Georgia, serif !important;
+  font-weight: 400 !important;
+  font-size: 1.3rem !important;
+  color: #3d3a2e !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Legacy buttons in other sections — slim them down */
+.acc-main .account-btn,
+.acc-main .account-btn--primary,
+.acc-main .account-btn--secondary {
+  padding: 0.72rem 1.15rem !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.12em !important;
+  font-weight: 400 !important;
+  border-radius: 3px !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+
+.acc-main .account-actions {
+  display: flex !important;
+  gap: 0.75rem !important;
+  flex-wrap: wrap !important;
+}
+
+/* Table inside Ritual section */
+.acc-main .account-table {
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.acc-main .account-table th {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: rgba(61, 58, 46, 0.55) !important;
+  font-weight: 500 !important;
+  padding: 1rem 1.25rem !important;
+  text-align: left;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+  background: #faf7f2;
+}
+
+.acc-main .account-table td {
+  padding: 1rem 1.25rem !important;
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  color: #3d3a2e;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.06);
+}
+
+.acc-main .account-table tr:last-child td {
+  border-bottom: none;
+}
+
+.acc-main .account-metarow {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(61, 58, 46, 0.06);
+}
+
+.acc-main .account-metarow__label {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase !important;
+  color: rgba(61, 58, 46, 0.5) !important;
+  min-width: 120px;
+}
+
+.acc-main .account-metarow__value {
+  font-family: "Fraunces", Georgia, serif !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  font-size: 1rem !important;
+  color: #3d3a2e !important;
+}
+
+/* ================================================================
+   Right rail (Overview only)
+   ================================================================ */
+
+.acc-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  position: sticky;
+  top: 4rem;
+  align-self: start;
+}
+
+.acc-rail__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.acc-rail__eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+/* --- Trio (mini product bottles) --- */
+
+.acc-rail__trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.acc-rail__bottle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.9rem 0.5rem 0.8rem;
+  background: #ffffff;
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 3px;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+  cursor: default;
+}
+
+.acc-rail__bottle:hover {
+  border-color: rgba(139, 125, 60, 0.3);
+  transform: translateY(-2px);
+}
+
+.acc-rail__bottle-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(61, 58, 46, 0.5);
+}
+
+.acc-rail__bottle-vessel {
+  position: relative;
+  width: 42px;
+  height: 70px;
+  border-radius: 4px 4px 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 3px 0 10px rgba(255, 255, 255, 0.25),
+    inset -3px 0 10px rgba(61, 58, 46, 0.08),
+    0 4px 10px -4px rgba(61, 58, 46, 0.2);
+}
+
+.acc-rail__bottle--sage .acc-rail__bottle-vessel {
+  background: linear-gradient(180deg, #dee5cf 0%, #c2cdb0 100%);
+}
+.acc-rail__bottle--rose .acc-rail__bottle-vessel {
+  background: linear-gradient(180deg, #eed6cb 0%, #d9b9a8 100%);
+}
+.acc-rail__bottle--amber .acc-rail__bottle-vessel {
+  background: linear-gradient(180deg, #e9d6b1 0%, #cfb385 100%);
+}
+
+.acc-rail__bottle-cap {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 14px;
+  background: #2a271e;
+  border-radius: 2px 2px 1px 1px;
+}
+
+.acc-rail__bottle-glass {
+  position: relative;
+  z-index: 1;
+  padding: 0.2rem 0.3rem;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 1px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #3d3a2e;
+  box-shadow: 0 1px 3px rgba(61, 58, 46, 0.15);
+}
+
+.acc-rail__bottle-cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.6);
+}
+
+/* --- Shipment block --- */
+
+.acc-rail__shipment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.acc-rail__shipment-date {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  color: #3d3a2e;
+}
+
+.acc-rail__shipment-date--quiet {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(61, 58, 46, 0.65);
+}
+
+.acc-rail__shipment-plan {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.acc-rail__shipment-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8b7d3c;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  transition: letter-spacing 0.25s ease, color 0.25s ease;
+}
+
+.acc-rail__shipment-link:hover {
+  letter-spacing: 0.22em;
+  color: #a6954a;
+}
+
+/* --- Order block --- */
+
+.acc-rail__order {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.acc-rail__order-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: rgba(61, 58, 46, 0.8);
+}
+
+.acc-rail__order-total {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #3d3a2e;
+}
+
+/* --- Letter block --- */
+
+.acc-rail__letter-body {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: rgba(61, 58, 46, 0.72);
+  margin: 0;
+}
+
+/* ================================================================
+   Responsive
+   ================================================================ */
+
+@media (max-width: 900px) {
+  .acc-shell {
+    grid-template-columns: 1fr;
+  }
+  .acc-aside {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+    padding: 1.5rem 1.25rem;
+  }
+  .acc-aside__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .acc-navitem {
+    padding: 0.45rem 0.5rem;
+    border: 1px solid rgba(61, 58, 46, 0.1);
+    border-radius: 3px;
+  }
+  .acc-navitem__rail {
+    display: none;
+  }
+  .acc-navitem.is-active {
+    background: #faf7f2;
+    border-color: #8b7d3c;
+  }
+  .acc-stage,
+  .acc-stage.has-rail {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+  .acc-rail {
+    position: static;
+  }
+  .acc-main {
+    max-width: none;
+  }
+  .acc-facts {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0;
+  }
+  .acc-fact {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(61, 58, 46, 0.06);
+  }
+  .acc-fact:last-child {
+    border-bottom: none;
+  }
+  .acc-facts__rule {
+    display: none;
+  }
+  .acc-orderline {
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem 1rem;
+    row-gap: 0.25rem;
+  }
+  .acc-orderline__date { grid-column: 1; }
+  .acc-orderline__total { grid-column: 2; grid-row: 1; }
+  .acc-orderline__items { grid-column: 1; }
+  .acc-orderline__plan { grid-column: 1 / -1; }
+  .acc-orderline__status { grid-column: 2; grid-row: 2; }
+}

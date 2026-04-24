@@ -1,0 +1,298 @@
+/* ================================================================
+   Subscription — two-tier editorial cards
+   ================================================================ */
+
+.lux-sub {
+  background: var(--bg-primary, #f5f0e8);
+  padding: 8rem 2.5rem 9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.lux-sub::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(139, 125, 60, 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.lux-sub__inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Header --- */
+
+.lux-sub__header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.lux-sub__eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent, #8b7d3c);
+}
+
+.lux-sub__title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-size: clamp(2.25rem, 5vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary, #3d3a2e);
+}
+
+.lux-sub__title-italic {
+  font-style: italic;
+  color: var(--accent, #8b7d3c);
+}
+
+.lux-sub__desc {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: rgba(61, 58, 46, 0.72);
+  max-width: 52ch;
+  margin: 0 auto;
+}
+
+/* --- Cards --- */
+
+.lux-sub__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.lux-sub__card {
+  padding: 2rem 2rem 2.25rem;
+  background: #ffffff;
+  border: 1px solid rgba(61, 58, 46, 0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.lux-sub__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 125, 60, 0.2);
+}
+
+.lux-sub__card:focus-visible {
+  outline: 2px solid var(--accent, #8b7d3c);
+  outline-offset: 2px;
+}
+
+.lux-sub__card.is-selected {
+  border-color: var(--accent, #8b7d3c);
+  box-shadow: 0 32px 64px -28px rgba(139, 125, 60, 0.3);
+}
+
+.lux-sub__card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent, #8b7d3c);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lux-sub__card.is-selected::before {
+  opacity: 1;
+}
+
+.lux-sub__card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+.lux-sub__card-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.6);
+}
+
+.lux-sub__card-tag {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--accent, #8b7d3c);
+}
+
+.lux-sub__card-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-size: 1.85rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-primary, #3d3a2e);
+  margin-top: 0.5rem;
+}
+
+.lux-sub__card-cadence {
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(61, 58, 46, 0.68);
+  font-weight: 300;
+}
+
+.lux-sub__card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+}
+
+.lux-sub__card-price-v {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 2.4rem;
+  letter-spacing: -0.015em;
+  color: var(--text-primary, #3d3a2e);
+}
+
+.lux-sub__card-price-k {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(61, 58, 46, 0.55);
+}
+
+.lux-sub__card-saved {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.88rem;
+  color: var(--accent, #8b7d3c);
+}
+
+.lux-sub__card-notes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 0 0;
+  margin: 0.5rem 0 0;
+  border-top: 1px solid rgba(61, 58, 46, 0.08);
+}
+
+.lux-sub__card-notes li {
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: rgba(61, 58, 46, 0.8);
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.lux-sub__card-bullet {
+  color: var(--accent, #8b7d3c);
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+/* --- Footer CTA --- */
+
+.lux-sub__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lux-sub__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.1rem 2rem;
+  background: var(--text-primary, #3d3a2e);
+  border: 1px solid var(--text-primary, #3d3a2e);
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f5efe4;
+  cursor: pointer;
+  transition: background 0.32s ease, border-color 0.32s ease, gap 0.32s ease;
+}
+
+.lux-sub__cta:hover {
+  background: var(--accent, #8b7d3c);
+  border-color: var(--accent, #8b7d3c);
+  gap: 1.2rem;
+}
+
+.lux-sub__cta-arrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1rem;
+  transition: transform 0.32s ease;
+}
+
+.lux-sub__cta:hover .lux-sub__cta-arrow {
+  transform: translateX(4px);
+}
+
+.lux-sub__note {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.84rem;
+  color: rgba(61, 58, 46, 0.62);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 780px) {
+  .lux-sub {
+    padding: 5rem 1.25rem 6rem;
+  }
+  .lux-sub__header {
+    margin-bottom: 2.5rem;
+  }
+  .lux-sub__cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .lux-sub__card {
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  .lux-sub__card-title {
+    font-size: 1.65rem;
+  }
+  .lux-sub__card-price-v {
+    font-size: 2.1rem;
+  }
+}

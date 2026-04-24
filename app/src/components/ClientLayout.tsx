@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/components/Navbar";
+import "@/styles/editorial.css";
 
 const SETTLE_DELAY = 1400;
 

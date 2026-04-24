@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan } from "@/types/cart";
 import { calculateTotal } from "@/types/cart";
+import { supabase } from "@/lib/supabase";
 
 const PLAN_LABELS: Record<SubscriptionPlan, string> = {
   "one-time": "One-Time Purchase",
@@ -54,16 +55,28 @@ export default function CheckoutPage() {
     setError(null);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id ?? undefined;
+      const email = session?.user?.email ?? undefined;
+      const customerName =
+        (typeof window !== "undefined" && sessionStorage.getItem("customerName")) || undefined;
+
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((item) => ({
+            productId: item.productId,
             productName: item.productName,
             category: item.category,
             price: item.price,
+            skinType: item.skinType,
+            fragranceOption: item.fragranceOption,
           })),
           plan,
+          email,
+          userId,
+          customerName,
         }),
       });
 
