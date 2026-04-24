@@ -1,6 +1,11 @@
+import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { CustomerOrder, QuizResult } from "../types";
 import type { ResolvedExtract } from "@/features/atlas/extracts";
 import { formatShortDate } from "../format";
+import { supabase } from "@/lib/supabase";
+import { PRODUCT_PRICES, type CartItem } from "@/types/cart";
+import type { FragranceOption, ProductCategory } from "@/features/consultation/types";
 
 interface OverviewProps {
   latestQuiz: QuizResult;
@@ -12,6 +17,15 @@ interface OverviewProps {
   onSwitchSection?: (section: "orders" | "ritual" | "extracts" | "atlas") => void;
 }
 
+const CATEGORY_BY_FIELD: Array<{
+  field: "recommended_cleanser" | "recommended_serum" | "recommended_moisturizer";
+  category: ProductCategory;
+}> = [
+  { field: "recommended_cleanser", category: "Cleanser" },
+  { field: "recommended_serum", category: "Serum" },
+  { field: "recommended_moisturizer", category: "Moisturizer" },
+];
+
 export default function Overview({
   latestQuiz,
   quizCount,
@@ -21,9 +35,70 @@ export default function Overview({
   extracts,
   onSwitchSection,
 }: OverviewProps) {
+  const router = useRouter();
   const firstName = displayName?.trim().split(" ")[0] ?? "";
   const recentOrders = orders.slice(0, 5);
   const featuredExtracts = extracts.slice(0, 8);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleOrderRitual = useCallback(async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const recommendations = CATEGORY_BY_FIELD.map(({ field, category }) => ({
+        category,
+        name: latestQuiz[field],
+      })).filter((r): r is { category: ProductCategory; name: string } => !!r.name);
+
+      if (recommendations.length === 0) {
+        setError("No ritual available — retake the consultation first.");
+        return;
+      }
+
+      const names = recommendations.map((r) => r.name);
+      const { data: products, error: prodErr } = await supabase
+        .from("products")
+        .select("id, name")
+        .in("name", names);
+      if (prodErr) throw prodErr;
+
+      const idByName = new Map<string, string>();
+      (products ?? []).forEach((p: { id: string; name: string }) => {
+        idByName.set(p.name, p.id);
+      });
+
+      const fragrance = (latestQuiz.fragrance_choice ?? "F0") as FragranceOption;
+      const skinType = latestQuiz.skin_type ?? "Normal";
+
+      const cart: CartItem[] = recommendations
+        .map((r) => {
+          const id = idByName.get(r.name);
+          if (!id) return null;
+          return {
+            productId: id,
+            productName: r.name,
+            category: r.category,
+            skinType,
+            fragranceOption: fragrance,
+            price: PRODUCT_PRICES[r.category],
+          } satisfies CartItem;
+        })
+        .filter((c): c is CartItem => c !== null);
+
+      if (cart.length === 0) {
+        setError("Could not locate products. Contact support.");
+        return;
+      }
+
+      sessionStorage.setItem("cartItems", JSON.stringify(cart));
+      router.push("/cart");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not build cart");
+    } finally {
+      setBusy(false);
+    }
+  }, [latestQuiz, router]);
 
   return (
     <article className="acc-section">
@@ -84,6 +159,14 @@ export default function Overview({
           <button
             type="button"
             className="acc-btn acc-btn--primary"
+            onClick={handleOrderRitual}
+            disabled={busy}
+          >
+            {busy ? "Preparing cart…" : "Order this ritual →"}
+          </button>
+          <button
+            type="button"
+            className="acc-btn"
             onClick={() => (window.location.href = "/quiz")}
           >
             Retake the consultation
@@ -96,6 +179,7 @@ export default function Overview({
             Back to the home
           </button>
         </div>
+        {error && <p className="acc-ledger__error">{error}</p>}
       </section>
 
       {featuredExtracts.length > 0 && (

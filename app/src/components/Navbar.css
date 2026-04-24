@@ -34,3 +34,24 @@
   text-transform: uppercase !important;
   font-size: 0.85rem !important;
 }
+
+/* Authed dot — shows on Account icon when user is signed in */
+.navbar .nav-icon-btn {
+  position: relative;
+}
+
+.navbar .nav-auth-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8b7d3c;
+  box-shadow: 0 0 0 2px var(--bg-primary, #f5f0e8);
+  pointer-events: none;
+}
+
+.navbar .nav-icon-btn--authed {
+  color: #3d3a2e;
+}

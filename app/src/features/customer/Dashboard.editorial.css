@@ -380,6 +380,13 @@
   flex-wrap: wrap;
 }
 
+.acc-ledger__error {
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  color: #a84242;
+  margin: 0.5rem 0 0;
+}
+
 /* ================================================================
    Buttons (quieter than the old giant primary/secondary pair)
    ================================================================ */

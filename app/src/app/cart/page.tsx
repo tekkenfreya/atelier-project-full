@@ -38,38 +38,28 @@ export default function CartPage() {
   useEffect(() => {
     const stored = sessionStorage.getItem("cartItems");
     if (!stored) {
-      router.push("/results");
+      setItems([]);
+      setLoaded(true);
       return;
     }
 
     try {
       const parsed: CartItem[] = JSON.parse(stored);
-      if (parsed.length === 0) {
-        router.push("/results");
-        return;
-      }
-      setItems(parsed);
+      setItems(Array.isArray(parsed) ? parsed : []);
     } catch {
-      router.push("/results");
-      return;
+      setItems([]);
     }
 
     setLoaded(true);
-  }, [router]);
+  }, []);
 
-  const removeItem = useCallback(
-    (productId: string) => {
-      setItems((prev) => {
-        const next = prev.filter((item) => item.productId !== productId);
-        sessionStorage.setItem("cartItems", JSON.stringify(next));
-        if (next.length === 0) {
-          router.push("/results");
-        }
-        return next;
-      });
-    },
-    [router]
-  );
+  const removeItem = useCallback((productId: string) => {
+    setItems((prev) => {
+      const next = prev.filter((item) => item.productId !== productId);
+      sessionStorage.setItem("cartItems", JSON.stringify(next));
+      return next;
+    });
+  }, []);
 
   const handleCheckout = useCallback(() => {
     sessionStorage.setItem("cartItems", JSON.stringify(items));
@@ -81,6 +71,44 @@ export default function CartPage() {
     return (
       <div className="cart-container">
         <div className="cart-loading">Loading your cart...</div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="cart-container">
+        <div className="cart-header">
+          <span className="cart-label">Review</span>
+          <h1 className="cart-title">Your cart is empty</h1>
+          <p className="cart-subtitle">
+            Every formula begins with a consultation. Answer a few questions about
+            your skin and we&apos;ll compose a ritual made for you.
+          </p>
+        </div>
+        <div className="cart-empty-actions">
+          <button
+            type="button"
+            className="cart-checkout-btn"
+            onClick={() => router.push("/quiz")}
+          >
+            Begin the consultation →
+          </button>
+          <button
+            type="button"
+            className="cart-back-btn"
+            onClick={() => router.push("/account")}
+          >
+            Go to your account
+          </button>
+          <button
+            type="button"
+            className="cart-back-btn"
+            onClick={() => router.push("/")}
+          >
+            Back to home
+          </button>
+        </div>
       </div>
     );
   }

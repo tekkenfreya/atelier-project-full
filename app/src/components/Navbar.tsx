@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -12,6 +13,17 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(!isHomePage);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAuthed(!!data.session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthed(!!session);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (!isHomePage) {
@@ -68,9 +80,10 @@ export default function Navbar() {
           <li><a href="#about">About</a></li>
           <li>
             <button
-              className="nav-icon-btn"
+              className={`nav-icon-btn ${isAuthed ? "nav-icon-btn--authed" : ""}`}
               onClick={() => router.push("/account")}
-              aria-label="Account"
+              aria-label={isAuthed ? "Your account" : "Sign in"}
+              title={isAuthed ? "Your account" : "Sign in"}
             >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <circle cx="9" cy="6" r="3.5" stroke="currentColor" strokeWidth="1.2" />
@@ -81,6 +94,7 @@ export default function Navbar() {
                   strokeLinecap="round"
                 />
               </svg>
+              {isAuthed && <span className="nav-auth-dot" aria-hidden />}
             </button>
           </li>
           <li>
