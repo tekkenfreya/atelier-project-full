@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ function parseItems(raw: string | undefined | null): OrderItem[] {
 }
 
 async function getDefaultIssuerId(): Promise<string | null> {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from("gtin_issuers")
     .select("id")
     .order("created_at", { ascending: true })
@@ -70,7 +70,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const totalEuros = session.amount_total != null ? session.amount_total / 100 : null;
 
   // Idempotency check: did a webhook already create this order?
-  const { data: existing } = await supabaseAdmin
+  const { data: existing } = await getSupabaseAdmin()
     .from("customer_orders")
     .select("id")
     .eq("stripe_session_id", session.id)
@@ -82,7 +82,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     orderId = existing.id as string;
     console.log("[stripe-webhook] order already exists for session", session.id, "→", orderId);
   } else {
-    const { data: inserted, error: insertErr } = await supabaseAdmin
+    const { data: inserted, error: insertErr } = await getSupabaseAdmin()
       .from("customer_orders")
       .insert({
         user_id: userId || null,
@@ -116,7 +116,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  const { error: fulfillErr } = await supabaseAdmin.rpc("fulfill_order_with_barcodes", {
+  const { error: fulfillErr } = await getSupabaseAdmin().rpc("fulfill_order_with_barcodes", {
     p_order_id: orderId,
     p_issuer_id: issuerId,
   });
