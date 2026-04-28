@@ -43,11 +43,13 @@ export default function Bottle({ gtin, symbology, productName, subtitle }: Bottl
 
     if (gtin) {
       try {
+        // GS1 EAN-13 100% target — 22.85mm × 0.330mm with 11X/7X quiet zones.
+        // The bottle texture remaps this onto the cylinder; using spec-correct
+        // proportions ensures the wrapped barcode reads as scannable.
         const bc = createBarcodeCanvas({
           value: gtin,
           symbology,
-          scale: 4,
-          height: 18,
+          mode: "print",
           background: LABEL_BG.replace("#", ""),
           foreground: LABEL_FG.replace("#", ""),
         });

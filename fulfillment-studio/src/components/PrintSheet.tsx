@@ -31,10 +31,10 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
   useEffect(() => {
     if (!canvasRef.current) return;
     try {
+      // GS1 EAN-13 100% target sizing for the print label
       renderBarcodeToCanvas(canvasRef.current, {
         value: item.gtin,
-        scale: 3,
-        height: 22,
+        mode: "print",
       });
     } catch {
       /* silent */

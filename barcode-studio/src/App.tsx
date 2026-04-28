@@ -223,11 +223,11 @@ export default function App() {
 
   const downloadPng = useCallback(() => {
     if (!selected) return;
+    // Print mode: GS1 EAN-13 100% target (22.85mm × 0.330mm X-dim, 11X/7X quiet)
     const canvas = createBarcodeCanvas({
       value: selected.gtin,
       symbology: selected.symbology,
-      scale: 6,
-      height: 24,
+      mode: "print",
     });
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
@@ -240,8 +240,7 @@ export default function App() {
     const svg = renderBarcodeToSvg({
       value: selected.gtin,
       symbology: selected.symbology,
-      scale: 3,
-      height: 22,
+      mode: "print",
     });
     const blob = new Blob([svg], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
@@ -257,8 +256,7 @@ export default function App() {
     const canvas = createBarcodeCanvas({
       value: selected.gtin,
       symbology: selected.symbology,
-      scale: 4,
-      height: 22,
+      mode: "print",
     });
     if (printImgRef.current) printImgRef.current.src = canvas.toDataURL("image/png");
     window.requestAnimationFrame(() => window.print());

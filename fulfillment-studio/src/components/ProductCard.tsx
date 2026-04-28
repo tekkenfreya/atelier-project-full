@@ -22,10 +22,11 @@ export default function ProductCard({
   useEffect(() => {
     if (!canvasRef.current || !assigned?.gtin) return;
     try {
+      // In-card preview — preview mode keeps GS1 proportions (22.85mm/0.330mm)
+      // at lower pixel density. Print uses the same opts but mode "print".
       renderBarcodeToCanvas(canvasRef.current, {
         value: assigned.gtin,
-        scale: 3,
-        height: 18,
+        mode: "preview",
       });
     } catch {
       /* silent */
