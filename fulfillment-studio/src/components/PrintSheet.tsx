@@ -1,7 +1,72 @@
 import { useEffect, useRef } from "react";
 import { renderBarcodeToCanvas } from "../lib/barcode";
-import { MANUFACTURER, copyForCategory } from "../lib/labelContent";
+import { MANUFACTURER, copyForCategory, poeticNameFor } from "../lib/labelContent";
 import type { FulfilledItem, CustomerOrder } from "../lib/engine";
+
+/** Botanical mark — placeholder line illustration. Replace with real SVG. */
+function BotanicalMark() {
+  return (
+    <svg
+      className="fs-label__botanical"
+      viewBox="0 0 28 28"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <g
+        fill="none"
+        stroke="#8a857b"
+        strokeWidth="0.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* central stem */}
+        <path d="M14 4 V24" />
+        {/* upper leaves */}
+        <path d="M14 9 Q9 8 7 11 Q11 12 14 11" />
+        <path d="M14 9 Q19 8 21 11 Q17 12 14 11" />
+        {/* mid leaves */}
+        <path d="M14 14 Q8 14 6 17 Q10 18 14 16" />
+        <path d="M14 14 Q20 14 22 17 Q18 18 14 16" />
+        {/* small bud at top */}
+        <circle cx="14" cy="4.5" r="1.2" fill="#8a857b" stroke="none" />
+      </g>
+    </svg>
+  );
+}
+
+/** Monogram — placeholder Atelier Rusalka mark. Replace with real logo. */
+function Monogram() {
+  return (
+    <svg
+      className="fs-label__monogram"
+      viewBox="0 0 14 14"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <rect
+        x="0.6"
+        y="0.6"
+        width="12.8"
+        height="12.8"
+        fill="none"
+        stroke="#1a1a18"
+        strokeWidth="0.7"
+      />
+      <text
+        x="7"
+        y="9.6"
+        textAnchor="middle"
+        fontFamily="Fraunces, Georgia, serif"
+        fontSize="6.4"
+        fontWeight="500"
+        fontStyle="italic"
+        fill="#1a1a18"
+      >
+        ar
+      </text>
+    </svg>
+  );
+}
 
 interface PrintSheetProps {
   order: CustomerOrder;
@@ -64,7 +129,7 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
   const copy = copyForCategory(category);
   const brandName = brand || "Atelier Rusalka";
   const customerName = order.shipping_name ?? "";
-  const productLine = `personalised ${(category || "product").toLowerCase()}`;
+  const poeticName = poeticNameFor(category);
   const netContent = item.net_content ?? "";
 
   return (
@@ -72,6 +137,8 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
       {/* ─── FRONT (personalised) ─── */}
       <section className="fs-label__face fs-label__face--front">
         <div className="fs-label__brand">{brandName}</div>
+
+        <BotanicalMark />
 
         {customerName && (
           <div className="fs-label__dedication">
@@ -81,13 +148,17 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
         )}
 
         <div className="fs-label__product">
-          <span className="fs-label__product-line">{productLine}</span>
-          {netContent && (
-            <span className="fs-label__product-volume">
-              <span className="fs-label__emark" aria-hidden>e</span>
-              {netContent}
-            </span>
-          )}
+          <span className="fs-label__product-poetic">{poeticName}</span>
+          <span className="fs-label__product-line">
+            personalised {(category || "product").toLowerCase()}
+            {netContent && (
+              <>
+                <span className="fs-label__product-sep" aria-hidden> · </span>
+                <span className="fs-label__emark" aria-hidden>e </span>
+                {netContent}
+              </>
+            )}
+          </span>
         </div>
       </section>
 
@@ -100,14 +171,19 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
           {copy.instruction}
         </p>
 
-        <p className="fs-label__resp">
-          <strong>{MANUFACTURER.name}</strong>
-          <br />
-          {MANUFACTURER.addressLine1} · {MANUFACTURER.addressLine2}
-        </p>
+        <div className="fs-label__back-foot">
+          <div className="fs-label__resp-block">
+            <p className="fs-label__resp">
+              <strong>{MANUFACTURER.name}</strong>
+              <br />
+              {MANUFACTURER.addressLine1} · {MANUFACTURER.addressLine2}
+            </p>
 
-        <div className="fs-label__barcode">
-          <canvas ref={canvasRef} />
+            <div className="fs-label__barcode">
+              <canvas ref={canvasRef} />
+            </div>
+          </div>
+          <Monogram />
         </div>
       </section>
     </article>

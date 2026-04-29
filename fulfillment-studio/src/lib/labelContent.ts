@@ -47,3 +47,19 @@ export function copyForCategory(category: string | null | undefined) {
   if (!category) return FALLBACK_COPY;
   return CATEGORY_COPY[category.toLowerCase()] ?? FALLBACK_COPY;
 }
+
+/**
+ * Poetic product name per category — placeholder until each product
+ * gets its own `products.poetic_name` column. Real names will come
+ * from the catalogue Kyrill is curating.
+ */
+export const POETIC_NAMES: Record<string, string> = {
+  cleanser: "Forbidden Spring",
+  serum: "First Light",
+  moisturizer: "Quiet Veil",
+};
+
+export function poeticNameFor(category: string | null | undefined): string {
+  if (!category) return "Personal Edition";
+  return POETIC_NAMES[category.toLowerCase()] ?? "Personal Edition";
+}

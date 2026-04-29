@@ -1400,6 +1400,15 @@ button:focus {
   color: #1a1a18;
 }
 
+/* Botanical illustration placeholder — small line-art mark beneath the
+   wordmark. Replace by dropping a real SVG into public/ and importing it. */
+.fs-label__botanical {
+  width: 8mm;
+  height: 8mm;
+  margin: 0.5mm 0 -1mm;
+  display: block;
+}
+
 .fs-label__dedication {
   display: flex;
   flex-direction: column;
@@ -1431,28 +1440,34 @@ button:focus {
 .fs-label__product {
   display: flex;
   flex-direction: column;
-  gap: 0.5mm;
+  gap: 0.4mm;
   font-family: "Fraunces", Georgia, serif;
+}
+
+.fs-label__product-poetic {
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: 3.4mm;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: #1a1a18;
 }
 
 .fs-label__product-line {
   font-style: italic;
   font-weight: 300;
-  font-size: 2.6mm;
+  font-size: 2.4mm;
   color: #6d6a63;
   letter-spacing: 0.01em;
 }
 
-.fs-label__product-volume {
-  font-weight: 400;
-  font-size: 3mm;
-  color: #1a1a18;
-  letter-spacing: 0.01em;
+.fs-label__product-sep {
+  color: #b3aea3;
+  font-style: normal;
 }
 
 .fs-label__emark {
   font-style: italic;
-  margin-right: 0.8mm;
   color: #8a857b;
 }
 
@@ -1514,12 +1529,28 @@ button:focus {
   font-weight: 500;
 }
 
-.fs-label__barcode {
+/* Foot row: responsible-person + barcode on the left, monogram bottom-right.
+   Anchored to the bottom of the back face. */
+.fs-label__back-foot {
   margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2mm;
+  align-items: end;
+  padding-top: 1mm;
+}
+
+.fs-label__resp-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1mm;
+  min-width: 0;
+}
+
+.fs-label__barcode {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
-  padding-top: 1mm;
 }
 
 .fs-label__barcode canvas {
@@ -1527,6 +1558,16 @@ button:focus {
   /* ~80% GS1 EAN-13 target — 18.28mm tall, ~30mm wide with quiet zones */
   height: 12mm;
   width: auto;
+}
+
+/* Monogram — placeholder square mark with "ar" inside. Replace with real
+   logo SVG when it exists. */
+.fs-label__monogram {
+  width: 7mm;
+  height: 7mm;
+  display: block;
+  align-self: end;
+  margin-bottom: 0.4mm;
 }
 
 /* ================================================================
