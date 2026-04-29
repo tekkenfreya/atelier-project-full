@@ -582,7 +582,7 @@ export default function App() {
                         Print all {selectedItems.length} label{selectedItems.length === 1 ? "" : "s"}
                       </span>
                       <span className="fs-btn-primary-sub">
-                        each on its own 110×60mm page · or use per-card buttons above
+                        each on its own 72×60mm page · or use per-card buttons above
                       </span>
                     </button>
                   </div>

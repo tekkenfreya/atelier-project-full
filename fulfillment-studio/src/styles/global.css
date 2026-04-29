@@ -1313,10 +1313,10 @@ button:focus {
 
 @media print {
   @page {
-    /* Physical label dimensions per Kyrill spec — 110mm × 60mm landscape.
+    /* Physical label dimensions per Kyrill spec — 72mm × 60mm landscape.
        Margin must be 0 so the label fills the entire printable area; tweak
        at the printer driver level if your roll printer needs a feed margin. */
-    size: 110mm 60mm;
+    size: 72mm 60mm;
     margin: 0;
   }
 
@@ -1360,7 +1360,7 @@ button:focus {
   .fs-label {
     /* One page per label. Both legacy and modern page-break properties
        so it works across browsers / OS print drivers. */
-    width: 110mm !important;
+    width: 72mm !important;
     height: 60mm !important;
     margin: 0 !important;
     border: none !important;
@@ -1390,7 +1390,7 @@ button:focus {
 }
 
 .fs-label {
-  width: 110mm;
+  width: 72mm;
   height: 60mm;
   background: #ffffff;
   color: #1a1a18;
@@ -1398,13 +1398,13 @@ button:focus {
   /* On-screen-only outline so previews are visible; removed in print. */
   border: 0.4mm solid rgba(26, 26, 24, 0.18);
   display: grid;
-  grid-template-columns: 50mm 60mm;
+  grid-template-columns: 30mm 42mm;
   overflow: hidden;
   margin: 0 auto;
 }
 
 .fs-label__face {
-  padding: 4mm 4mm;
+  padding: 2.5mm 2.5mm;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -1424,7 +1424,7 @@ button:focus {
   font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
   font-weight: 400;
   font-variation-settings: "opsz" 144;
-  font-size: 5mm;
+  font-size: 3.6mm;
   line-height: 1;
   letter-spacing: -0.005em;
   color: #1a1a18;
@@ -1433,9 +1433,9 @@ button:focus {
 /* Botanical illustration placeholder — small line-art mark beneath the
    wordmark. Replace by dropping a real SVG into public/ and importing it. */
 .fs-label__botanical {
-  width: 8mm;
-  height: 8mm;
-  margin: 0.5mm 0 -1mm;
+  width: 6mm;
+  height: 6mm;
+  margin: 0.5mm 0 -0.5mm;
   display: block;
 }
 
@@ -1448,7 +1448,7 @@ button:focus {
 
 .fs-label__dedication-eyebrow {
   font-family: var(--mono);
-  font-size: 1.8mm;
+  font-size: 1.5mm;
   letter-spacing: 0.22em;
   text-transform: lowercase;
   color: #8a857b;
@@ -1459,8 +1459,8 @@ button:focus {
   font-style: italic;
   font-weight: 400;
   font-variation-settings: "opsz" 72;
-  font-size: 5.6mm;
-  line-height: 1.02;
+  font-size: 4mm;
+  line-height: 1.05;
   letter-spacing: -0.01em;
   color: #1a1a18;
   /* Long names wrap to two lines; the box is tall enough. */
@@ -1477,7 +1477,7 @@ button:focus {
 .fs-label__product-poetic {
   font-weight: 400;
   font-variation-settings: "opsz" 72;
-  font-size: 3.4mm;
+  font-size: 2.8mm;
   line-height: 1;
   letter-spacing: -0.005em;
   color: #1a1a18;
@@ -1486,7 +1486,7 @@ button:focus {
 .fs-label__product-line {
   font-style: italic;
   font-weight: 300;
-  font-size: 2.4mm;
+  font-size: 1.9mm;
   color: #6d6a63;
   letter-spacing: 0.01em;
 }
@@ -1517,26 +1517,26 @@ button:focus {
 
 .fs-label__inci {
   margin: 0;
-  font-size: 1.55mm;
-  line-height: 1.3;
+  font-size: 1.3mm;
+  line-height: 1.25;
   color: #1a1a18;
   word-break: break-word;
-  /* If the ingredient list is enormous it line-clamps; keep this generous
-     so most formulas fit fully. */
+  /* The 42mm back panel is narrower than before — clamp INCI tighter
+     so it never pushes the barcode off the bottom of the label. */
   display: -webkit-box;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .fs-label__usage {
   margin: 0;
-  font-size: 1.5mm;
-  line-height: 1.35;
+  font-size: 1.3mm;
+  line-height: 1.3;
   color: #3d3a2e;
   font-style: italic;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -1549,8 +1549,8 @@ button:focus {
 
 .fs-label__resp {
   margin: 0;
-  font-size: 1.5mm;
-  line-height: 1.3;
+  font-size: 1.3mm;
+  line-height: 1.25;
   color: #6d6a63;
 }
 
@@ -1581,14 +1581,15 @@ button:focus {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
-  /* Constrain the inline SVG to a known mm height so it prints at exactly
-     the GS1 ~80% target regardless of viewport or printer DPI. */
-  height: 13mm;
+  /* Constrain the inline SVG to a known mm height. Barcode width auto-scales;
+     at 11mm tall and ~80% GS1 target it renders ~18mm wide which fits the
+     42mm back panel comfortably alongside the monogram. */
+  height: 11mm;
 }
 
 .fs-label__barcode svg {
   display: block;
-  height: 13mm;
+  height: 11mm;
   width: auto;
   /* Override any internal width/height the bwip-js SVG defines. */
   max-width: none;
@@ -1597,8 +1598,8 @@ button:focus {
 /* Monogram — placeholder square mark with "ar" inside. Replace with real
    logo SVG when it exists. */
 .fs-label__monogram {
-  width: 7mm;
-  height: 7mm;
+  width: 5mm;
+  height: 5mm;
   display: block;
   align-self: end;
   margin-bottom: 0.4mm;

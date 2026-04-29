@@ -75,9 +75,9 @@ interface PrintSheetProps {
 }
 
 /**
- * Renders one or more 110×60mm cosmetic labels for a roll-feed printer.
- * Each label is its own page (110mm wide × 60mm tall, landscape) and
- * wraps around the bottle when applied — the 110mm dimension is the
+ * Renders one or more 72×60mm cosmetic labels for a roll-feed printer.
+ * Each label is its own page (72mm wide × 60mm tall, landscape) and
+ * wraps around the bottle when applied — the 72mm dimension is the
  * circumference, 60mm is the bottle height.
  *
  * Layout philosophy: a single, continuous editorial wrap. No hard
