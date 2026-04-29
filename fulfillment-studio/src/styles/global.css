@@ -1365,193 +1365,166 @@ button:focus {
   background: #ffffff;
   color: #1a1a18;
   font-family: var(--sans);
-  /* Subtle border on-screen for preview clarity; removed in print */
+  /* On-screen-only outline so previews are visible; removed in print. */
   border: 0.4mm solid rgba(26, 26, 24, 0.18);
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* Subtle vertical line where the label folds in half */
-  background-image: linear-gradient(
-    to right,
-    transparent calc(50% - 0.05mm),
-    rgba(26, 26, 24, 0.08) 50%,
-    transparent calc(50% + 0.05mm)
-  );
+  grid-template-columns: 50mm 60mm;
   overflow: hidden;
   margin: 0 auto;
 }
 
 .fs-label__face {
-  padding: 3mm 3.5mm;
+  padding: 4mm 4mm;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-/* ─── FRONT (personalised) ───────────────────────────────── */
+/* ─── FRONT (personalised, ~50mm) ─────────────────────────
+   Reads like a hand-set dedication: brand, "for [customer]",
+   product line + volume. No hairlines, just whitespace. */
 
 .fs-label__face--front {
-  gap: 1.5mm;
-  text-align: center;
-  align-items: center;
+  text-align: left;
   justify-content: space-between;
+  gap: 2mm;
 }
 
 .fs-label__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4mm;
-}
-
-.fs-label__brand-mark {
   font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
   font-weight: 400;
-  font-size: 4mm;
-  letter-spacing: 0.04em;
+  font-variation-settings: "opsz" 144;
+  font-size: 5mm;
   line-height: 1;
+  letter-spacing: -0.005em;
   color: #1a1a18;
 }
 
-.fs-label__brand-eyebrow {
-  font-family: var(--mono);
-  font-size: 1.7mm;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6d6a63;
-}
-
-.fs-label__category {
-  font-family: var(--mono);
-  font-size: 2.4mm;
-  font-weight: 500;
-  letter-spacing: 0.32em;
-  color: #6d6a63;
-  border-top: 0.2mm solid #1a1a18;
-  border-bottom: 0.2mm solid #1a1a18;
-  padding: 1mm 0;
-  width: 100%;
-}
-
-.fs-label__customer {
+.fs-label__dedication {
   display: flex;
   flex-direction: column;
-  gap: 0.3mm;
-  margin: 0;
+  gap: 0.4mm;
+  margin: auto 0;
 }
 
-.fs-label__customer-eyebrow {
+.fs-label__dedication-eyebrow {
   font-family: var(--mono);
-  font-size: 1.6mm;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6d6a63;
+  font-size: 1.8mm;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  color: #8a857b;
 }
 
-.fs-label__customer-name {
+.fs-label__dedication-name {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 4.2mm;
-  line-height: 1.05;
+  font-variation-settings: "opsz" 72;
+  font-size: 5.6mm;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
   color: #1a1a18;
+  /* Long names wrap to two lines; the box is tall enough. */
+  overflow-wrap: break-word;
 }
 
-.fs-label__volume {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 1mm;
+.fs-label__product {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5mm;
   font-family: "Fraunces", Georgia, serif;
-  font-weight: 400;
 }
 
-.fs-label__volume-emark {
+.fs-label__product-line {
   font-style: italic;
+  font-weight: 300;
   font-size: 2.6mm;
   color: #6d6a63;
-}
-
-.fs-label__volume-value {
-  font-size: 3.6mm;
   letter-spacing: 0.01em;
-  color: #1a1a18;
 }
 
-/* ─── BACK (regulatory) ──────────────────────────────────── */
+.fs-label__product-volume {
+  font-weight: 400;
+  font-size: 3mm;
+  color: #1a1a18;
+  letter-spacing: 0.01em;
+}
+
+.fs-label__emark {
+  font-style: italic;
+  margin-right: 0.8mm;
+  color: #8a857b;
+}
+
+/* ─── BACK (regulatory, ~60mm) ────────────────────────────
+   INCI as a single justified paragraph, instruction below
+   it as one short line (italic), responsible person on a
+   single line, barcode anchored bottom-left. No headings —
+   the typography differentiates the blocks. */
 
 .fs-label__face--back {
-  gap: 1.2mm;
-  font-size: 1.7mm;
-  line-height: 1.3;
-}
-
-.fs-label__h {
-  display: block;
-  font-family: var(--mono);
-  font-size: 1.5mm;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6d6a63;
-  margin-bottom: 0.4mm;
+  font-family: var(--sans);
+  color: #1a1a18;
+  gap: 1.5mm;
+  /* anchor barcode to bottom */
+  justify-content: flex-start;
 }
 
 .fs-label__inci {
-  display: block;
-}
-
-.fs-label__inci-body {
   margin: 0;
-  font-family: var(--sans);
   font-size: 1.55mm;
-  line-height: 1.25;
+  line-height: 1.3;
   color: #1a1a18;
-  /* Cap the INCI block; long ingredient strings should wrap */
   word-break: break-word;
-  /* Allow up to ~5 lines before truncating; tune if labels overflow */
+  /* If the ingredient list is enormous it line-clamps; keep this generous
+     so most formulas fit fully. */
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .fs-label__usage {
-  display: block;
-}
-
-.fs-label__usage-body {
   margin: 0;
-  font-family: var(--sans);
-  font-size: 1.55mm;
-  line-height: 1.3;
-  color: #1a1a18;
+  font-size: 1.5mm;
+  line-height: 1.35;
+  color: #3d3a2e;
+  font-style: italic;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.fs-label__resp {
-  display: block;
+.fs-label__usage-fn {
+  font-style: normal;
+  font-weight: 500;
+  color: #1a1a18;
 }
 
-.fs-label__resp-body {
+.fs-label__resp {
   margin: 0;
-  font-family: var(--sans);
-  font-size: 1.55mm;
-  line-height: 1.25;
+  font-size: 1.5mm;
+  line-height: 1.3;
+  color: #6d6a63;
+}
+
+.fs-label__resp strong {
   color: #1a1a18;
+  font-weight: 500;
 }
 
 .fs-label__barcode {
   margin-top: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
+  padding-top: 1mm;
 }
 
 .fs-label__barcode canvas {
   display: block;
-  /* Render at GS1 ~80% target — fits the back panel */
+  /* ~80% GS1 EAN-13 target — 18.28mm tall, ~30mm wide with quiet zones */
   height: 12mm;
   width: auto;
 }

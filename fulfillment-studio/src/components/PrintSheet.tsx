@@ -10,16 +10,16 @@ interface PrintSheetProps {
 }
 
 /**
- * Renders one or more 110×60mm cosmetic labels, each on its own print page.
- * Layout per label: 2-column landscape — front (personalised) on the left
- * side, back (regulatory) on the right.
+ * Renders one or more 110×60mm cosmetic labels for a roll-feed printer.
+ * Each label is its own page (110mm wide × 60mm tall, landscape) and
+ * wraps around the bottle when applied — the 110mm dimension is the
+ * circumference, 60mm is the bottle height.
  *
- *  ┌────────── FRONT (55mm) ──────────┬────────── BACK (55mm) ──────────┐
- *  │ Logo / wordmark                  │ Ingredients (INCI)              │
- *  │ Category                         │ Category + Instruction          │
- *  │ For [customer]                   │ Responsible person + address    │
- *  │ Net content                      │ Barcode (EAN-13)                │
- *  └──────────────────────────────────┴─────────────────────────────────┘
+ * Layout philosophy: a single, continuous editorial wrap. No hard
+ * divider line between "front" (personalised) and "back" (regulatory)
+ * — they share the same paper. The brand wordmark and customer
+ * dedication occupy the personalised half; INCI, instructions, and
+ * the barcode occupy the regulatory half. Both flow as one design.
  */
 export default function PrintSheet({ order, items, brand }: PrintSheetProps) {
   return (
@@ -48,8 +48,8 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
   useEffect(() => {
     if (!canvasRef.current) return;
     try {
-      // ~80% GS1 target (X = 0.264mm, height = 18.28mm) — fits the back
-      // panel of a 110×60mm label while staying inside the GS1 minimum.
+      // ~80% GS1 target — fits the back half of the wrap while staying
+      // inside the GS1 minimum X-dimension for retail scanning.
       renderBarcodeToCanvas(canvasRef.current, {
         value: item.gtin,
         mode: "print",
@@ -61,57 +61,50 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
   }, [item.gtin]);
 
   const category = (item.category || item.variant || "").trim();
-  const categoryDisplay = category.toUpperCase() || "PRODUCT";
   const copy = copyForCategory(category);
-  const netContent = item.net_content ?? "";
+  const brandName = brand || "Atelier Rusalka";
   const customerName = order.shipping_name ?? "";
+  const productLine = `personalised ${(category || "product").toLowerCase()}`;
+  const netContent = item.net_content ?? "";
 
   return (
     <article className="fs-label" aria-label={`Label for ${item.name}`}>
-      {/* ─────────── FRONT (left half, personalised) ─────────── */}
+      {/* ─── FRONT (personalised) ─── */}
       <section className="fs-label__face fs-label__face--front">
-        <header className="fs-label__brand">
-          <span className="fs-label__brand-mark">{brand || "ATELIER RUSALKA"}</span>
-          <span className="fs-label__brand-eyebrow">atelier · made</span>
-        </header>
-
-        <span className="fs-label__category">{categoryDisplay}</span>
+        <div className="fs-label__brand">{brandName}</div>
 
         {customerName && (
-          <p className="fs-label__customer">
-            <span className="fs-label__customer-eyebrow">composed for</span>
-            <span className="fs-label__customer-name">{customerName}</span>
-          </p>
+          <div className="fs-label__dedication">
+            <span className="fs-label__dedication-eyebrow">composed for</span>
+            <span className="fs-label__dedication-name">{customerName}</span>
+          </div>
         )}
 
-        <span className="fs-label__volume">
-          <span className="fs-label__volume-emark" aria-hidden>e</span>
-          <span className="fs-label__volume-value">{netContent || "—"}</span>
-        </span>
+        <div className="fs-label__product">
+          <span className="fs-label__product-line">{productLine}</span>
+          {netContent && (
+            <span className="fs-label__product-volume">
+              <span className="fs-label__emark" aria-hidden>e</span>
+              {netContent}
+            </span>
+          )}
+        </div>
       </section>
 
-      {/* ─────────── BACK (right half, regulatory) ─────────── */}
+      {/* ─── BACK (regulatory) ─── */}
       <section className="fs-label__face fs-label__face--back">
-        <div className="fs-label__inci">
-          <span className="fs-label__h">Ingredients</span>
-          <p className="fs-label__inci-body">{item.inci || "—"}</p>
-        </div>
+        <p className="fs-label__inci">{item.inci || "—"}</p>
 
-        <div className="fs-label__usage">
-          <span className="fs-label__h">{copy.function}</span>
-          <p className="fs-label__usage-body">{copy.instruction}</p>
-        </div>
+        <p className="fs-label__usage">
+          <span className="fs-label__usage-fn">{copy.function}.</span>{" "}
+          {copy.instruction}
+        </p>
 
-        <div className="fs-label__resp">
-          <span className="fs-label__h">Responsible person</span>
-          <p className="fs-label__resp-body">
-            {MANUFACTURER.name}
-            <br />
-            {MANUFACTURER.addressLine1}
-            <br />
-            {MANUFACTURER.addressLine2}
-          </p>
-        </div>
+        <p className="fs-label__resp">
+          <strong>{MANUFACTURER.name}</strong>
+          <br />
+          {MANUFACTURER.addressLine1} · {MANUFACTURER.addressLine2}
+        </p>
 
         <div className="fs-label__barcode">
           <canvas ref={canvasRef} />
