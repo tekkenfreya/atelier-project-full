@@ -33,6 +33,15 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [fulfillingOrderId, setFulfillingOrderId] = useState<string | null>(null);
+  const [printItems, setPrintItems] = useState<FulfilledItem[] | null>(null);
+
+  // Clear print scope after the browser print dialog closes so the hidden
+  // print-only div unmounts and can't get re-printed by accident.
+  useEffect(() => {
+    const onAfter = () => setPrintItems(null);
+    window.addEventListener("afterprint", onAfter);
+    return () => window.removeEventListener("afterprint", onAfter);
+  }, []);
 
   // --- Auth session ---
   useEffect(() => {
@@ -151,12 +160,33 @@ export default function App() {
     }
   }, [selected, issuer, loadAll]);
 
-  const handlePrint = useCallback(async () => {
-    if (!selected) return;
+  const triggerPrint = useCallback((items: FulfilledItem[]) => {
+    setPrintItems(items);
+    // Two animation frames — give React time to flush the new items into
+    // the print-only div before the print dialog snapshots the page.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+      });
+    });
+  }, []);
+
+  const handlePrintAll = useCallback(async () => {
+    if (!selected || selectedItems.length === 0) return;
     await markOrderPrinted(selected.id);
-    window.print();
+    triggerPrint(selectedItems);
     await loadAll();
-  }, [selected, loadAll]);
+  }, [selected, selectedItems, triggerPrint, loadAll]);
+
+  const handlePrintItem = useCallback(
+    async (item: FulfilledItem) => {
+      if (!selected) return;
+      await markOrderPrinted(selected.id);
+      triggerPrint([item]);
+      await loadAll();
+    },
+    [selected, triggerPrint, loadAll],
+  );
 
   const handleCancelOrder = useCallback(async () => {
     if (!selected) return;
@@ -462,6 +492,8 @@ export default function App() {
                         assigned={assigned ?? null}
                         isFulfilling={isFulfillingSelected}
                         revealDelayMs={idx * 120}
+                        onPrint={handlePrintItem}
+                        printDisabled={busy}
                       />
                     );
                   })}
@@ -535,14 +567,14 @@ export default function App() {
                     <button
                       type="button"
                       className="fs-btn fs-btn--primary fs-btn--hero"
-                      onClick={handlePrint}
+                      onClick={handlePrintAll}
                       disabled={busy}
                     >
                       <span className="fs-btn-primary-label">
-                        Print {selectedItems.length} label{selectedItems.length === 1 ? "" : "s"}
+                        Print all {selectedItems.length} label{selectedItems.length === 1 ? "" : "s"}
                       </span>
                       <span className="fs-btn-primary-sub">
-                        opens browser print dialog with composed labels
+                        each on its own 110×60mm page · or use per-card buttons above
                       </span>
                     </button>
                   </div>
@@ -596,11 +628,16 @@ export default function App() {
         </section>
       </main>
 
-      {selected && selectedItems.length > 0 && (
+      {/*
+        Hidden during normal screen use, made visible by @media print.
+        Only renders while printItems is set (a print is in flight) so the
+        printer captures exactly the items the user clicked.
+      */}
+      {selected && printItems && printItems.length > 0 && (
         <div className="fs-print-only" aria-hidden="true">
           <PrintSheet
             order={selected}
-            items={selectedItems}
+            items={printItems}
             brand={issuer?.brand ?? ""}
           />
         </div>

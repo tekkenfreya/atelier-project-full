@@ -8,6 +8,8 @@ interface ProductCardProps {
   assigned: FulfilledItem | null;
   isFulfilling: boolean;
   revealDelayMs?: number;
+  onPrint?: (item: FulfilledItem) => void;
+  printDisabled?: boolean;
 }
 
 export default function ProductCard({
@@ -16,6 +18,8 @@ export default function ProductCard({
   assigned,
   isFulfilling,
   revealDelayMs = 0,
+  onPrint,
+  printDisabled,
 }: ProductCardProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -83,6 +87,18 @@ export default function ProductCard({
           </div>
         )}
       </div>
+
+      {state === "assigned" && assigned && onPrint && (
+        <button
+          type="button"
+          className="fs-card__print"
+          onClick={() => onPrint(assigned)}
+          disabled={printDisabled}
+          aria-label={`Print label for ${sourceItem.productName ?? sourceItem.category}`}
+        >
+          Print this label →
+        </button>
+      )}
     </article>
   );
 }
