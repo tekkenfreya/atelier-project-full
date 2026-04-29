@@ -1551,13 +1551,17 @@ button:focus {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
+  /* Constrain the inline SVG to a known mm height so it prints at exactly
+     the GS1 ~80% target regardless of viewport or printer DPI. */
+  height: 13mm;
 }
 
-.fs-label__barcode canvas {
+.fs-label__barcode svg {
   display: block;
-  /* ~80% GS1 EAN-13 target — 18.28mm tall, ~30mm wide with quiet zones */
-  height: 12mm;
+  height: 13mm;
   width: auto;
+  /* Override any internal width/height the bwip-js SVG defines. */
+  max-width: none;
 }
 
 /* Monogram — placeholder square mark with "ar" inside. Replace with real

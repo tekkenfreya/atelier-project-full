@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { renderBarcodeToCanvas } from "../lib/barcode";
+import { useMemo } from "react";
+import { renderBarcodeToSvg } from "../lib/barcode";
 import { MANUFACTURER, copyForCategory, poeticNameFor } from "../lib/labelContent";
 import type { FulfilledItem, CustomerOrder } from "../lib/engine";
 
@@ -108,20 +108,20 @@ interface PrintLabelProps {
 }
 
 function PrintLabel({ order, item, brand }: PrintLabelProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  // SVG output rather than canvas — canvas elements rasterise at the
+  // browser's print-snapshot DPI, which is unreliable across browsers.
+  // bwip-js's SVG path produces crisp vector strokes that print cleanly
+  // regardless of printer or browser.
+  const barcodeSvg = useMemo(() => {
+    if (!item.gtin) return "";
     try {
-      // ~80% GS1 target — fits the back half of the wrap while staying
-      // inside the GS1 minimum X-dimension for retail scanning.
-      renderBarcodeToCanvas(canvasRef.current, {
+      return renderBarcodeToSvg({
         value: item.gtin,
         mode: "print",
         height: 18.28,
       });
     } catch {
-      /* silent */
+      return "";
     }
   }, [item.gtin]);
 
@@ -179,9 +179,10 @@ function PrintLabel({ order, item, brand }: PrintLabelProps) {
               {MANUFACTURER.addressLine1} · {MANUFACTURER.addressLine2}
             </p>
 
-            <div className="fs-label__barcode">
-              <canvas ref={canvasRef} />
-            </div>
+            <div
+              className="fs-label__barcode"
+              dangerouslySetInnerHTML={{ __html: barcodeSvg }}
+            />
           </div>
           <Monogram />
         </div>
