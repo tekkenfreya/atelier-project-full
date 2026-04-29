@@ -162,28 +162,36 @@ export default function App() {
 
   const triggerPrint = useCallback((items: FulfilledItem[]) => {
     setPrintItems(items);
-    // Two animation frames — give React time to flush the new items into
-    // the print-only div before the print dialog snapshots the page.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.print();
-      });
-    });
+    // 80ms — generous buffer that lets React commit the new items array
+    // and the browser apply CSS before the print snapshot. Two rAFs were
+    // not always enough on slower laptops / heavier extensions.
+    setTimeout(() => window.print(), 80);
   }, []);
 
-  const handlePrintAll = useCallback(async () => {
-    if (!selected || selectedItems.length === 0) return;
-    await markOrderPrinted(selected.id);
-    triggerPrint(selectedItems);
-    await loadAll();
-  }, [selected, selectedItems, triggerPrint, loadAll]);
+  const handlePrintAll = useCallback(
+    (event?: React.MouseEvent) => {
+      event?.preventDefault();
+      if (!selected || selectedItems.length === 0) return;
+      // Fire-and-forget the timestamp update so a slow / failing DB
+      // round-trip can't block the print dialog from opening.
+      markOrderPrinted(selected.id).catch((err) => {
+        console.error("[print] markOrderPrinted failed:", err);
+      });
+      triggerPrint(selectedItems);
+      // Refresh data after the print dialog has had time to close.
+      setTimeout(() => loadAll(), 1500);
+    },
+    [selected, selectedItems, triggerPrint, loadAll],
+  );
 
   const handlePrintItem = useCallback(
-    async (item: FulfilledItem) => {
+    (item: FulfilledItem) => {
       if (!selected) return;
-      await markOrderPrinted(selected.id);
+      markOrderPrinted(selected.id).catch((err) => {
+        console.error("[print] markOrderPrinted failed:", err);
+      });
       triggerPrint([item]);
-      await loadAll();
+      setTimeout(() => loadAll(), 1500);
     },
     [selected, triggerPrint, loadAll],
   );
@@ -629,15 +637,18 @@ export default function App() {
       </main>
 
       {/*
-        Hidden during normal screen use, made visible by @media print.
-        Only renders while printItems is set (a print is in flight) so the
-        printer captures exactly the items the user clicked.
+        Always rendered when an order is selected (display:none on screen
+        via @media print rules). printItems controls the filter — when
+        the user clicks "Print this" we set it to one item; "Print all"
+        sets it to every fulfilled item. Falls back to selectedItems so
+        File→Print from the browser menu still produces a sane output.
+        Always-rendered avoids a mount/unmount race with window.print().
       */}
-      {selected && printItems && printItems.length > 0 && (
+      {selected && (printItems ?? selectedItems).length > 0 && (
         <div className="fs-print-only" aria-hidden="true">
           <PrintSheet
             order={selected}
-            items={printItems}
+            items={printItems ?? selectedItems}
             brand={issuer?.brand ?? ""}
           />
         </div>

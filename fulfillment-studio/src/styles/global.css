@@ -1319,30 +1319,60 @@ button:focus {
     size: 110mm 60mm;
     margin: 0;
   }
-  body * {
-    visibility: hidden !important;
+
+  /* Hide every direct child of .fs-app except the print container. The
+     print container itself is a direct child of .fs-app, so a single
+     :not() selector catches the topbar, main, modals, etc. without
+     touching ancestors. */
+  html, body, .fs-app {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
-  .fs-print-only,
-  .fs-print-only * {
-    visibility: visible !important;
+  .fs-app::before {
+    display: none !important;
   }
+  .fs-app > *:not(.fs-print-only) {
+    display: none !important;
+  }
+
   .fs-print-only {
     display: block !important;
-    position: fixed !important;
-    inset: 0 !important;
+    position: static !important;
     background: #ffffff !important;
-    padding: 0 !important;
     color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
+
+  /* The PrintSheet wrapper — strip its on-screen flex/gap so labels
+     stack as block-level page boxes. */
+  .fs-print {
+    display: block !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   .fs-label {
-    /* Each label is one page. */
+    /* One page per label. Both legacy and modern page-break properties
+       so it works across browsers / OS print drivers. */
+    width: 110mm !important;
+    height: 60mm !important;
+    margin: 0 !important;
+    border: none !important;
+    background-image: none !important;
     page-break-inside: avoid;
     page-break-after: always;
-    border: none !important;
-    margin: 0 !important;
+    break-inside: avoid;
+    break-after: page;
   }
   .fs-label:last-child {
     page-break-after: auto;
+    break-after: auto;
   }
 }
 
