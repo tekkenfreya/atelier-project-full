@@ -84,6 +84,30 @@ export async function configureIssuer(input: {
   return data as string;
 }
 
+export interface ImportGtinResult {
+  issuer_id: string;
+  company_prefix: string;
+  brand: string;
+  imported: number;
+  skipped_duplicates: number;
+  invalid: number;
+  total_pool: number;
+}
+
+export async function importGtinBatch(input: {
+  gtins: string[];
+  brand: string;
+  symbology?: Symbology;
+}): Promise<ImportGtinResult> {
+  const { data, error } = await supabase.rpc("import_gtin_batch", {
+    p_gtins: input.gtins,
+    p_brand: input.brand,
+    p_symbology: input.symbology ?? "ean13",
+  });
+  if (error) throw error;
+  return data as ImportGtinResult;
+}
+
 export async function reserveGtinForOrder(
   issuerId: string,
   orderId: string | null,

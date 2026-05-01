@@ -630,6 +630,225 @@ button:focus {
   margin-top: 0.5rem;
 }
 
+/* -------- Import file (Excel onboarding + modal) -------- */
+
+.bs-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 11, 10, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  padding: 2rem;
+}
+
+.bs-modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow:
+    0 40px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 60px -20px rgba(212, 168, 74, 0.12);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.bs-import-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1.5rem;
+  background: var(--bg-1);
+  border: 1px dashed var(--line-strong);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  text-align: center;
+}
+
+.bs-import-drop:hover,
+.bs-import-drop.is-drag {
+  border-color: var(--accent-dim);
+  background: var(--bg-2);
+}
+
+.bs-import-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.bs-import-drop-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.bs-import-drop-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  color: var(--text-0);
+}
+
+.bs-import-drop-sub {
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.bs-import-busy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.bs-import-summary {
+  display: grid;
+  grid-template-columns: auto 1px auto 1px auto 1px auto;
+  gap: 0;
+  padding: 0.85rem 1rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  align-items: center;
+}
+
+.bs-import-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0 0.75rem;
+}
+
+.bs-import-stat:first-child {
+  padding-left: 0;
+}
+
+.bs-import-stat-k {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.bs-import-stat-v {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text-0);
+  letter-spacing: -0.005em;
+}
+
+.bs-import-stat-v--err {
+  color: var(--err);
+}
+
+.bs-import-stat-rule {
+  height: 22px;
+  background: var(--line);
+}
+
+.bs-import-list {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--bg-1);
+}
+
+.bs-import-list-summary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  list-style: none;
+}
+
+.bs-import-list-summary::-webkit-details-marker {
+  display: none;
+}
+
+.bs-import-list-summary::before {
+  content: "› ";
+  display: inline-block;
+  margin-right: 0.4rem;
+  transition: transform 0.2s ease;
+}
+
+.bs-import-list[open] .bs-import-list-summary::before {
+  transform: rotate(90deg);
+}
+
+.bs-import-list-body {
+  list-style: none;
+  padding: 0.5rem 1rem 1rem;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.78rem;
+  color: var(--text-1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.bs-import-list-more {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+  font-style: italic;
+}
+
+.bs-import-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.bs-import-actions .bs-onboard-submit {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .bs-import-summary {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .bs-import-stat-rule {
+    display: none;
+  }
+  .bs-import-list-body {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* -------- Meta reset button -------- */
 
 .bs-meta-reset {

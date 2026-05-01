@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Scene from "./three/Scene";
-import Onboarding from "./components/Onboarding";
+import ImportFile from "./components/ImportFile";
 import LoginForm from "./components/LoginForm";
 import { supabase } from "./lib/supabase";
 import { getSpec, lookupPrefixCountry } from "./lib/gtin";
@@ -40,6 +40,7 @@ export default function App() {
   // Issue test GTIN form
   const [testName, setTestName] = useState("");
   const [testVariant, setTestVariant] = useState("");
+  const [importOpen, setImportOpen] = useState(false);
 
   const printImgRef = useRef<HTMLImageElement>(null);
 
@@ -305,7 +306,14 @@ export default function App() {
   if (!issuer) {
     return (
       <div className="bs-app">
-        <Onboarding onComplete={refresh} onSignOut={handleSignOut} />
+        <ImportFile
+          variant="onboarding"
+          onImported={() => {
+            setImportOpen(false);
+            refresh();
+          }}
+          onSignOut={handleSignOut}
+        />
       </div>
     );
   }
@@ -344,6 +352,15 @@ export default function App() {
             <span className="bs-meta-key">user</span>
             <span className="bs-meta-val">{user?.email?.split("@")[0]}</span>
           </div>
+          <button
+            type="button"
+            className="bs-meta-reset"
+            onClick={() => setImportOpen(true)}
+            disabled={busy}
+            title="Upload another GS1 file to extend the pool"
+          >
+            import more
+          </button>
           <button
             type="button"
             className="bs-meta-reset"
@@ -575,6 +592,18 @@ export default function App() {
       <div className="bs-print-only" aria-hidden="true" style={{ display: "none" }}>
         <img ref={printImgRef} alt="" />
       </div>
+
+      {importOpen && (
+        <ImportFile
+          variant="modal"
+          defaultBrand={issuer.brand}
+          onImported={() => {
+            setImportOpen(false);
+            refresh();
+          }}
+          onCancel={() => setImportOpen(false)}
+        />
+      )}
     </div>
   );
 }
