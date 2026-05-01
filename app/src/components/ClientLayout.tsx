@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/components/Navbar";
 import "@/styles/editorial.css";
+import "@/styles/atelier-2026.css";
 
 const SETTLE_DELAY = 1400;
 
