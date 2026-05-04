@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import "./Navbar.css";
 
 /**
  * Atelier Rusalka 2026 nav — sticky glass pill, animated morph mark,
@@ -76,16 +78,25 @@ export default function Navbar() {
 
       <ul className="nav__links">
         <li>
-          <a href="/#products">Collection</a>
+          <Link href="/#products">Skincare</Link>
         </li>
         <li>
-          <a href="/#ritual">The Ritual</a>
+          <Link href="/accessories">Accessories</Link>
         </li>
         <li>
-          <a href="/ingredients">Ingredients</a>
+          <Link href="/ingredients">Our ingredients</Link>
         </li>
         <li>
-          <a href="/#about">Atelier</a>
+          <Link href="/#about">About us</Link>
+        </li>
+        <li>
+          <Link href="/#reviews">Reviews</Link>
+        </li>
+        <li>
+          <Link href="/gift">Gift Rusalka</Link>
+        </li>
+        <li>
+          <Link href="/#subscription">Subscribe</Link>
         </li>
       </ul>
 
