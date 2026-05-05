@@ -6,6 +6,21 @@
    ================================================================ */
 
 :root {
+  /* Site-wide type tokens — apply on every page (inside or outside
+     the .atelier wrapper). The atelier scope re-declares --serif /
+     --sans / --mono with the same values so the homepage cascade
+     stays identical; the lab targets both layers when swapping. */
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Editorial-system variants — separate font families used on the
+     legacy cart / quiz / results / account surfaces. Wired up so
+     the design lab can swap them independently from the atelier
+     headline + body fonts. */
+  --ed-display: "Cormorant Garamond", Georgia, serif;
+  --ed-body: "Satoshi", system-ui, -apple-system, sans-serif;
+
   --ed-serif: "Fraunces", "Cormorant Garamond", Georgia, serif;
   --ed-sans: "Inter", system-ui, -apple-system, sans-serif;
   --ed-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;

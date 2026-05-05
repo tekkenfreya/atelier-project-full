@@ -2,7 +2,7 @@
 
 /* ─── Fonts ─── */
 @font-face {
-  font-family: "Cormorant Garamond";
+  font-family: var(--ed-display);
   font-style: normal;
   font-weight: 300 700;
   font-display: swap;
@@ -79,7 +79,7 @@ html.lenis body {
 }
 
 body {
-  font-family: "Satoshi", "DM Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--ed-body);
   background-color: var(--bg-primary);
   overflow-x: hidden;
 }
@@ -117,7 +117,7 @@ body {
 }
 
 .nav-links a {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -138,7 +138,7 @@ body {
 }
 
 .nav-cta {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -256,7 +256,7 @@ body {
 }
 
 .hero-tagline {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.35em;
@@ -266,7 +266,7 @@ body {
 }
 
 .hero-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(3rem, 7vw, 6.5rem);
   font-weight: 300;
   line-height: 0.95;
@@ -276,7 +276,7 @@ body {
 }
 
 .hero-subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1.2vw, 1.1rem);
   font-weight: 400;
   line-height: 1.6;
@@ -288,7 +288,7 @@ body {
 .hero-cta {
   display: inline-block;
   margin-top: 0.5rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -323,7 +323,7 @@ body {
 }
 
 .hero-scroll-hint span {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -361,7 +361,7 @@ body {
 }
 
 .social-proof-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -381,7 +381,7 @@ body {
 }
 
 .press-logo {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.1rem, 1.8vw, 1.6rem);
   font-weight: 600;
   font-style: italic;
@@ -403,7 +403,7 @@ body {
 }
 
 .social-quote {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.2rem, 2vw, 1.6rem);
   font-weight: 300;
   font-style: italic;
@@ -415,7 +415,7 @@ body {
 }
 
 .social-quote-attr {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -436,7 +436,7 @@ body {
 }
 
 .products-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -447,7 +447,7 @@ body {
 }
 
 .products-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 300;
   line-height: 1;
@@ -489,7 +489,7 @@ body {
 }
 
 .product-image-placeholder {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 300;
   font-style: italic;
@@ -502,7 +502,7 @@ body {
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -517,7 +517,7 @@ body {
 }
 
 .product-category {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -526,7 +526,7 @@ body {
 }
 
 .product-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 3.5vw, 3.2rem);
   font-weight: 300;
   line-height: 1.05;
@@ -535,7 +535,7 @@ body {
 }
 
 .product-description {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -544,7 +544,7 @@ body {
 }
 
 .product-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -554,7 +554,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -635,7 +635,7 @@ body {
 }
 
 .subscription-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -646,7 +646,7 @@ body {
 }
 
 .subscription-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.1;
@@ -657,7 +657,7 @@ body {
 }
 
 .subscription-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -669,7 +669,7 @@ body {
 
 .subscription-cta {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -690,7 +690,7 @@ body {
 }
 
 .subscription-note {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 1.25rem;
@@ -727,7 +727,7 @@ body {
 }
 
 .footer-tagline {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: rgba(245, 240, 232, 0.4);
   line-height: 1.6;
@@ -740,7 +740,7 @@ body {
 }
 
 .footer-col h4 {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -757,7 +757,7 @@ body {
 }
 
 .footer-col a {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: rgba(245, 240, 232, 0.6);
   text-decoration: none;
@@ -779,7 +779,7 @@ body {
 }
 
 .footer-copy {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: rgba(245, 240, 232, 0.3);
 }
@@ -880,7 +880,7 @@ body {
 }
 
 .quiz-topbar-counter {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -910,7 +910,7 @@ body {
 }
 
 .quiz-intro-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -919,7 +919,7 @@ body {
 }
 
 .quiz-intro-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.05;
@@ -928,7 +928,7 @@ body {
 }
 
 .quiz-intro-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -958,14 +958,14 @@ body {
 }
 
 .quiz-intro-section-num {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.5rem;
   font-weight: 300;
   color: var(--accent);
 }
 
 .quiz-intro-section-name {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -973,7 +973,7 @@ body {
 }
 
 .quiz-intro-section-count {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   color: var(--text-secondary);
 }
@@ -999,7 +999,7 @@ body {
 }
 
 .quiz-name-label {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.5rem;
   font-weight: 300;
   color: var(--text-primary);
@@ -1010,7 +1010,7 @@ body {
   padding: 0.9rem 1.1rem;
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -1034,7 +1034,7 @@ body {
 }
 
 .quiz-sex-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
   line-height: 1.1;
@@ -1043,7 +1043,7 @@ body {
 }
 
 .quiz-sex-subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.85rem, 1vw, 0.95rem);
   font-weight: 400;
   line-height: 1.7;
@@ -1066,7 +1066,7 @@ body {
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -1100,7 +1100,7 @@ body {
 }
 
 .quiz-section-num {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -1109,7 +1109,7 @@ body {
 }
 
 .quiz-section-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.2rem, 4.5vw, 3.5rem);
   font-weight: 300;
   line-height: 1.1;
@@ -1118,7 +1118,7 @@ body {
 }
 
 .quiz-section-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -1137,7 +1137,7 @@ body {
 }
 
 .quiz-complete-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -1146,7 +1146,7 @@ body {
 }
 
 .quiz-complete-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 300;
   line-height: 1.05;
@@ -1155,7 +1155,7 @@ body {
 }
 
 .quiz-complete-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -1166,7 +1166,7 @@ body {
 /* CTA Button (quiz variant) */
 .quiz-cta-btn {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -1196,7 +1196,7 @@ body {
 }
 
 .quiz-progress-text {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -1205,7 +1205,7 @@ body {
 }
 
 .quiz-progress-section {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -1234,7 +1234,7 @@ body {
 }
 
 .quiz-question-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   font-weight: 300;
   line-height: 1.15;
@@ -1243,7 +1243,7 @@ body {
 }
 
 .quiz-question-subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 400;
   line-height: 1.6;
@@ -1268,7 +1268,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -1291,7 +1291,7 @@ body {
 }
 
 .quiz-why-text {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 400;
   line-height: 1.65;
@@ -1314,7 +1314,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -1329,7 +1329,7 @@ body {
 }
 
 .quiz-nav-next {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -1427,7 +1427,7 @@ body {
 }
 
 .quiz-select-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.88rem;
   font-weight: 400;
   line-height: 1.4;
@@ -1455,7 +1455,7 @@ body {
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -1478,7 +1478,7 @@ body {
 }
 
 .quiz-scale-labels span {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -1498,7 +1498,7 @@ body {
 }
 
 .quiz-grid-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   font-weight: 500;
   color: var(--text-primary);
@@ -1525,7 +1525,7 @@ body {
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -1552,7 +1552,7 @@ body {
 }
 
 .rank-instruction {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   margin-bottom: 0.25rem;
@@ -1605,7 +1605,7 @@ body {
   border-radius: 50%;
   background-color: var(--accent);
   color: #fff;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1rem;
   font-weight: 600;
   flex-shrink: 0;
@@ -1624,7 +1624,7 @@ body {
 }
 
 .rank-card-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -1643,7 +1643,7 @@ body {
   padding: 0.85rem 1.1rem;
   background-color: var(--bg-cream);
   border: 1px solid var(--accent);
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -1671,7 +1671,7 @@ body {
   padding: 1rem 1.25rem;
   background-color: var(--bg-cream);
   border: 1px solid var(--border);
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.6;
@@ -1692,7 +1692,7 @@ body {
 }
 
 .quiz-char-count {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   color: var(--text-secondary);
   text-align: right;
@@ -1748,7 +1748,7 @@ body {
 }
 
 .mobile-nav a {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 2rem;
   font-weight: 300;
   color: var(--text-primary);
@@ -1763,7 +1763,7 @@ body {
 .mobile-nav-quiz {
   color: var(--accent);
   font-size: 1rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1792,7 +1792,7 @@ body {
 }
 
 .results-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -1801,7 +1801,7 @@ body {
 }
 
 .results-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.05;
@@ -1811,7 +1811,7 @@ body {
 }
 
 .results-subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: clamp(0.9rem, 1vw, 1rem);
   font-weight: 400;
   line-height: 1.7;
@@ -1861,7 +1861,7 @@ body {
 }
 
 .results-card-category {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -1870,7 +1870,7 @@ body {
 }
 
 .results-card-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 300;
   line-height: 1.1;
@@ -1879,7 +1879,7 @@ body {
 }
 
 .results-card-skin {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: 0.25rem;
@@ -1891,7 +1891,7 @@ body {
 }
 
 .results-card-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -1908,7 +1908,7 @@ body {
 
 .results-card-actives li,
 .results-card-reasons li {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   padding: 0.25rem 0;
   color: var(--text-primary);
@@ -1922,7 +1922,7 @@ body {
 
 .results-btn {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -1942,7 +1942,7 @@ body {
 
 .results-btn-secondary {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -1968,7 +1968,7 @@ body {
 }
 
 .results-fragrance-value {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.88rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -1982,7 +1982,7 @@ body {
 }
 
 .results-report-link a {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -2041,7 +2041,7 @@ body {
 }
 
 .results-card-toggle-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -2050,7 +2050,7 @@ body {
 }
 
 .results-card-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2075,21 +2075,21 @@ body {
 }
 
 .results-pricing-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .results-pricing-value {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--text-primary);
 }
 
 .results-pricing-note {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--accent);
   margin-top: 0.25rem;
@@ -2105,20 +2105,20 @@ body {
 }
 
 .results-pricing-sub-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
 }
 
 .results-pricing-sub-value {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--accent);
 }
 
 .results-pricing-sub-freq {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -2163,7 +2163,7 @@ body {
   right: -6px;
   background-color: var(--accent);
   color: #fff;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.55rem;
   font-weight: 700;
   width: 16px;
@@ -2187,7 +2187,7 @@ body {
 .cart-loading {
   text-align: center;
   padding: 4rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   color: var(--text-secondary);
 }
 
@@ -2197,7 +2197,7 @@ body {
 }
 
 .cart-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -2206,7 +2206,7 @@ body {
 }
 
 .cart-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.05;
@@ -2251,7 +2251,7 @@ body {
 }
 
 .cart-item-category {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -2260,14 +2260,14 @@ body {
 }
 
 .cart-item-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
 }
 
 .cart-item-details {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
 }
@@ -2280,7 +2280,7 @@ body {
 }
 
 .cart-item-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.2rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2290,7 +2290,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -2305,7 +2305,7 @@ body {
 }
 
 .cart-bundle-note {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--accent);
@@ -2321,7 +2321,7 @@ body {
 }
 
 .cart-plan-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2375,7 +2375,7 @@ body {
   padding: 4px 10px;
   background: var(--accent);
   color: var(--bg-cream);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--mono);
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -2391,14 +2391,14 @@ body {
 }
 
 .cart-plan-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .cart-plan-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -2416,7 +2416,7 @@ body {
 .cart-plan-reassurances li {
   position: relative;
   padding-left: 1.1rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.35;
@@ -2441,7 +2441,7 @@ body {
 }
 
 .cart-summary-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2458,7 +2458,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -2485,7 +2485,7 @@ body {
 }
 
 .cart-summary-annual-note {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   color: var(--text-secondary);
   text-align: right;
@@ -2495,7 +2495,7 @@ body {
   display: block;
   width: 100%;
   margin-top: 1.5rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -2517,7 +2517,7 @@ body {
   display: block;
   width: 100%;
   margin-top: 0.75rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -2547,7 +2547,7 @@ body {
 .checkout-loading {
   text-align: center;
   padding: 4rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   color: var(--text-secondary);
 }
 
@@ -2557,7 +2557,7 @@ body {
 }
 
 .checkout-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -2566,7 +2566,7 @@ body {
 }
 
 .checkout-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.05;
@@ -2595,7 +2595,7 @@ body {
 }
 
 .checkout-section-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2621,7 +2621,7 @@ body {
 }
 
 .checkout-field-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -2630,7 +2630,7 @@ body {
 }
 
 .checkout-input {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2648,7 +2648,7 @@ body {
 
 .checkout-place-order {
   margin-top: 1rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -2682,7 +2682,7 @@ body {
 }
 
 .checkout-sidebar-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2703,7 +2703,7 @@ body {
 
 .checkout-sidebar-item-category {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -2713,14 +2713,14 @@ body {
 
 .checkout-sidebar-item-name {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
   margin-top: 0.15rem;
 }
 
 .checkout-sidebar-item-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.1rem;
   color: var(--text-primary);
 }
@@ -2739,7 +2739,7 @@ body {
 }
 
 .checkout-sidebar-plan-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -2748,7 +2748,7 @@ body {
 }
 
 .checkout-sidebar-plan-value {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -2763,7 +2763,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -2783,7 +2783,7 @@ body {
   display: block;
   width: 100%;
   margin-top: 1rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -2825,7 +2825,7 @@ body {
 
 .checkout-review-item-category {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -2835,20 +2835,20 @@ body {
 
 .checkout-review-item-name {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
   margin-top: 0.15rem;
 }
 
 .checkout-review-item-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.1rem;
   color: var(--text-primary);
 }
 
 .checkout-recurring-note {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   text-align: center;
@@ -2856,7 +2856,7 @@ body {
 }
 
 .checkout-error {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: #c44d4d;
   text-align: center;
@@ -2867,7 +2867,7 @@ body {
   display: block;
   width: 100%;
   margin-top: 1.5rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -2903,7 +2903,7 @@ body {
 .confirmation-loading {
   text-align: center;
   padding: 4rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   color: var(--text-secondary);
 }
 
@@ -2917,7 +2917,7 @@ body {
 }
 
 .confirmation-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -2926,7 +2926,7 @@ body {
 }
 
 .confirmation-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.05;
@@ -2936,7 +2936,7 @@ body {
 }
 
 .confirmation-subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
@@ -2952,7 +2952,7 @@ body {
 }
 
 .confirmation-summary-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -2973,7 +2973,7 @@ body {
 
 .confirmation-item-category {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -2983,14 +2983,14 @@ body {
 
 .confirmation-item-name {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
   margin-top: 0.15rem;
 }
 
 .confirmation-item-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.1rem;
   color: var(--text-primary);
 }
@@ -3006,7 +3006,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
   padding: 0.25rem 0;
@@ -3033,7 +3033,7 @@ body {
 
 .confirmation-btn {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3065,7 +3065,7 @@ body {
 .account-loading {
   text-align: center;
   padding: 6rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-secondary);
   letter-spacing: 0.1em;
@@ -3078,7 +3078,7 @@ body {
 
 .account-label {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -3088,7 +3088,7 @@ body {
 }
 
 .account-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
   line-height: 1.1;
@@ -3113,7 +3113,7 @@ body {
 }
 
 .account-field-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -3122,7 +3122,7 @@ body {
 }
 
 .account-input {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -3139,7 +3139,7 @@ body {
 }
 
 .account-error {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: #c0392b;
   margin-bottom: 1rem;
@@ -3148,7 +3148,7 @@ body {
 .account-btn {
   display: block;
   width: 100%;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3173,7 +3173,7 @@ body {
 }
 
 .account-toggle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   text-align: center;
@@ -3184,7 +3184,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent);
@@ -3242,7 +3242,7 @@ body {
 }
 
 .profile-hero__title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   line-height: 1.1;
@@ -3252,7 +3252,7 @@ body {
 }
 
 .profile-hero__subtitle {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.7;
@@ -3268,14 +3268,14 @@ body {
 }
 
 .profile-hero__email {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   color: var(--text-secondary);
 }
 
 .profile-hero__skin-badge {
   display: inline-block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3291,7 +3291,7 @@ body {
 }
 
 .profile-section__title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.3rem, 2vw, 1.6rem);
   font-weight: 400;
   color: var(--text-primary);
@@ -3307,7 +3307,7 @@ body {
 }
 
 .profile-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -3331,7 +3331,7 @@ body {
 }
 
 .profile-regimen__label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3339,7 +3339,7 @@ body {
 }
 
 .profile-regimen__name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -3361,7 +3361,7 @@ body {
 }
 
 .profile-skin__label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3370,14 +3370,14 @@ body {
 }
 
 .profile-skin__type {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--text-primary);
 }
 
 .profile-skin__value {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   color: var(--text-primary);
 }
@@ -3390,7 +3390,7 @@ body {
 }
 
 .profile-concern {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -3402,7 +3402,7 @@ body {
 
 /* Text Link */
 .profile-text-link {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--accent);
@@ -3435,14 +3435,14 @@ body {
 }
 
 .profile-row__date {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   min-width: 110px;
 }
 
 .profile-row__detail {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -3453,7 +3453,7 @@ body {
 }
 
 .profile-row__link {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--accent);
@@ -3475,7 +3475,7 @@ body {
 
 /* Status — text only, no background badge */
 .profile-status {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   flex-shrink: 0;
@@ -3504,7 +3504,7 @@ body {
 
 /* Buttons */
 .profile-btn {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3552,7 +3552,7 @@ body {
 
 /* Empty */
 .profile-empty {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -3571,7 +3571,7 @@ body {
 }
 
 .profile-settings__label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3580,7 +3580,7 @@ body {
 }
 
 .profile-settings__value {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   color: var(--text-primary);
 }
@@ -3592,7 +3592,7 @@ body {
 }
 
 .profile-settings__heading {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -3607,7 +3607,7 @@ body {
 }
 
 .profile-field__label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -3616,7 +3616,7 @@ body {
 }
 
 .profile-field__input {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -3634,14 +3634,14 @@ body {
 }
 
 .profile-field__error {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: #c0392b;
   margin-bottom: 1rem;
 }
 
 .profile-field__success {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: #2e7d32;
   margin-bottom: 1rem;
@@ -3654,7 +3654,7 @@ body {
 }
 
 .profile-signout__link {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-secondary);
@@ -3742,7 +3742,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 420px;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
 }
@@ -3810,7 +3810,7 @@ body {
 }
 
 .profile-extract-item-name {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-primary);
@@ -3821,7 +3821,7 @@ body {
 }
 
 .profile-extract-item-region {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   color: var(--text-secondary);
 }
@@ -3837,7 +3837,7 @@ body {
 }
 
 .profile-extract-group-header {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -3865,7 +3865,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.6rem 0.85rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -3890,7 +3890,7 @@ body {
   width: 100%;
   text-align: left;
   padding: 0.7rem 0.85rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-primary);
   background: transparent;
@@ -3918,7 +3918,7 @@ body {
 
 .extract-modal-chip {
   padding: 0.35rem 0.75rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
   color: var(--text-secondary);
@@ -3961,7 +3961,7 @@ body {
 
 .journal-eyebrow {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -3977,7 +3977,7 @@ body {
 }
 
 .journal-hero-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(3rem, 7vw, 5.5rem);
   font-weight: 300;
   line-height: 1.05;
@@ -3993,7 +3993,7 @@ body {
 }
 
 .journal-hero-sub {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 1.1rem;
   color: var(--text-secondary);
@@ -4028,7 +4028,7 @@ body {
 
 .journal-spread-num {
   display: block;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1rem;
   font-style: italic;
   color: var(--accent);
@@ -4037,7 +4037,7 @@ body {
 }
 
 .journal-spread-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
   line-height: 1.1;
@@ -4047,7 +4047,7 @@ body {
 }
 
 .journal-spread-lede {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 1.05rem;
   color: var(--text-secondary);
@@ -4057,7 +4057,7 @@ body {
 }
 
 .journal-spread-count {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.68rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -4121,7 +4121,7 @@ body {
 #ritual-card-3 { left: calc(50% + 20px); }
 
 .ritual-card-num {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 0.85rem;
   letter-spacing: 0.25em;
@@ -4143,7 +4143,7 @@ body {
 }
 
 .ritual-card-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -4153,7 +4153,7 @@ body {
 }
 
 .ritual-card-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 1.2;
@@ -4162,7 +4162,7 @@ body {
 }
 
 .ritual-card-tagline {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--text-secondary);
@@ -4212,7 +4212,7 @@ body {
 }
 
 .journal-ritual-num {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 0.85rem;
   letter-spacing: 0.2em;
@@ -4237,7 +4237,7 @@ body {
 }
 
 .journal-ritual-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.25em;
@@ -4247,7 +4247,7 @@ body {
 }
 
 .journal-ritual-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.55rem;
   font-weight: 400;
   line-height: 1.2;
@@ -4256,7 +4256,7 @@ body {
 }
 
 .journal-ritual-tagline {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--text-secondary);
@@ -4294,7 +4294,7 @@ body {
 }
 
 .journal-botanicals-group-header {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.22em;
@@ -4332,7 +4332,7 @@ body {
 }
 
 .journal-botanicals-item-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -4344,7 +4344,7 @@ body {
 }
 
 .journal-botanicals-item-region {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.68rem;
   letter-spacing: 0.02em;
   color: var(--text-secondary);
@@ -4373,7 +4373,7 @@ body {
 }
 
 .journal-profile-prose {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.3rem, 2.2vw, 1.7rem);
   font-weight: 300;
   line-height: 1.55;
@@ -4402,7 +4402,7 @@ body {
 }
 
 .journal-profile-meta-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.25em;
@@ -4411,7 +4411,7 @@ body {
 }
 
 .journal-profile-meta-value {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -4426,7 +4426,7 @@ body {
 }
 
 .journal-quiet-link {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 1.1rem;
   color: var(--text-primary);
@@ -4470,7 +4470,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
 }
 
 .journal-account-label {
@@ -4495,7 +4495,7 @@ body {
 }
 
 .journal-account-input {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--border);
@@ -4510,21 +4510,21 @@ body {
 }
 
 .journal-account-error {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: #a63b3b;
   margin: 0;
 }
 
 .journal-account-success {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--accent);
   margin: 0;
 }
 
 .journal-account-btn {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.22em;
@@ -4549,7 +4549,7 @@ body {
 }
 
 .journal-signout {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -4606,7 +4606,7 @@ body {
 }
 
 .journal-atlas-teaser-eyebrow {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -4615,7 +4615,7 @@ body {
 }
 
 .journal-atlas-teaser-num {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.5rem, 3vw, 2.2rem);
   font-weight: 300;
   color: var(--text-primary);
@@ -4641,7 +4641,7 @@ body {
 }
 
 .journal-atlas-teaser-cta {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 1rem;
   color: var(--text-secondary);
@@ -4668,7 +4668,7 @@ body {
 }
 
 .botanicals-loading {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 1.1rem;
   color: var(--text-secondary);
@@ -4688,7 +4688,7 @@ body {
 }
 
 .botanicals-back {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -4713,7 +4713,7 @@ body {
 }
 
 .botanicals-eyebrow {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -4722,7 +4722,7 @@ body {
 }
 
 .botanicals-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.8rem;
   font-weight: 300;
   line-height: 1.2;
@@ -4752,7 +4752,7 @@ body {
 .botanicals-tab {
   flex: 1;
   padding: 0.75rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -4815,14 +4815,14 @@ body {
 
 .botanicals-region-name {
   flex: 1;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.05rem;
   color: var(--text-primary);
   transition: color 0.2s ease;
 }
 
 .botanicals-region-count {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   color: var(--text-secondary);
   letter-spacing: 0.05em;
@@ -4863,7 +4863,7 @@ body {
 }
 
 .botanicals-ing-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 0.95rem;
   color: var(--text-primary);
   font-style: italic;
@@ -4874,7 +4874,7 @@ body {
 }
 
 .botanicals-ing-region {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   letter-spacing: 0.03em;
   color: var(--text-secondary);
@@ -4934,7 +4934,7 @@ body {
 }
 
 .botanicals-legend-title {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.25em;
@@ -4947,7 +4947,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--text-primary);
 }
@@ -4959,7 +4959,7 @@ body {
 }
 
 .botanicals-legend-more {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-style: italic;
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -5160,7 +5160,7 @@ body {
 
 .extract-modal-placeholder-name {
   position: relative;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 2rem;
   font-weight: 300;
   color: #fff;
@@ -5169,7 +5169,7 @@ body {
 
 .extract-modal-placeholder-region {
   position: relative;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -5185,7 +5185,7 @@ body {
 
 .extract-modal-map-country {
   display: block;
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -5193,7 +5193,7 @@ body {
 
 .extract-modal-map-region {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 0.15rem;
@@ -5208,7 +5208,7 @@ body {
 }
 
 .extract-modal-eyebrow {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -5217,7 +5217,7 @@ body {
 }
 
 .extract-modal-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 300;
   line-height: 1.1;
@@ -5226,7 +5226,7 @@ body {
 }
 
 .extract-modal-ingredient {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   font-style: italic;
   color: var(--text-secondary);
@@ -5243,7 +5243,7 @@ body {
 
 .extract-modal-origin-label {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -5253,7 +5253,7 @@ body {
 
 .extract-modal-origin-value {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.88rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -5261,7 +5261,7 @@ body {
 }
 
 .extract-modal-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -5297,7 +5297,7 @@ body {
 .report-loading {
   text-align: center;
   padding: 4rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   color: var(--text-secondary);
 }
 
@@ -5307,7 +5307,7 @@ body {
 }
 
 .report-error h2 {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.8rem;
   font-weight: 300;
   color: var(--text-primary);
@@ -5315,7 +5315,7 @@ body {
 }
 
 .report-error p {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
@@ -5326,7 +5326,7 @@ body {
 }
 
 .report-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 300;
   color: var(--text-primary);
@@ -5334,7 +5334,7 @@ body {
 }
 
 .report-date {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
@@ -5347,7 +5347,7 @@ body {
 }
 
 .report-section-title {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -5359,7 +5359,7 @@ body {
 .report-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   margin-top: 0.75rem;
 }
@@ -5406,7 +5406,7 @@ body {
 }
 
 .report-mono {
-  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.78rem;
 }
 
@@ -5415,7 +5415,7 @@ body {
   gap: 0.75rem;
   align-items: baseline;
   margin-bottom: 0.4rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -5430,7 +5430,7 @@ body {
   list-style: none;
   padding: 0;
   margin: 0.25rem 0 0.75rem 1rem;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -5449,7 +5449,7 @@ body {
 }
 
 .report-category-title {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -5461,7 +5461,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem 0;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
 }
 
@@ -5470,14 +5470,14 @@ body {
 }
 
 .report-gate-count {
-  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.78rem;
   color: var(--text-primary);
 }
 
 .report-sub-label {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -5494,14 +5494,14 @@ body {
 }
 
 .report-gap-message {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   color: var(--accent);
   margin-bottom: 0.75rem;
 }
 
 .report-winner {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-primary);
   margin-top: 0.75rem;
@@ -5519,7 +5519,7 @@ body {
 }
 
 .report-btn {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -5627,14 +5627,14 @@ body {
 }
 
 .rd-loading-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 300;
   color: var(--text-primary);
 }
 
 .rd-loading-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
@@ -5647,7 +5647,7 @@ body {
 }
 
 .rd-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -5657,7 +5657,7 @@ body {
 }
 
 .rd-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(2rem, 3.5vw, 2.8rem);
   font-weight: 300;
   line-height: 1.1;
@@ -5672,7 +5672,7 @@ body {
 }
 
 .rd-scene-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 300;
   line-height: 1.1;
@@ -5707,7 +5707,7 @@ body {
 }
 
 .rd-scene-label {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -5797,7 +5797,7 @@ body {
 }
 
 .rd-orb-label-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.5rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -5806,7 +5806,7 @@ body {
 }
 
 .rd-orb-label-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -5814,7 +5814,7 @@ body {
 }
 
 .rd-orb-label-sci {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 0.7rem;
   font-weight: 300;
   font-style: italic;
@@ -5834,7 +5834,7 @@ body {
 }
 
 .rd-tab {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -5880,7 +5880,7 @@ body {
 }
 
 .rd-label-sm {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.25em;
@@ -5891,7 +5891,7 @@ body {
 }
 
 .rd-label-xs {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.55rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -5900,7 +5900,7 @@ body {
 }
 
 .rd-analysis-type-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 300;
   line-height: 1.1;
@@ -5908,7 +5908,7 @@ body {
 }
 
 .rd-analysis-type-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.88rem;
   font-weight: 400;
   line-height: 1.75;
@@ -5930,7 +5930,7 @@ body {
 }
 
 .rd-concern-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.15rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -5938,7 +5938,7 @@ body {
 }
 
 .rd-concern-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   font-weight: 400;
   line-height: 1.65;
@@ -5947,7 +5947,7 @@ body {
 }
 
 .rd-priority-text {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.7;
@@ -5961,7 +5961,7 @@ body {
 
 /* ─── Botanicals Tab ─── */
 .rd-botanicals-intro {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-bottom: 1.25rem;
@@ -6031,7 +6031,7 @@ body {
 }
 
 .rd-botanical-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.55rem;
   font-weight: 500;
   letter-spacing: 0.25em;
@@ -6040,7 +6040,7 @@ body {
 }
 
 .rd-botanical-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   line-height: 1.15;
@@ -6049,7 +6049,7 @@ body {
 }
 
 .rd-botanical-sci {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 0.82rem;
   font-weight: 300;
   font-style: italic;
@@ -6065,7 +6065,7 @@ body {
 }
 
 .rd-botanical-tag {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -6103,7 +6103,7 @@ body {
 }
 
 .rd-product-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.55rem;
   font-weight: 500;
   letter-spacing: 0.25em;
@@ -6112,7 +6112,7 @@ body {
 }
 
 .rd-product-name {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   line-height: 1.15;
@@ -6121,14 +6121,14 @@ body {
 }
 
 .rd-product-skin {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 0.15rem;
 }
 
 .rd-product-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.4rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -6142,7 +6142,7 @@ body {
 }
 
 .rd-active-tag {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -6160,7 +6160,7 @@ body {
 }
 
 .rd-reason {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -6178,7 +6178,7 @@ body {
 }
 
 .rd-fragrance-val {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.75rem;
   color: var(--text-secondary);
 }
@@ -6188,7 +6188,7 @@ body {
 }
 
 .rd-gap {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: var(--text-secondary);
   opacity: 0.6;
@@ -6205,7 +6205,7 @@ body {
 }
 
 .rd-btn-ghost {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -6223,7 +6223,7 @@ body {
 }
 
 .rd-report-link {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 400;
   letter-spacing: 0.1em;
@@ -6283,7 +6283,7 @@ body {
 
 .rd-price-label {
   display: block;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   color: var(--text-secondary);
   margin-bottom: 0.6rem;
@@ -6296,7 +6296,7 @@ body {
 }
 
 .rd-concern-pill {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   letter-spacing: 0.04em;
   color: var(--text-primary);
@@ -6335,7 +6335,7 @@ body {
 }
 
 .rd-order-item-cat {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.55rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -6344,7 +6344,7 @@ body {
 }
 
 .rd-order-item-name {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -6354,7 +6354,7 @@ body {
 }
 
 .rd-order-item-price {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.1rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -6378,20 +6378,20 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.82rem;
   color: var(--text-secondary);
 }
 
 .rd-price-val {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--text-primary);
 }
 
 .rd-price-save {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   color: var(--accent);
   margin-top: 0.2rem;
@@ -6404,7 +6404,7 @@ body {
 }
 
 .rd-price-sub small {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   color: var(--text-secondary);
 }
@@ -6444,14 +6444,14 @@ body {
 }
 
 .rd-plan-btn-name {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .rd-plan-btn-desc {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.68rem;
   color: var(--text-secondary);
 }
@@ -6478,7 +6478,7 @@ body {
 }
 
 .rd-total-val {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ed-display);
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -6495,7 +6495,7 @@ body {
 }
 
 .rd-btn-primary {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -6523,7 +6523,7 @@ body {
 }
 
 .rd-btn-secondary {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -6545,7 +6545,7 @@ body {
 }
 
 .rd-checkout-err {
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.8rem;
   color: #b44;
   margin-top: 0.5rem;

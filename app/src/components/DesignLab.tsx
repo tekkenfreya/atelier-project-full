@@ -4,27 +4,38 @@ import { useEffect, useState } from "react";
 import "./DesignLab.css";
 
 /**
- * Floating dev panel for live A/B-ing typography (display, body,
- * mono) and palette. Hidden by default. Activate with `?lab=1`
- * once — the panel persists itself in localStorage. Shift+L
- * toggles open/closed after activation. `?lab=0` to deactivate.
+ * Floating dev panel for live A/B-ing typography and palette.
+ * Hidden by default. Activate with `?lab=1` once — the panel
+ * persists itself in localStorage. Shift+L toggles open/closed
+ * after activation. `?lab=0` to deactivate.
  *
- * Each row is labelled in plain English with a "where it shows up"
- * hint and a live preview rendered in the selected font, so the
- * relationship between dropdown and surface is immediately obvious.
+ * The Atelier Rusalka type system carries TWO display serifs and
+ * TWO body sans, so the lab exposes five typography slots:
+ *
+ *   1. Atelier headlines — Fraunces (homepage hero, featured)
+ *   2. Editorial display — Cormorant Garamond (cart/quiz/results)
+ *   3. Atelier body      — Inter (homepage paragraphs)
+ *   4. Editorial body    — Satoshi (cart/quiz/results body copy)
+ *   5. Captions & buttons — JetBrains Mono (both contexts)
+ *
+ * Each slot maps to a specific set of CSS custom properties; the
+ * SLOT_TARGETS table below is the single source of truth.
+ *
+ * Fonts whose families are not statically loaded in app/layout.tsx
+ * are pulled from Google Fonts via a single aggregated stylesheet
+ * link, only when the lab activates.
  */
 
 type Font = {
   id: string;
   label: string;
   stack: string;
-  /** Google Fonts query fragment, e.g. "Manrope:wght@200..800". Omit
-   *  for fonts already loaded in app/layout.tsx. */
+  /** Google Fonts query fragment; omit for fonts already loaded. */
   google?: string;
 };
 
 const SERIFS: readonly Font[] = [
-  { id: "fraunces", label: "Fraunces (default)", stack: '"Fraunces", Georgia, serif' },
+  { id: "fraunces", label: "Fraunces", stack: '"Fraunces", Georgia, serif' },
   { id: "cormorant", label: "Cormorant Garamond", stack: '"Cormorant Garamond", Georgia, serif' },
   { id: "playfair", label: "Playfair Display", stack: '"Playfair Display", Georgia, serif', google: "Playfair+Display:ital,wght@0,400..900;1,400..900" },
   { id: "eb-garamond", label: "EB Garamond", stack: '"EB Garamond", Georgia, serif', google: "EB+Garamond:ital,wght@0,400..800;1,400..800" },
@@ -42,9 +53,9 @@ const SERIFS: readonly Font[] = [
 ];
 
 const SANS: readonly Font[] = [
-  { id: "inter", label: "Inter (default)", stack: '"Inter", system-ui, -apple-system, sans-serif' },
-  { id: "dm-sans", label: "DM Sans", stack: '"DM Sans", system-ui, -apple-system, sans-serif' },
+  { id: "inter", label: "Inter", stack: '"Inter", system-ui, -apple-system, sans-serif' },
   { id: "satoshi", label: "Satoshi", stack: '"Satoshi", system-ui, -apple-system, sans-serif' },
+  { id: "dm-sans", label: "DM Sans", stack: '"DM Sans", system-ui, -apple-system, sans-serif' },
   { id: "manrope", label: "Manrope (Gibson-like)", stack: '"Manrope", system-ui, -apple-system, sans-serif', google: "Manrope:wght@200..800" },
   { id: "plus-jakarta", label: "Plus Jakarta Sans", stack: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif', google: "Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800" },
   { id: "geist", label: "Geist", stack: '"Geist", system-ui, -apple-system, sans-serif', google: "Geist:wght@100..900" },
@@ -61,7 +72,7 @@ const SANS: readonly Font[] = [
 ];
 
 const MONOS: readonly Font[] = [
-  { id: "jetbrains-mono", label: "JetBrains Mono (default)", stack: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+  { id: "jetbrains-mono", label: "JetBrains Mono", stack: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
   { id: "geist-mono", label: "Geist Mono", stack: '"Geist Mono", ui-monospace, Menlo, monospace', google: "Geist+Mono:wght@100..900" },
   { id: "ibm-plex-mono", label: "IBM Plex Mono", stack: '"IBM Plex Mono", ui-monospace, Menlo, monospace', google: "IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500" },
   { id: "space-mono", label: "Space Mono", stack: '"Space Mono", ui-monospace, Menlo, monospace', google: "Space+Mono:ital,wght@0,400;0,700;1,400;1,700" },
@@ -72,12 +83,105 @@ const MONOS: readonly Font[] = [
   { id: "azeret-mono", label: "Azeret Mono", stack: '"Azeret Mono", ui-monospace, Menlo, monospace', google: "Azeret+Mono:ital,wght@0,100..900;1,100..900" },
 ];
 
+type SlotKey = "display" | "edDisplay" | "body" | "edBody" | "mono";
+
+type SlotTarget = {
+  /** The data-* attribute on <html> the lab toggles for this slot. */
+  attr: string;
+  /** Default font id for this slot. */
+  defaultId: string;
+  /** Pool of font candidates the dropdown is built from. */
+  source: readonly Font[];
+  /** CSS variable + selector pairs to override when this slot
+   *  switches. Each pair becomes one rule in the generated <style>. */
+  targets: readonly { selector: string; vars: readonly string[] }[];
+  /** Plain-English UI labels. */
+  ui: { label: string; where: string; sample: string; sampleStyle: React.CSSProperties };
+};
+
+const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
+  display: {
+    attr: "display-font",
+    defaultId: "fraunces",
+    source: SERIFS,
+    targets: [
+      { selector: "", vars: ["--serif", "--ed-serif"] },
+      { selector: ".atelier", vars: ["--serif"] },
+    ],
+    ui: {
+      label: "Atelier headlines · italic serif",
+      where: "Hero wordmark · 'Let's begin with your name.' · big italic titles",
+      sample: "Let’s begin with your name.",
+      sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
+    },
+  },
+  edDisplay: {
+    attr: "ed-display-font",
+    defaultId: "cormorant",
+    source: SERIFS,
+    targets: [{ selector: "", vars: ["--ed-display"] }],
+    ui: {
+      label: "Editorial display · serif",
+      where: "Cart titles · quiz section names · results page 'Your Skin Profile'",
+      sample: "Your Skin Profile",
+      sampleStyle: { fontStyle: "normal", fontSize: "18px", letterSpacing: "-0.01em" },
+    },
+  },
+  body: {
+    attr: "body-font",
+    defaultId: "inter",
+    source: SANS,
+    targets: [
+      { selector: "", vars: ["--sans", "--ed-sans"] },
+      { selector: ".atelier", vars: ["--sans"] },
+    ],
+    ui: {
+      label: "Atelier body · sans",
+      where: "Homepage paragraphs · navigation · most readable text",
+      sample: "Each bottle is composed from 185 botanical actives — no two alike.",
+      sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
+    },
+  },
+  edBody: {
+    attr: "ed-body-font",
+    defaultId: "satoshi",
+    source: SANS,
+    targets: [{ selector: "", vars: ["--ed-body"] }],
+    ui: {
+      label: "Editorial body · sans",
+      where: "Cart copy · quiz question text · results details · trust strips",
+      sample: "Your bespoke moisturizer is calibrated to oily skin.",
+      sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
+    },
+  },
+  mono: {
+    attr: "mono-font",
+    defaultId: "jetbrains-mono",
+    source: MONOS,
+    targets: [
+      { selector: "", vars: ["--mono", "--ed-mono"] },
+      { selector: ".atelier", vars: ["--mono"] },
+    ],
+    ui: {
+      label: "Captions & buttons · mono",
+      where: "Eyebrows · CTAs · the promo strip · category labels · fine print",
+      sample: "EDITION MMXXVI · 60% OFF",
+      sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" },
+    },
+  },
+};
+
+const SLOT_ORDER: readonly SlotKey[] = [
+  "display",
+  "edDisplay",
+  "body",
+  "edBody",
+  "mono",
+];
+
 type Palette = {
   id: string;
   label: string;
-  /** Four representative swatches: bg, ink, accent-1, accent-2. Used
-   *  for the live preview row only — the full palette is set by the
-   *  matching CSS rule in DesignLab.css. */
   swatches: readonly [string, string, string, string];
 };
 
@@ -99,75 +203,48 @@ const PALETTES: readonly Palette[] = [
   },
 ];
 
-/** Plain-English description of where each token actually shows up. */
-const SLOTS = {
-  display: {
-    label: "Headlines · italic serif",
-    where: "Big titles · 'Atelier Rusalka' wordmark · 'Let's begin with your name.'",
-    sample: "Let’s begin with your name.",
-    sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
-  },
-  body: {
-    label: "Paragraph text · sans",
-    where: "Body copy · descriptions · form inputs · most readable text",
-    sample: "Each bottle is composed from 185 botanical actives — no two alike.",
-    sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
-  },
-  mono: {
-    label: "Captions & buttons · mono",
-    where: "Eyebrows · CTAs · the promo strip · category labels · fine print",
-    sample: "EDITION MMXXVI · 60% OFF",
-    sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" as const },
-  },
-} as const;
-
-const STORAGE_KEYS = {
+const STORAGE_KEYS: Record<SlotKey | "active" | "palette", string> = {
   active: "atelier-lab",
   display: "atelier-lab-display",
+  edDisplay: "atelier-lab-ed-display",
   body: "atelier-lab-body",
+  edBody: "atelier-lab-ed-body",
   mono: "atelier-lab-mono",
   palette: "atelier-lab-palette",
-} as const;
-
-const DEFAULTS = {
-  display: "fraunces",
-  body: "inter",
-  mono: "jetbrains-mono",
-  palette: "default",
-} as const;
+};
 
 function buildGoogleFontsUrl(fonts: readonly Font[]): string {
-  const families = fonts
-    .filter((f) => f.google)
-    .map((f) => `family=${f.google}`)
-    .join("&");
-  if (!families) return "";
-  return `https://fonts.googleapis.com/css2?${families}&display=swap`;
+  const seen = new Set<string>();
+  const families: string[] = [];
+  for (const f of fonts) {
+    if (!f.google || seen.has(f.google)) continue;
+    seen.add(f.google);
+    families.push(`family=${f.google}`);
+  }
+  if (families.length === 0) return "";
+  return `https://fonts.googleapis.com/css2?${families.join("&")}&display=swap`;
 }
 
 function buildOverrideCss(): string {
   const rules: string[] = [];
 
-  function addRules(
-    attr: string,
-    fonts: readonly Font[],
-    edVar: string,
-    atelierVar: string,
-    defaultId: string,
-  ) {
-    fonts.forEach((f) => {
-      if (f.id === defaultId) return;
-      rules.push(
-        `html[data-${attr}="${f.id}"] { ${edVar}: ${f.stack}; }`,
-        `html[data-${attr}="${f.id}"] .atelier { ${atelierVar}: ${f.stack}; }`,
-      );
-    });
+  for (const key of SLOT_ORDER) {
+    const slot = SLOT_TARGETS[key];
+    for (const f of slot.source) {
+      if (f.id === slot.defaultId) continue;
+      for (const t of slot.targets) {
+        const sel = t.selector
+          ? `html[data-${slot.attr}="${f.id}"] ${t.selector}`
+          : `html[data-${slot.attr}="${f.id}"]`;
+        const decls = t.vars.map((v) => `${v}: ${f.stack};`).join(" ");
+        rules.push(`${sel} { ${decls} }`);
+      }
+    }
   }
 
-  addRules("display-font", SERIFS, "--ed-serif", "--serif", DEFAULTS.display);
-  addRules("body-font", SANS, "--ed-sans", "--sans", DEFAULTS.body);
-  addRules("mono-font", MONOS, "--ed-mono", "--mono", DEFAULTS.mono);
-
+  // Force the .atelier wrapper to honour the body swap (font-family
+  // is set explicitly on .atelier; var() is live so re-pointing is
+  // enough — but the declaration must be present for it to apply).
   rules.push(`.atelier { font-family: var(--sans); }`);
 
   return rules.join("\n");
@@ -176,10 +253,14 @@ function buildOverrideCss(): string {
 export default function DesignLab() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(true);
-  const [display, setDisplay] = useState<string>(DEFAULTS.display);
-  const [body, setBody] = useState<string>(DEFAULTS.body);
-  const [mono, setMono] = useState<string>(DEFAULTS.mono);
-  const [palette, setPalette] = useState<string>(DEFAULTS.palette);
+  const [selections, setSelections] = useState<Record<SlotKey, string>>({
+    display: SLOT_TARGETS.display.defaultId,
+    edDisplay: SLOT_TARGETS.edDisplay.defaultId,
+    body: SLOT_TARGETS.body.defaultId,
+    edBody: SLOT_TARGETS.edBody.defaultId,
+    mono: SLOT_TARGETS.mono.defaultId,
+  });
+  const [palette, setPalette] = useState<string>("default");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -193,12 +274,18 @@ export default function DesignLab() {
     if (!enabled) return;
     localStorage.setItem(STORAGE_KEYS.active, "1");
     setActive(true);
-    setDisplay(localStorage.getItem(STORAGE_KEYS.display) ?? DEFAULTS.display);
-    setBody(localStorage.getItem(STORAGE_KEYS.body) ?? DEFAULTS.body);
-    setMono(localStorage.getItem(STORAGE_KEYS.mono) ?? DEFAULTS.mono);
-    setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? DEFAULTS.palette);
+    setSelections({
+      display: localStorage.getItem(STORAGE_KEYS.display) ?? SLOT_TARGETS.display.defaultId,
+      edDisplay: localStorage.getItem(STORAGE_KEYS.edDisplay) ?? SLOT_TARGETS.edDisplay.defaultId,
+      body: localStorage.getItem(STORAGE_KEYS.body) ?? SLOT_TARGETS.body.defaultId,
+      edBody: localStorage.getItem(STORAGE_KEYS.edBody) ?? SLOT_TARGETS.edBody.defaultId,
+      mono: localStorage.getItem(STORAGE_KEYS.mono) ?? SLOT_TARGETS.mono.defaultId,
+    });
+    setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? "default");
   }, []);
 
+  // Inject Google Fonts stylesheet + dynamic override CSS once when
+  // the lab activates. Cleaned up if the component unmounts.
   useEffect(() => {
     if (!active) return;
 
@@ -234,23 +321,17 @@ export default function DesignLab() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
+  // Sync each slot's data-* attribute + localStorage when its
+  // selection changes.
   useEffect(() => {
     if (!active) return;
-    document.documentElement.setAttribute("data-display-font", display);
-    localStorage.setItem(STORAGE_KEYS.display, display);
-  }, [active, display]);
-
-  useEffect(() => {
-    if (!active) return;
-    document.documentElement.setAttribute("data-body-font", body);
-    localStorage.setItem(STORAGE_KEYS.body, body);
-  }, [active, body]);
-
-  useEffect(() => {
-    if (!active) return;
-    document.documentElement.setAttribute("data-mono-font", mono);
-    localStorage.setItem(STORAGE_KEYS.mono, mono);
-  }, [active, mono]);
+    for (const key of SLOT_ORDER) {
+      const slot = SLOT_TARGETS[key];
+      const value = selections[key];
+      document.documentElement.setAttribute(`data-${slot.attr}`, value);
+      localStorage.setItem(STORAGE_KEYS[key], value);
+    }
+  }, [active, selections]);
 
   useEffect(() => {
     if (!active) return;
@@ -258,19 +339,23 @@ export default function DesignLab() {
     localStorage.setItem(STORAGE_KEYS.palette, palette);
   }, [active, palette]);
 
+  function setSlot(key: SlotKey, value: string) {
+    setSelections((prev) => ({ ...prev, [key]: value }));
+  }
+
   function reset() {
-    setDisplay(DEFAULTS.display);
-    setBody(DEFAULTS.body);
-    setMono(DEFAULTS.mono);
-    setPalette(DEFAULTS.palette);
+    setSelections({
+      display: SLOT_TARGETS.display.defaultId,
+      edDisplay: SLOT_TARGETS.edDisplay.defaultId,
+      body: SLOT_TARGETS.body.defaultId,
+      edBody: SLOT_TARGETS.edBody.defaultId,
+      mono: SLOT_TARGETS.mono.defaultId,
+    });
+    setPalette("default");
   }
 
   if (!active || !open) return null;
 
-  const displayStack =
-    SERIFS.find((f) => f.id === display)?.stack ?? SERIFS[0].stack;
-  const bodyStack = SANS.find((f) => f.id === body)?.stack ?? SANS[0].stack;
-  const monoStack = MONOS.find((f) => f.id === mono)?.stack ?? MONOS[0].stack;
   const activePalette =
     PALETTES.find((p) => p.id === palette) ?? PALETTES[0];
 
@@ -298,71 +383,35 @@ export default function DesignLab() {
         </div>
       </header>
 
-      <div className="design-lab__row">
-        <span className="design-lab__label">{SLOTS.display.label}</span>
-        <span className="design-lab__where">{SLOTS.display.where}</span>
-        <select
-          className="design-lab__select"
-          value={display}
-          onChange={(e) => setDisplay(e.target.value)}
-        >
-          {SERIFS.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-        <span
-          className="design-lab__preview"
-          style={{ fontFamily: displayStack, ...SLOTS.display.sampleStyle }}
-        >
-          {SLOTS.display.sample}
-        </span>
-      </div>
-
-      <div className="design-lab__row">
-        <span className="design-lab__label">{SLOTS.body.label}</span>
-        <span className="design-lab__where">{SLOTS.body.where}</span>
-        <select
-          className="design-lab__select"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        >
-          {SANS.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-        <span
-          className="design-lab__preview"
-          style={{ fontFamily: bodyStack, ...SLOTS.body.sampleStyle }}
-        >
-          {SLOTS.body.sample}
-        </span>
-      </div>
-
-      <div className="design-lab__row">
-        <span className="design-lab__label">{SLOTS.mono.label}</span>
-        <span className="design-lab__where">{SLOTS.mono.where}</span>
-        <select
-          className="design-lab__select"
-          value={mono}
-          onChange={(e) => setMono(e.target.value)}
-        >
-          {MONOS.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-        <span
-          className="design-lab__preview"
-          style={{ fontFamily: monoStack, ...SLOTS.mono.sampleStyle }}
-        >
-          {SLOTS.mono.sample}
-        </span>
-      </div>
+      {SLOT_ORDER.map((key) => {
+        const slot = SLOT_TARGETS[key];
+        const value = selections[key];
+        const stack =
+          slot.source.find((f) => f.id === value)?.stack ?? slot.source[0].stack;
+        return (
+          <div className="design-lab__row" key={key}>
+            <span className="design-lab__label">{slot.ui.label}</span>
+            <span className="design-lab__where">{slot.ui.where}</span>
+            <select
+              className="design-lab__select"
+              value={value}
+              onChange={(e) => setSlot(key, e.target.value)}
+            >
+              {slot.source.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.id === slot.defaultId ? `${f.label} (default)` : f.label}
+                </option>
+              ))}
+            </select>
+            <span
+              className="design-lab__preview"
+              style={{ fontFamily: stack, ...slot.ui.sampleStyle }}
+            >
+              {slot.ui.sample}
+            </span>
+          </div>
+        );
+      })}
 
       <div className="design-lab__row">
         <span className="design-lab__label">Colour palette</span>

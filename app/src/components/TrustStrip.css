@@ -14,7 +14,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 6px;
-  font-family: "Satoshi", sans-serif;
+  font-family: var(--ed-body);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
   color: var(--text-secondary, rgba(61, 58, 46, 0.72));

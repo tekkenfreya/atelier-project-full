@@ -130,7 +130,7 @@
 }
 
 .atelier .featured__bottle-label > span:first-child {
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
   font-size: clamp(18px, 1.4vw, 24px);
@@ -140,7 +140,7 @@
 }
 
 .atelier .featured__bottle-label > span:nth-child(2) {
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 9.5px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -186,7 +186,7 @@
   background: var(--bg-tint);
   border: 1px solid var(--line);
   border-radius: 100px;
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 9.5px;
   font-weight: 500;
   letter-spacing: 0.22em;
@@ -204,7 +204,7 @@
 }
 
 .atelier .featured__eyebrow {
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.28em;
@@ -220,7 +220,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px 18px;
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.22em;
@@ -244,7 +244,7 @@
 }
 
 .atelier .featured__name {
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: clamp(56px, 7.4vw, 110px);
@@ -257,7 +257,7 @@
 }
 
 .atelier .featured__brand-line {
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 18px;
@@ -278,7 +278,7 @@
 }
 
 .atelier .featured__name-label {
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.26em;
@@ -306,7 +306,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 17px;
@@ -331,7 +331,7 @@
   border: none;
   display: grid;
   place-items: center;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--mono);
   font-size: 14px;
   cursor: pointer;
   transition: background 0.25s ease, transform 0.25s ease;

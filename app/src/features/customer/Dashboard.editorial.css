@@ -11,7 +11,7 @@
   color: #3d3a2e;
   display: grid;
   grid-template-columns: 260px 1fr;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: var(--sans);
   position: relative;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .acc-aside__eyebrow {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--mono);
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.28em;
@@ -56,7 +56,7 @@
 }
 
 .acc-aside__name {
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 300;
   font-variation-settings: "opsz" 72, "SOFT" 30;
   font-size: 1.7rem;
@@ -69,7 +69,7 @@
 }
 
 .acc-aside__since {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 0.8rem;
@@ -115,7 +115,7 @@
 }
 
 .acc-navitem__num {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.16em;
@@ -129,7 +129,7 @@
 }
 
 .acc-navitem__label {
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans);
   font-size: 0.92rem;
   font-weight: 400;
   letter-spacing: 0.005em;
@@ -172,7 +172,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -238,7 +238,7 @@
 }
 
 .acc-section__eyebrow {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -247,7 +247,7 @@
 }
 
 .acc-section__title {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 300;
   font-variation-settings: "opsz" 144, "SOFT" 30;
   font-size: clamp(2rem, 4.5vw, 3.2rem);
@@ -263,7 +263,7 @@
 }
 
 .acc-section__lede {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 1.05rem;
@@ -300,7 +300,7 @@
 .acc-fact:last-child { padding-right: 0; }
 
 .acc-fact__k {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.26em;
@@ -309,7 +309,7 @@
 }
 
 .acc-fact__v {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 1.05rem;
   color: #3d3a2e;
@@ -317,7 +317,7 @@
 }
 
 .acc-fact__v--num {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1;
@@ -325,7 +325,7 @@
 }
 
 .acc-fact__v--date {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.82rem;
   letter-spacing: 0.03em;
   color: rgba(61, 58, 46, 0.75);
@@ -350,7 +350,7 @@
 }
 
 .acc-ledger__h {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.28em;
@@ -360,7 +360,7 @@
 }
 
 .acc-ledger__p {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 300;
   font-size: 1.08rem;
   line-height: 1.65;
@@ -381,7 +381,7 @@
 }
 
 .acc-ledger__error {
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans);
   font-size: 0.82rem;
   color: #a84242;
   margin: 0.5rem 0 0;
@@ -399,7 +399,7 @@
   background: transparent;
   border: 1px solid rgba(61, 58, 46, 0.25);
   border-radius: 3px;
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 400;
   letter-spacing: 0.12em;
@@ -457,7 +457,7 @@
 }
 
 .acc-block__eyebrow {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -469,7 +469,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -484,7 +484,7 @@
 }
 
 .acc-block__empty {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 0.98rem;
@@ -531,7 +531,7 @@
 }
 
 .acc-chip__name {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 0.9rem;
   letter-spacing: -0.005em;
@@ -539,7 +539,7 @@
 }
 
 .acc-chip__country {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -581,21 +581,21 @@
 }
 
 .acc-orderline__date {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   color: rgba(61, 58, 46, 0.85);
 }
 
 .acc-orderline__items {
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 400;
   color: #3d3a2e;
 }
 
 .acc-orderline__plan {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -606,7 +606,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -638,7 +638,7 @@
 }
 
 .acc-orderline__total {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 1rem;
   color: #3d3a2e;
@@ -655,7 +655,7 @@
   padding-top: 2rem;
   margin-top: 1rem;
   border-top: 1px solid rgba(61, 58, 46, 0.08);
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 0.88rem;
@@ -665,7 +665,7 @@
 
 .acc-footnote__em {
   font-style: normal;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -696,7 +696,7 @@
 }
 
 .acc-main .account-section__title {
-  font-family: "Fraunces", Georgia, serif !important;
+  font-family: var(--serif) !important;
   font-weight: 300 !important;
   font-variation-settings: "opsz" 144 !important;
   font-size: clamp(2rem, 4.5vw, 3rem) !important;
@@ -706,7 +706,7 @@
 }
 
 .acc-main .account-section__subtitle {
-  font-family: "Fraunces", Georgia, serif !important;
+  font-family: var(--serif) !important;
   font-style: italic !important;
   font-weight: 300 !important;
   font-size: 1.05rem !important;
@@ -747,7 +747,7 @@
 }
 
 .acc-main .account-card__label {
-  font-family: "JetBrains Mono", monospace !important;
+  font-family: var(--mono) !important;
   font-size: 0.62rem !important;
   letter-spacing: 0.26em !important;
   text-transform: uppercase !important;
@@ -755,7 +755,7 @@
 }
 
 .acc-main .account-card__value {
-  font-family: "Fraunces", Georgia, serif !important;
+  font-family: var(--serif) !important;
   font-weight: 400 !important;
   font-size: 1.3rem !important;
   color: #3d3a2e !important;
@@ -790,7 +790,7 @@
 }
 
 .acc-main .account-table th {
-  font-family: "JetBrains Mono", monospace !important;
+  font-family: var(--mono) !important;
   font-size: 0.62rem !important;
   letter-spacing: 0.26em !important;
   text-transform: uppercase !important;
@@ -804,7 +804,7 @@
 
 .acc-main .account-table td {
   padding: 1rem 1.25rem !important;
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans);
   font-size: 0.92rem;
   color: #3d3a2e;
   border-bottom: 1px solid rgba(61, 58, 46, 0.06);
@@ -822,7 +822,7 @@
 }
 
 .acc-main .account-metarow__label {
-  font-family: "JetBrains Mono", monospace !important;
+  font-family: var(--mono) !important;
   font-size: 0.62rem !important;
   letter-spacing: 0.26em !important;
   text-transform: uppercase !important;
@@ -831,7 +831,7 @@
 }
 
 .acc-main .account-metarow__value {
-  font-family: "Fraunces", Georgia, serif !important;
+  font-family: var(--serif) !important;
   font-weight: 300 !important;
   font-style: italic !important;
   font-size: 1rem !important;
@@ -858,7 +858,7 @@
 }
 
 .acc-rail__eyebrow {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.3em;
@@ -895,7 +895,7 @@
 }
 
 .acc-rail__bottle-num {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.58rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -944,7 +944,7 @@
   padding: 0.2rem 0.3rem;
   background: rgba(255, 255, 255, 0.88);
   border-radius: 1px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.64rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -953,7 +953,7 @@
 }
 
 .acc-rail__bottle-cat {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.58rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -969,7 +969,7 @@
 }
 
 .acc-rail__shipment-date {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
@@ -977,14 +977,14 @@
 }
 
 .acc-rail__shipment-date--quiet {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   color: rgba(61, 58, 46, 0.65);
 }
 
 .acc-rail__shipment-plan {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.62rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -992,7 +992,7 @@
 }
 
 .acc-rail__shipment-link {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1017,14 +1017,14 @@
 }
 
 .acc-rail__order-date {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.82rem;
   letter-spacing: 0.03em;
   color: rgba(61, 58, 46, 0.8);
 }
 
 .acc-rail__order-total {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 400;
   font-size: 1.1rem;
   color: #3d3a2e;
@@ -1033,7 +1033,7 @@
 /* --- Letter block --- */
 
 .acc-rail__letter-body {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: 0.92rem;

@@ -33,7 +33,7 @@
 }
 
 .lux-proof__press-label {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
 }
 
 .lux-proof__press-logo {
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
   font-size: 1.45rem;
@@ -91,7 +91,7 @@
   position: absolute;
   top: 0.25rem;
   left: 1.75rem;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-size: 4rem;
   font-weight: 300;
   line-height: 1;
@@ -104,7 +104,7 @@
 }
 
 .lux-proof__quote {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 300;
   font-variation-settings: "opsz" 72, "SOFT" 40;
   font-size: 1.4rem;
@@ -123,7 +123,7 @@
 }
 
 .lux-proof__attribution-name {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
   font-size: 0.95rem;
@@ -131,7 +131,7 @@
 }
 
 .lux-proof__attribution-role {
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
