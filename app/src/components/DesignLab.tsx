@@ -109,8 +109,9 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
       { selector: ".atelier", vars: ["--serif"] },
     ],
     ui: {
-      label: "Atelier headlines · italic serif",
-      where: "Hero wordmark · 'Let's begin with your name.' · big italic titles",
+      label: "Homepage headlines · italic serif",
+      where:
+        "Homepage hero · featured 'Let's begin with your name.' · brand line · italic input text",
       sample: "Let’s begin with your name.",
       sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
     },
@@ -121,8 +122,9 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     source: SERIFS,
     targets: [{ selector: "", vars: ["--ed-display"] }],
     ui: {
-      label: "Editorial display · serif",
-      where: "Cart titles · quiz section names · results page 'Your Skin Profile'",
+      label: "Inner-page display · serif",
+      where:
+        "Cart titles · quiz section names · results 'Your Skin Profile' · disclosure scientific names",
       sample: "Your Skin Profile",
       sampleStyle: { fontStyle: "normal", fontSize: "18px", letterSpacing: "-0.01em" },
     },
@@ -136,9 +138,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
       { selector: ".atelier", vars: ["--sans"] },
     ],
     ui: {
-      label: "Atelier body · sans",
-      where: "Homepage paragraphs · navigation · most readable text",
-      sample: "Each bottle is composed from 185 botanical actives — no two alike.",
+      label: "Homepage body · sans",
+      where:
+        "Subscription card cadence + notes + button · footer detail rows · default homepage body text",
+      sample: "Bi-monthly cadence — billed every 60 days, dispatched on the 1st.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
     },
   },
@@ -148,8 +151,9 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     source: SANS,
     targets: [{ selector: "", vars: ["--ed-body"] }],
     ui: {
-      label: "Editorial body · sans",
-      where: "Cart copy · quiz question text · results details · trust strips",
+      label: "Inner-page body · sans",
+      where:
+        "Cart item names + summary · checkout copy · quiz question body · results detail panels · trust strips",
       sample: "Your bespoke moisturizer is calibrated to oily skin.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
     },
@@ -164,7 +168,8 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ],
     ui: {
       label: "Captions & buttons · mono",
-      where: "Eyebrows · CTAs · the promo strip · category labels · fine print",
+      where:
+        "Navigation links + CTA · hero mark · 'Begin' button · promo strip · eyebrows · category labels",
       sample: "EDITION MMXXVI · 60% OFF",
       sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" },
     },
