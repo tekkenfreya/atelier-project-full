@@ -4,26 +4,80 @@ import { useEffect, useState } from "react";
 import "./DesignLab.css";
 
 /**
- * Floating dev panel for live A/B-ing body fonts and palette.
- * Hidden by default. Activate with `?lab=1` once — the panel
- * persists itself in localStorage. Shift+L toggles open/closed
- * after activation. Use `?lab=0` to deactivate.
+ * Floating dev panel for live A/B-ing typography (display, body,
+ * mono) and palette. Hidden by default. Activate with `?lab=1` once
+ * — the panel persists itself in localStorage. Shift+L toggles
+ * open/closed after activation. Use `?lab=0` to deactivate.
  *
- * The panel sets `data-body-font` and `data-palette` attributes
- * on <html>; the matching CSS rules in DesignLab.css remap the
- * relevant tokens. To add a new font or palette, append it to
- * the arrays below and add the corresponding rule in the CSS.
+ * Fonts whose families are not statically loaded in app/layout.tsx
+ * are pulled from Google Fonts via a single aggregated stylesheet
+ * link, only when the lab activates — so prod page weight is
+ * unchanged for normal visitors.
+ *
+ * To add a font: append to the relevant array. The override CSS
+ * (mapping data-*-font attributes to the right CSS tokens) is
+ * generated once at activation from the same arrays.
  */
 
-type Font = { id: string; label: string };
-type Palette = { id: string; label: string };
+type Font = {
+  id: string;
+  label: string;
+  stack: string;
+  /** Google Fonts query fragment, e.g. "Manrope:wght@200..800". Omit
+   *  for fonts already loaded in app/layout.tsx. */
+  google?: string;
+};
 
-const FONTS: readonly Font[] = [
-  { id: "inter", label: "Inter (default)" },
-  { id: "dm-sans", label: "DM Sans" },
-  { id: "satoshi", label: "Satoshi" },
-  { id: "fraunces", label: "Fraunces (serif)" },
+const SERIFS: readonly Font[] = [
+  { id: "fraunces", label: "Fraunces (default)", stack: '"Fraunces", Georgia, serif' },
+  { id: "cormorant", label: "Cormorant Garamond", stack: '"Cormorant Garamond", Georgia, serif' },
+  { id: "playfair", label: "Playfair Display", stack: '"Playfair Display", Georgia, serif', google: "Playfair+Display:ital,wght@0,400..900;1,400..900" },
+  { id: "eb-garamond", label: "EB Garamond", stack: '"EB Garamond", Georgia, serif', google: "EB+Garamond:ital,wght@0,400..800;1,400..800" },
+  { id: "crimson-pro", label: "Crimson Pro", stack: '"Crimson Pro", Georgia, serif', google: "Crimson+Pro:ital,wght@0,200..900;1,200..900" },
+  { id: "lora", label: "Lora", stack: '"Lora", Georgia, serif', google: "Lora:ital,wght@0,400..700;1,400..700" },
+  { id: "dm-serif-display", label: "DM Serif Display", stack: '"DM Serif Display", Georgia, serif', google: "DM+Serif+Display:ital@0;1" },
+  { id: "spectral", label: "Spectral", stack: '"Spectral", Georgia, serif', google: "Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700" },
+  { id: "bodoni-moda", label: "Bodoni Moda", stack: '"Bodoni Moda", Georgia, serif', google: "Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900" },
+  { id: "italiana", label: "Italiana", stack: '"Italiana", Georgia, serif', google: "Italiana" },
+  { id: "source-serif", label: "Source Serif 4", stack: '"Source Serif 4", Georgia, serif', google: "Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900" },
+  { id: "libre-caslon", label: "Libre Caslon Text", stack: '"Libre Caslon Text", Georgia, serif', google: "Libre+Caslon+Text:ital,wght@0,400;0,700;1,400" },
+  { id: "tenor-sans", label: "Tenor Sans", stack: '"Tenor Sans", Georgia, serif', google: "Tenor+Sans" },
+  { id: "cardo", label: "Cardo", stack: '"Cardo", Georgia, serif', google: "Cardo:ital,wght@0,400;0,700;1,400" },
+  { id: "marcellus", label: "Marcellus", stack: '"Marcellus", Georgia, serif', google: "Marcellus" },
 ];
+
+const SANS: readonly Font[] = [
+  { id: "inter", label: "Inter (default)", stack: '"Inter", system-ui, -apple-system, sans-serif' },
+  { id: "dm-sans", label: "DM Sans", stack: '"DM Sans", system-ui, -apple-system, sans-serif' },
+  { id: "satoshi", label: "Satoshi", stack: '"Satoshi", system-ui, -apple-system, sans-serif' },
+  { id: "manrope", label: "Manrope (Gibson-like)", stack: '"Manrope", system-ui, -apple-system, sans-serif', google: "Manrope:wght@200..800" },
+  { id: "plus-jakarta", label: "Plus Jakarta Sans", stack: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif', google: "Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800" },
+  { id: "geist", label: "Geist", stack: '"Geist", system-ui, -apple-system, sans-serif', google: "Geist:wght@100..900" },
+  { id: "outfit", label: "Outfit", stack: '"Outfit", system-ui, -apple-system, sans-serif', google: "Outfit:wght@100..900" },
+  { id: "sora", label: "Sora", stack: '"Sora", system-ui, -apple-system, sans-serif', google: "Sora:wght@100..800" },
+  { id: "instrument-sans", label: "Instrument Sans", stack: '"Instrument Sans", system-ui, -apple-system, sans-serif', google: "Instrument+Sans:ital,wght@0,400..700;1,400..700" },
+  { id: "albert-sans", label: "Albert Sans", stack: '"Albert Sans", system-ui, -apple-system, sans-serif', google: "Albert+Sans:ital,wght@0,100..900;1,100..900" },
+  { id: "public-sans", label: "Public Sans", stack: '"Public Sans", system-ui, -apple-system, sans-serif', google: "Public+Sans:ital,wght@0,100..900;1,100..900" },
+  { id: "work-sans", label: "Work Sans", stack: '"Work Sans", system-ui, -apple-system, sans-serif', google: "Work+Sans:ital,wght@0,100..900;1,100..900" },
+  { id: "hanken-grotesk", label: "Hanken Grotesk", stack: '"Hanken Grotesk", system-ui, -apple-system, sans-serif', google: "Hanken+Grotesk:ital,wght@0,100..900;1,100..900" },
+  { id: "be-vietnam", label: "Be Vietnam Pro", stack: '"Be Vietnam Pro", system-ui, -apple-system, sans-serif', google: "Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500" },
+  { id: "figtree", label: "Figtree", stack: '"Figtree", system-ui, -apple-system, sans-serif', google: "Figtree:ital,wght@0,300..900;1,300..900" },
+  { id: "epilogue", label: "Epilogue", stack: '"Epilogue", system-ui, -apple-system, sans-serif', google: "Epilogue:ital,wght@0,100..900;1,100..900" },
+];
+
+const MONOS: readonly Font[] = [
+  { id: "jetbrains-mono", label: "JetBrains Mono (default)", stack: '"JetBrains Mono", ui-monospace, Menlo, monospace' },
+  { id: "geist-mono", label: "Geist Mono", stack: '"Geist Mono", ui-monospace, Menlo, monospace', google: "Geist+Mono:wght@100..900" },
+  { id: "ibm-plex-mono", label: "IBM Plex Mono", stack: '"IBM Plex Mono", ui-monospace, Menlo, monospace', google: "IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500" },
+  { id: "space-mono", label: "Space Mono", stack: '"Space Mono", ui-monospace, Menlo, monospace', google: "Space+Mono:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "fira-code", label: "Fira Code", stack: '"Fira Code", ui-monospace, Menlo, monospace', google: "Fira+Code:wght@300..700" },
+  { id: "dm-mono", label: "DM Mono", stack: '"DM Mono", ui-monospace, Menlo, monospace', google: "DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500" },
+  { id: "inconsolata", label: "Inconsolata", stack: '"Inconsolata", ui-monospace, Menlo, monospace', google: "Inconsolata:wght@200..900" },
+  { id: "roboto-mono", label: "Roboto Mono", stack: '"Roboto Mono", ui-monospace, Menlo, monospace', google: "Roboto+Mono:ital,wght@0,100..700;1,100..700" },
+  { id: "azeret-mono", label: "Azeret Mono", stack: '"Azeret Mono", ui-monospace, Menlo, monospace', google: "Azeret+Mono:ital,wght@0,100..900;1,100..900" },
+];
+
+type Palette = { id: string; label: string };
 
 const PALETTES: readonly Palette[] = [
   { id: "default", label: "Warm botanical (default)" },
@@ -33,15 +87,66 @@ const PALETTES: readonly Palette[] = [
 
 const STORAGE_KEYS = {
   active: "atelier-lab",
-  font: "atelier-lab-font",
+  display: "atelier-lab-display",
+  body: "atelier-lab-body",
+  mono: "atelier-lab-mono",
   palette: "atelier-lab-palette",
 } as const;
+
+const DEFAULTS = {
+  display: "fraunces",
+  body: "inter",
+  mono: "jetbrains-mono",
+  palette: "default",
+} as const;
+
+function buildGoogleFontsUrl(fonts: readonly Font[]): string {
+  const families = fonts
+    .filter((f) => f.google)
+    .map((f) => `family=${f.google}`)
+    .join("&");
+  if (!families) return "";
+  return `https://fonts.googleapis.com/css2?${families}&display=swap`;
+}
+
+function buildOverrideCss(): string {
+  const rules: string[] = [];
+
+  function addRules(
+    attr: string,
+    fonts: readonly Font[],
+    edVar: string,
+    atelierVar: string,
+    defaultId: string,
+  ) {
+    fonts.forEach((f) => {
+      if (f.id === defaultId) return;
+      rules.push(
+        `html[data-${attr}="${f.id}"] { ${edVar}: ${f.stack}; }`,
+        `html[data-${attr}="${f.id}"] .atelier { ${atelierVar}: ${f.stack}; }`,
+      );
+    });
+  }
+
+  addRules("display-font", SERIFS, "--ed-serif", "--serif", DEFAULTS.display);
+  addRules("body-font", SANS, "--ed-sans", "--sans", DEFAULTS.body);
+  addRules("mono-font", MONOS, "--ed-mono", "--mono", DEFAULTS.mono);
+
+  // Force the .atelier wrapper to honour the body swap (it has its
+  // own font-family declaration that resolves --sans at parse time
+  // — re-pointing the variable is enough because var() is live).
+  rules.push(`.atelier { font-family: var(--sans); }`);
+
+  return rules.join("\n");
+}
 
 export default function DesignLab() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(true);
-  const [font, setFont] = useState<string>("inter");
-  const [palette, setPalette] = useState<string>("default");
+  const [display, setDisplay] = useState<string>(DEFAULTS.display);
+  const [body, setBody] = useState<string>(DEFAULTS.body);
+  const [mono, setMono] = useState<string>(DEFAULTS.mono);
+  const [palette, setPalette] = useState<string>(DEFAULTS.palette);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -55,9 +160,37 @@ export default function DesignLab() {
     if (!enabled) return;
     localStorage.setItem(STORAGE_KEYS.active, "1");
     setActive(true);
-    setFont(localStorage.getItem(STORAGE_KEYS.font) ?? "inter");
-    setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? "default");
+    setDisplay(localStorage.getItem(STORAGE_KEYS.display) ?? DEFAULTS.display);
+    setBody(localStorage.getItem(STORAGE_KEYS.body) ?? DEFAULTS.body);
+    setMono(localStorage.getItem(STORAGE_KEYS.mono) ?? DEFAULTS.mono);
+    setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? DEFAULTS.palette);
   }, []);
+
+  // Inject Google Fonts stylesheet + dynamic override CSS once
+  // when the lab activates. Cleaned up if the component unmounts.
+  useEffect(() => {
+    if (!active) return;
+
+    const url = buildGoogleFontsUrl([...SERIFS, ...SANS, ...MONOS]);
+    let linkEl: HTMLLinkElement | null = null;
+    if (url) {
+      linkEl = document.createElement("link");
+      linkEl.rel = "stylesheet";
+      linkEl.href = url;
+      linkEl.setAttribute("data-design-lab", "fonts");
+      document.head.appendChild(linkEl);
+    }
+
+    const styleEl = document.createElement("style");
+    styleEl.setAttribute("data-design-lab", "overrides");
+    styleEl.textContent = buildOverrideCss();
+    document.head.appendChild(styleEl);
+
+    return () => {
+      linkEl?.remove();
+      styleEl.remove();
+    };
+  }, [active]);
 
   useEffect(() => {
     if (!active) return;
@@ -72,9 +205,21 @@ export default function DesignLab() {
 
   useEffect(() => {
     if (!active) return;
-    document.documentElement.setAttribute("data-body-font", font);
-    localStorage.setItem(STORAGE_KEYS.font, font);
-  }, [active, font]);
+    document.documentElement.setAttribute("data-display-font", display);
+    localStorage.setItem(STORAGE_KEYS.display, display);
+  }, [active, display]);
+
+  useEffect(() => {
+    if (!active) return;
+    document.documentElement.setAttribute("data-body-font", body);
+    localStorage.setItem(STORAGE_KEYS.body, body);
+  }, [active, body]);
+
+  useEffect(() => {
+    if (!active) return;
+    document.documentElement.setAttribute("data-mono-font", mono);
+    localStorage.setItem(STORAGE_KEYS.mono, mono);
+  }, [active, mono]);
 
   useEffect(() => {
     if (!active) return;
@@ -82,30 +227,77 @@ export default function DesignLab() {
     localStorage.setItem(STORAGE_KEYS.palette, palette);
   }, [active, palette]);
 
+  function reset() {
+    setDisplay(DEFAULTS.display);
+    setBody(DEFAULTS.body);
+    setMono(DEFAULTS.mono);
+    setPalette(DEFAULTS.palette);
+  }
+
   if (!active || !open) return null;
 
   return (
     <aside className="design-lab" aria-label="Design lab">
       <header className="design-lab__head">
         <span className="design-lab__title">Design Lab</span>
-        <button
-          type="button"
-          className="design-lab__close"
-          onClick={() => setOpen(false)}
-          aria-label="Hide design lab"
-        >
-          ×
-        </button>
+        <div className="design-lab__head-actions">
+          <button
+            type="button"
+            className="design-lab__reset"
+            onClick={reset}
+            aria-label="Reset to defaults"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            className="design-lab__close"
+            onClick={() => setOpen(false)}
+            aria-label="Hide design lab"
+          >
+            ×
+          </button>
+        </div>
       </header>
 
       <label className="design-lab__row">
-        <span className="design-lab__label">Body font</span>
+        <span className="design-lab__label">Display · serif</span>
         <select
           className="design-lab__select"
-          value={font}
-          onChange={(e) => setFont(e.target.value)}
+          value={display}
+          onChange={(e) => setDisplay(e.target.value)}
         >
-          {FONTS.map((f) => (
+          {SERIFS.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="design-lab__row">
+        <span className="design-lab__label">Body · sans</span>
+        <select
+          className="design-lab__select"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        >
+          {SANS.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="design-lab__row">
+        <span className="design-lab__label">Data · mono</span>
+        <select
+          className="design-lab__select"
+          value={mono}
+          onChange={(e) => setMono(e.target.value)}
+        >
+          {MONOS.map((f) => (
             <option key={f.id} value={f.id}>
               {f.label}
             </option>

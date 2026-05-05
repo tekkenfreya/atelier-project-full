@@ -3,6 +3,13 @@
    Activated via ?lab=1 (persists in localStorage). Lives outside
    .atelier so it works on every page. Sits bottom-left so it does
    not collide with the hero CTA at bottom-right.
+
+   Font-token override rules (data-display-font / data-body-font /
+   data-mono-font) are generated dynamically in DesignLab.tsx so a
+   single source of truth (the font arrays) drives both the panel
+   options and the CSS variable remapping. The palette overrides
+   below stay static — they redefine many tokens at once and are
+   easier to maintain by hand.
    ================================================================ */
 
 .design-lab {
@@ -10,7 +17,7 @@
   bottom: 18px;
   left: 18px;
   z-index: 9999;
-  width: 240px;
+  width: 260px;
   padding: 14px 14px 12px;
   background: rgba(31, 29, 26, 0.92);
   color: rgba(255, 252, 242, 0.92);
@@ -41,21 +48,44 @@
   color: rgba(255, 252, 242, 0.7);
 }
 
+.design-lab__head-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.design-lab__reset,
+.design-lab__close {
+  background: transparent;
+  border: 1px solid rgba(255, 252, 242, 0.2);
+  color: rgba(255, 252, 242, 0.85);
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.design-lab__reset {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .design-lab__close {
   width: 22px;
   height: 22px;
   display: grid;
   place-items: center;
-  background: transparent;
-  border: 1px solid rgba(255, 252, 242, 0.2);
   border-radius: 50%;
-  color: rgba(255, 252, 242, 0.85);
   font-size: 14px;
   line-height: 1;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s ease, border-color 0.2s ease;
 }
+
+.design-lab__reset:hover,
 .design-lab__close:hover {
   background: rgba(255, 252, 242, 0.12);
   border-color: rgba(255, 252, 242, 0.4);
@@ -100,43 +130,9 @@
 }
 
 /* ================================================================
-   Body font overrides — driven by data-body-font on <html>.
-   We override BOTH the .atelier `--sans` token (homepage / 2026
-   surfaces) and the editorial `--ed-sans` token (quiz / account /
-   inner pages) so the swap is visible everywhere. The atelier
-   wrapper also inherits its own font-family declaration, so we
-   set it explicitly to honour the swap.
-   ================================================================ */
-
-html[data-body-font="dm-sans"] {
-  --ed-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-}
-html[data-body-font="dm-sans"] .atelier {
-  --sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  font-family: var(--sans);
-}
-
-html[data-body-font="satoshi"] {
-  --ed-sans: "Satoshi", system-ui, -apple-system, sans-serif;
-}
-html[data-body-font="satoshi"] .atelier {
-  --sans: "Satoshi", system-ui, -apple-system, sans-serif;
-  font-family: var(--sans);
-}
-
-html[data-body-font="fraunces"] {
-  --ed-sans: "Fraunces", "Cormorant Garamond", Georgia, serif;
-}
-html[data-body-font="fraunces"] .atelier {
-  --sans: "Fraunces", "Cormorant Garamond", Georgia, serif;
-  font-family: var(--sans);
-}
-
-/* ================================================================
    Palette overrides — driven by data-palette on <html>.
-   Each block redefines the .atelier palette tokens. The
-   placeholder values below give Edson a visible swap target —
-   replace with the final 3 palettes when supplied.
+   Each block redefines the .atelier palette tokens. Replace the
+   placeholder values with the final 3 palettes when supplied.
    ================================================================ */
 
 /* Alt 1 — slate & moss (placeholder) */
