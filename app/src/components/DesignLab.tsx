@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./DesignLab.css";
 
 /**
@@ -100,8 +100,9 @@ type SlotTarget = {
     label: string;
     /** Concrete page surfaces this slot controls. First entry is
      *  the most recognisable / dominant surface and is rendered
-     *  with extra emphasis. */
-    surfaces: readonly string[];
+     *  with extra emphasis. The optional selector lets the user
+     *  click a chip to flash the matching elements on the page. */
+    surfaces: readonly { label: string; selector?: string }[];
     sample: string;
     sampleStyle: React.CSSProperties;
   };
@@ -119,10 +120,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Homepage headlines · italic serif",
       surfaces: [
-        "Hero wordmark",
-        "Featured “Let’s begin…”",
-        "Brand line",
-        "Italic input text",
+        { label: "Atelier wordmark", selector: ".nav__logo" },
+        { label: "Featured “Let’s begin…”", selector: ".featured__name" },
+        { label: "Brand line", selector: ".featured__brand-line" },
+        { label: "Italic input", selector: ".featured__name-input" },
       ],
       sample: "Let’s begin with your name.",
       sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
@@ -136,10 +137,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Inner-page display · serif",
       surfaces: [
-        "Cart titles",
-        "Quiz section names",
-        "“Your Skin Profile”",
-        "Scientific names",
+        { label: "Cart titles", selector: ".cart-title, .cart-summary-title, .cart-item-name, .cart-plan-title" },
+        { label: "Checkout titles", selector: ".checkout-title" },
+        { label: "Results product name", selector: ".rd-product-name" },
+        { label: "Scientific names", selector: ".rd-active-detail-sci" },
       ],
       sample: "Your Skin Profile",
       sampleStyle: { fontStyle: "normal", fontSize: "18px", letterSpacing: "-0.01em" },
@@ -156,9 +157,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Homepage body · sans",
       surfaces: [
-        "Subscription card details",
-        "Footer rows",
-        "Default homepage body",
+        { label: "Subscription details", selector: ".lux-sub__card-cadence, .lux-sub__card-notes li" },
+        { label: "Subscription button", selector: ".sub__cta, .lux-sub__card-cta" },
+        { label: "Footer detail rows", selector: ".lux-footer__detail-row, .footer-row" },
+        { label: "Default homepage body", selector: ".atelier" },
       ],
       sample: "Bi-monthly cadence — billed every 60 days, dispatched on the 1st.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
@@ -172,11 +174,11 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Inner-page body · sans",
       surfaces: [
-        "Cart item names",
-        "Checkout copy",
-        "Quiz body",
-        "Results details",
-        "Trust strips",
+        { label: "Cart item details", selector: ".cart-item-details, .cart-item-category, .cart-item-price" },
+        { label: "Cart plan cards", selector: ".cart-plan-label, .cart-plan-desc, .cart-plan-reassurances li" },
+        { label: "Quiz body", selector: ".quiz-question-body, .quiz-option-label" },
+        { label: "Results details", selector: ".rd-product-skin, .rd-reason, .rd-active-detail-fn" },
+        { label: "Trust strip", selector: ".trust-strip__item" },
       ],
       sample: "Your bespoke moisturizer is calibrated to oily skin.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
@@ -193,12 +195,12 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Captions & buttons · mono",
       surfaces: [
-        "Navigation",
-        "Nav CTA",
-        "Hero mark",
-        "“Begin” button",
-        "Promo strip",
-        "Eyebrows",
+        { label: "Navigation links", selector: ".nav__links a" },
+        { label: "Nav CTA", selector: ".nav__cta" },
+        { label: "Hero mark", selector: ".hero-v__mark" },
+        { label: "“Begin” button", selector: ".hero-v__cta" },
+        { label: "Promo strip", selector: ".promo-bar" },
+        { label: "Eyebrows", selector: ".featured__eyebrow, .featured__halo, .featured__anchors, .cart-label, .checkout-label, .rd-label" },
       ],
       sample: "EDITION MMXXVI · 60% OFF",
       sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" },
@@ -296,6 +298,19 @@ export default function DesignLab() {
     mono: SLOT_TARGETS.mono.defaultId,
   });
   const [palette, setPalette] = useState<string>("default");
+  /** Element-picker mode: when true, hovering outlines elements
+   *  on the page and clicking one identifies which slot controls
+   *  its font. */
+  const [picking, setPicking] = useState(false);
+  /** When set, the matching slot row pulses for ~2.5s — used both
+   *  by the picker (page → slot) and by chip clicks (slot → page). */
+  const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
+
+  /** Latest selections kept in a ref so the picker's click handler
+   *  can read fresh font ids without forcing a listener re-bind on
+   *  every keystroke. */
+  const selectionsRef = useRef(selections);
+  selectionsRef.current = selections;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -374,8 +389,143 @@ export default function DesignLab() {
     localStorage.setItem(STORAGE_KEYS.palette, palette);
   }, [active, palette]);
 
+  /** Element picker. When `picking` is true, hovering outlines the
+   *  element under the cursor and clicking identifies which slot
+   *  controls it — then highlights that slot row in the panel. */
+  useEffect(() => {
+    if (!active || !picking) return;
+
+    const prevCursor = document.body.style.cursor;
+    document.body.style.cursor = "crosshair";
+
+    let highlighted: HTMLElement | null = null;
+    function unhighlight() {
+      if (highlighted) {
+        highlighted.style.outline = "";
+        highlighted.style.outlineOffset = "";
+        highlighted = null;
+      }
+    }
+
+    function isInsideLab(el: EventTarget | null): boolean {
+      return !!(el instanceof HTMLElement && el.closest(".design-lab"));
+    }
+
+    function onMove(e: MouseEvent) {
+      if (isInsideLab(e.target)) {
+        unhighlight();
+        return;
+      }
+      const target = e.target as HTMLElement | null;
+      if (!target || target === highlighted) return;
+      unhighlight();
+      target.style.outline = "2px solid #d4a373";
+      target.style.outlineOffset = "2px";
+      highlighted = target;
+    }
+
+    function onClick(e: MouseEvent) {
+      if (isInsideLab(e.target)) return;
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const slot = findSlotForElement(target);
+      unhighlight();
+      setPicking(false);
+      if (slot) flashSlot(slot);
+    }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        unhighlight();
+        setPicking(false);
+      }
+    }
+
+    document.addEventListener("mousemove", onMove, true);
+    document.addEventListener("click", onClick, true);
+    document.addEventListener("keydown", onKey, true);
+
+    return () => {
+      document.body.style.cursor = prevCursor;
+      unhighlight();
+      document.removeEventListener("mousemove", onMove, true);
+      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, picking]);
+
   function setSlot(key: SlotKey, value: string) {
     setSelections((prev) => ({ ...prev, [key]: value }));
+  }
+
+  /** Match a DOM element's computed font-family to one of the five
+   *  slot definitions. Disambiguates display-vs-editorial by
+   *  whether the element lives inside the .atelier wrapper. */
+  function findSlotForElement(el: HTMLElement): SlotKey | null {
+    const inAtelier = !!el.closest(".atelier");
+    const family = (getComputedStyle(el).fontFamily.split(",")[0] || "")
+      .replace(/['"]/g, "")
+      .trim()
+      .toLowerCase();
+    if (!family) return null;
+
+    function matches(key: SlotKey): boolean {
+      const slot = SLOT_TARGETS[key];
+      const fontId = selectionsRef.current[key];
+      const font = slot.source.find((f) => f.id === fontId);
+      if (!font) return false;
+      const slotFirst = (font.stack.split(",")[0] || "")
+        .replace(/['"]/g, "")
+        .trim()
+        .toLowerCase();
+      return slotFirst === family;
+    }
+
+    if (matches("mono")) return "mono";
+
+    const dispMatch = matches("display");
+    const edDispMatch = matches("edDisplay");
+    if (dispMatch && edDispMatch) return inAtelier ? "display" : "edDisplay";
+    if (dispMatch) return "display";
+    if (edDispMatch) return "edDisplay";
+
+    const bodyMatch = matches("body");
+    const edBodyMatch = matches("edBody");
+    if (bodyMatch && edBodyMatch) return inAtelier ? "body" : "edBody";
+    if (bodyMatch) return "body";
+    if (edBodyMatch) return "edBody";
+
+    return null;
+  }
+
+  function flashSlot(key: SlotKey) {
+    setActiveSlot(key);
+    window.setTimeout(() => setActiveSlot((cur) => (cur === key ? null : cur)), 2500);
+  }
+
+  /** Click a surface chip → outline the matching DOM elements for
+   *  ~1.6s so the user sees which page elements that slot owns. */
+  function flashSurface(selector: string) {
+    if (!selector) return;
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(selector),
+    );
+    if (els.length === 0) return;
+    for (const el of els) {
+      el.style.transition = "outline-color 0.2s ease, outline-offset 0.2s ease";
+      el.style.outline = "2px solid #d4a373";
+      el.style.outlineOffset = "3px";
+    }
+    window.setTimeout(() => {
+      for (const el of els) {
+        el.style.outline = "";
+        el.style.outlineOffset = "";
+        el.style.transition = "";
+      }
+    }, 1600);
   }
 
   function reset() {
@@ -401,6 +551,16 @@ export default function DesignLab() {
         <div className="design-lab__head-actions">
           <button
             type="button"
+            className={`design-lab__pick${picking ? " design-lab__pick--on" : ""}`}
+            onClick={() => setPicking((p) => !p)}
+            aria-pressed={picking}
+            aria-label="Pick text on the page to identify its slot"
+            title="Click, then point at any text on the page"
+          >
+            {picking ? "Cancel" : "Pick"}
+          </button>
+          <button
+            type="button"
             className="design-lab__reset"
             onClick={reset}
             aria-label="Reset to defaults"
@@ -418,21 +578,35 @@ export default function DesignLab() {
         </div>
       </header>
 
+      {picking && (
+        <p className="design-lab__pick-hint">
+          Click any text on the page to find its slot · Esc to cancel
+        </p>
+      )}
+
       {SLOT_ORDER.map((key) => {
         const slot = SLOT_TARGETS[key];
         const value = selections[key];
         const stack =
           slot.source.find((f) => f.id === value)?.stack ?? slot.source[0].stack;
         return (
-          <div className="design-lab__row" key={key}>
+          <div
+            className={`design-lab__row${activeSlot === key ? " design-lab__row--flash" : ""}`}
+            key={key}
+          >
             <span className="design-lab__label">{slot.ui.label}</span>
             <ul className="design-lab__surfaces" aria-label="What this slot controls">
               {slot.ui.surfaces.map((s, i) => (
-                <li
-                  key={s}
-                  className={`design-lab__chip${i === 0 ? " design-lab__chip--key" : ""}`}
-                >
-                  {s}
+                <li key={s.label}>
+                  <button
+                    type="button"
+                    className={`design-lab__chip${i === 0 ? " design-lab__chip--key" : ""}${s.selector ? "" : " design-lab__chip--static"}`}
+                    onClick={s.selector ? () => flashSurface(s.selector!) : undefined}
+                    disabled={!s.selector}
+                    title={s.selector ? "Click to flash this surface on the page" : undefined}
+                  >
+                    {s.label}
+                  </button>
                 </li>
               ))}
             </ul>

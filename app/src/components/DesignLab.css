@@ -57,17 +57,19 @@
 }
 
 .design-lab__reset,
-.design-lab__close {
+.design-lab__close,
+.design-lab__pick {
   background: transparent;
   border: 1px solid rgba(255, 252, 242, 0.2);
   color: rgba(255, 252, 242, 0.85);
   font-family: inherit;
   cursor: pointer;
   padding: 0;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.design-lab__reset {
+.design-lab__reset,
+.design-lab__pick {
   height: 22px;
   padding: 0 8px;
   border-radius: 11px;
@@ -75,6 +77,27 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.design-lab__pick--on {
+  background: #d4a373;
+  border-color: #d4a373;
+  color: #1f1d1a;
+}
+.design-lab__pick--on:hover {
+  background: #c8956b;
+}
+
+.design-lab__pick-hint {
+  margin: 0;
+  padding: 8px 10px;
+  background: rgba(212, 163, 115, 0.18);
+  border: 1px solid rgba(212, 163, 115, 0.45);
+  border-radius: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: #f1d8b5;
+  text-align: center;
 }
 
 .design-lab__close {
@@ -138,6 +161,15 @@
   border: 1px solid rgba(255, 252, 242, 0.06);
   border-radius: 100px;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease,
+    transform 0.18s ease;
+}
+.design-lab__chip:hover:not(:disabled) {
+  background: rgba(255, 252, 242, 0.16);
+  border-color: rgba(255, 252, 242, 0.32);
+  color: rgba(255, 252, 242, 0.95);
+  transform: translateY(-1px);
 }
 
 .design-lab__chip--key {
@@ -145,6 +177,33 @@
   color: rgba(255, 252, 242, 0.96);
   border-color: rgba(255, 252, 242, 0.22);
   font-weight: 600;
+}
+
+.design-lab__chip--static,
+.design-lab__chip:disabled {
+  cursor: default;
+}
+
+/* Slot row flashes for ~2.5s when the picker identifies it as the
+   one controlling the clicked element. */
+.design-lab__row--flash {
+  animation: design-lab-flash 2.5s ease-out;
+  border-radius: 8px;
+}
+
+@keyframes design-lab-flash {
+  0% {
+    background: rgba(212, 163, 115, 0.32);
+    box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.6);
+  }
+  60% {
+    background: rgba(212, 163, 115, 0.18);
+    box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.4);
+  }
+  100% {
+    background: transparent;
+    box-shadow: 0 0 0 1px transparent;
+  }
 }
 
 .design-lab__select {
