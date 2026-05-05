@@ -1,0 +1,176 @@
+/* ================================================================
+   Design Lab — floating dev panel
+   Activated via ?lab=1 (persists in localStorage). Lives outside
+   .atelier so it works on every page. Sits bottom-left so it does
+   not collide with the hero CTA at bottom-right.
+   ================================================================ */
+
+.design-lab {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 9999;
+  width: 240px;
+  padding: 14px 14px 12px;
+  background: rgba(31, 29, 26, 0.92);
+  color: rgba(255, 252, 242, 0.92);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 14px;
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 18px 50px -16px rgba(0, 0, 0, 0.55);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.design-lab__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.design-lab__title {
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 9.5px;
+  color: rgba(255, 252, 242, 0.7);
+}
+
+.design-lab__close {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 252, 242, 0.2);
+  border-radius: 50%;
+  color: rgba(255, 252, 242, 0.85);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.design-lab__close:hover {
+  background: rgba(255, 252, 242, 0.12);
+  border-color: rgba(255, 252, 242, 0.4);
+}
+
+.design-lab__row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.design-lab__label {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.55);
+}
+
+.design-lab__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 252, 242, 0.08);
+  color: rgba(255, 252, 242, 0.95);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.design-lab__select:focus {
+  outline: none;
+  border-color: rgba(255, 252, 242, 0.4);
+}
+
+.design-lab__hint {
+  margin: 4px 0 0;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.42);
+}
+
+/* ================================================================
+   Body font overrides — driven by data-body-font on <html>.
+   We override BOTH the .atelier `--sans` token (homepage / 2026
+   surfaces) and the editorial `--ed-sans` token (quiz / account /
+   inner pages) so the swap is visible everywhere. The atelier
+   wrapper also inherits its own font-family declaration, so we
+   set it explicitly to honour the swap.
+   ================================================================ */
+
+html[data-body-font="dm-sans"] {
+  --ed-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+html[data-body-font="dm-sans"] .atelier {
+  --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  font-family: var(--sans);
+}
+
+html[data-body-font="satoshi"] {
+  --ed-sans: "Satoshi", system-ui, -apple-system, sans-serif;
+}
+html[data-body-font="satoshi"] .atelier {
+  --sans: "Satoshi", system-ui, -apple-system, sans-serif;
+  font-family: var(--sans);
+}
+
+html[data-body-font="fraunces"] {
+  --ed-sans: "Fraunces", "Cormorant Garamond", Georgia, serif;
+}
+html[data-body-font="fraunces"] .atelier {
+  --sans: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-family: var(--sans);
+}
+
+/* ================================================================
+   Palette overrides — driven by data-palette on <html>.
+   Each block redefines the .atelier palette tokens. The
+   placeholder values below give Edson a visible swap target —
+   replace with the final 3 palettes when supplied.
+   ================================================================ */
+
+/* Alt 1 — slate & moss (placeholder) */
+html[data-palette="alt-1"] .atelier {
+  --bg: #e9e6e0;
+  --bg-deep: #ddd8cf;
+  --bg-tint: #f1eee8;
+  --ink: #1a1d1f;
+  --ink-soft: #2c3033;
+  --ink-mute: rgba(26, 29, 31, 0.62);
+  --ink-faint: rgba(26, 29, 31, 0.38);
+  --line: rgba(26, 29, 31, 0.14);
+  --moss: oklch(0.58 0.06 145);
+  --moss-deep: oklch(0.36 0.06 145);
+  --rose: oklch(0.68 0.05 25);
+  --rose-deep: oklch(0.46 0.06 25);
+  --amber: oklch(0.74 0.07 80);
+  --amber-deep: oklch(0.54 0.07 80);
+}
+
+/* Alt 2 — porcelain & rust (placeholder) */
+html[data-palette="alt-2"] .atelier {
+  --bg: #f6f1ea;
+  --bg-deep: #ede5d8;
+  --bg-tint: #fcf7ee;
+  --ink: #2a1f17;
+  --ink-soft: #443325;
+  --ink-mute: rgba(42, 31, 23, 0.62);
+  --ink-faint: rgba(42, 31, 23, 0.38);
+  --line: rgba(42, 31, 23, 0.14);
+  --moss: oklch(0.65 0.06 110);
+  --moss-deep: oklch(0.45 0.06 110);
+  --rose: oklch(0.66 0.10 35);
+  --rose-deep: oklch(0.48 0.12 30);
+  --amber: oklch(0.74 0.10 60);
+  --amber-deep: oklch(0.52 0.10 55);
+}

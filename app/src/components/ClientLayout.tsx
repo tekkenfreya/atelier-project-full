@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/components/Navbar";
+import PromoBar from "@/components/PromoBar";
+import DesignLab from "@/components/DesignLab";
 import "@/styles/editorial.css";
 import "@/styles/atelier-2026.css";
 
@@ -30,8 +32,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <ViewTransitions>
+      <PromoBar />
       <Navbar />
       {children}
+      <DesignLab />
     </ViewTransitions>
   );
 }

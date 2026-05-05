@@ -9,8 +9,8 @@
   position: relative;
   width: min(1480px, calc(100% - 48px));
   margin: 24px auto 0;
-  height: calc(100vh - 220px);
-  min-height: 520px;
+  height: calc(100vh - 254px);
+  min-height: 500px;
   overflow: hidden;
   background: #0c0a08;
   border-radius: 24px;
@@ -117,13 +117,15 @@
   transform: translateY(-50%) translateX(3px);
 }
 
-/* --- Bottom-center CTA ----------------------------------------- */
+/* --- Bottom-right CTA -----------------------------------------
+   Asymmetric placement: the eye stays on the video while the
+   pointer drifts to the action, instead of having to dive to the
+   visual centre. Mobile keeps the CTA centred for thumb reach. */
 
 .atelier .hero-v__cta-wrap {
   position: absolute;
-  bottom: 76px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 64px;
+  right: 36px;
   z-index: 5;
 }
 
@@ -205,8 +207,8 @@
   .atelier .hero-v {
     width: calc(100% - 24px);
     margin: 14px auto 0;
-    height: calc(100vh - 180px);
-    min-height: 480px;
+    height: calc(100vh - 208px);
+    min-height: 460px;
     border-radius: 18px;
   }
   .atelier .hero-v__mark {
@@ -229,6 +231,9 @@
   }
   .atelier .hero-v__cta-wrap {
     bottom: 70px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .atelier .hero-v__dots {
     bottom: 28px;
