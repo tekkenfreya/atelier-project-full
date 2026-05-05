@@ -96,7 +96,15 @@ type SlotTarget = {
    *  switches. Each pair becomes one rule in the generated <style>. */
   targets: readonly { selector: string; vars: readonly string[] }[];
   /** Plain-English UI labels. */
-  ui: { label: string; where: string; sample: string; sampleStyle: React.CSSProperties };
+  ui: {
+    label: string;
+    /** Concrete page surfaces this slot controls. First entry is
+     *  the most recognisable / dominant surface and is rendered
+     *  with extra emphasis. */
+    surfaces: readonly string[];
+    sample: string;
+    sampleStyle: React.CSSProperties;
+  };
 };
 
 const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
@@ -110,8 +118,12 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ],
     ui: {
       label: "Homepage headlines · italic serif",
-      where:
-        "Homepage hero · featured 'Let's begin with your name.' · brand line · italic input text",
+      surfaces: [
+        "Hero wordmark",
+        "Featured “Let’s begin…”",
+        "Brand line",
+        "Italic input text",
+      ],
       sample: "Let’s begin with your name.",
       sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
     },
@@ -123,8 +135,12 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     targets: [{ selector: "", vars: ["--ed-display"] }],
     ui: {
       label: "Inner-page display · serif",
-      where:
-        "Cart titles · quiz section names · results 'Your Skin Profile' · disclosure scientific names",
+      surfaces: [
+        "Cart titles",
+        "Quiz section names",
+        "“Your Skin Profile”",
+        "Scientific names",
+      ],
       sample: "Your Skin Profile",
       sampleStyle: { fontStyle: "normal", fontSize: "18px", letterSpacing: "-0.01em" },
     },
@@ -139,8 +155,11 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ],
     ui: {
       label: "Homepage body · sans",
-      where:
-        "Subscription card cadence + notes + button · footer detail rows · default homepage body text",
+      surfaces: [
+        "Subscription card details",
+        "Footer rows",
+        "Default homepage body",
+      ],
       sample: "Bi-monthly cadence — billed every 60 days, dispatched on the 1st.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
     },
@@ -152,8 +171,13 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     targets: [{ selector: "", vars: ["--ed-body"] }],
     ui: {
       label: "Inner-page body · sans",
-      where:
-        "Cart item names + summary · checkout copy · quiz question body · results detail panels · trust strips",
+      surfaces: [
+        "Cart item names",
+        "Checkout copy",
+        "Quiz body",
+        "Results details",
+        "Trust strips",
+      ],
       sample: "Your bespoke moisturizer is calibrated to oily skin.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
     },
@@ -168,8 +192,14 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ],
     ui: {
       label: "Captions & buttons · mono",
-      where:
-        "Navigation links + CTA · hero mark · 'Begin' button · promo strip · eyebrows · category labels",
+      surfaces: [
+        "Navigation",
+        "Nav CTA",
+        "Hero mark",
+        "“Begin” button",
+        "Promo strip",
+        "Eyebrows",
+      ],
       sample: "EDITION MMXXVI · 60% OFF",
       sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" },
     },
@@ -396,7 +426,16 @@ export default function DesignLab() {
         return (
           <div className="design-lab__row" key={key}>
             <span className="design-lab__label">{slot.ui.label}</span>
-            <span className="design-lab__where">{slot.ui.where}</span>
+            <ul className="design-lab__surfaces" aria-label="What this slot controls">
+              {slot.ui.surfaces.map((s, i) => (
+                <li
+                  key={s}
+                  className={`design-lab__chip${i === 0 ? " design-lab__chip--key" : ""}`}
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
             <select
               className="design-lab__select"
               value={value}
@@ -420,9 +459,11 @@ export default function DesignLab() {
 
       <div className="design-lab__row">
         <span className="design-lab__label">Colour palette</span>
-        <span className="design-lab__where">
-          Page background, ink, botanical accents
-        </span>
+        <ul className="design-lab__surfaces" aria-label="What this slot controls">
+          <li className="design-lab__chip design-lab__chip--key">Page background</li>
+          <li className="design-lab__chip">Ink</li>
+          <li className="design-lab__chip">Botanical accents</li>
+        </ul>
         <select
           className="design-lab__select"
           value={palette}

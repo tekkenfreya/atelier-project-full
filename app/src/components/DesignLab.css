@@ -113,14 +113,38 @@
   color: rgba(255, 252, 242, 0.92);
 }
 
-.design-lab__where {
+/* Surface chips — replaces the previous low-contrast "where" line.
+   Each chip names one concrete page element this slot controls; the
+   first chip is rendered at higher contrast as the dominant surface
+   (e.g. "Navigation" for the mono slot) so the slot↔surface mapping
+   reads at a glance. */
+.design-lab__surfaces {
+  list-style: none;
+  margin: 2px 0 4px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.design-lab__chip {
   font-family: var(--mono);
-  font-size: 9.5px;
-  line-height: 1.4;
-  letter-spacing: 0.03em;
-  color: rgba(255, 252, 242, 0.5);
-  text-transform: none;
-  margin-bottom: 2px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  background: rgba(255, 252, 242, 0.08);
+  color: rgba(255, 252, 242, 0.62);
+  border: 1px solid rgba(255, 252, 242, 0.06);
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.design-lab__chip--key {
+  background: rgba(255, 252, 242, 0.18);
+  color: rgba(255, 252, 242, 0.96);
+  border-color: rgba(255, 252, 242, 0.22);
+  font-weight: 600;
 }
 
 .design-lab__select {
