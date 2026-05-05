@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan } from "@/types/cart";
 import { calculateTotal } from "@/types/cart";
 import { supabase } from "@/lib/supabase";
+import TrustStrip from "@/components/TrustStrip";
 
 const PLAN_LABELS: Record<SubscriptionPlan, string> = {
   "one-time": "One-Time Purchase",
@@ -172,6 +173,8 @@ export default function CheckoutPage() {
         >
           {redirecting ? "Redirecting to Stripe..." : "Pay with Stripe"}
         </button>
+
+        <TrustStrip />
 
         <button
           type="button"

@@ -4,22 +4,33 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan } from "@/types/cart";
 import { calculateTotal } from "@/types/cart";
+import TrustStrip from "@/components/TrustStrip";
 
-const PLAN_OPTIONS: { value: SubscriptionPlan; label: string; description: string }[] = [
-  {
-    value: "one-time",
-    label: "One-Time Purchase",
-    description: "No commitment, full price",
-  },
+const PLAN_OPTIONS: {
+  value: SubscriptionPlan;
+  label: string;
+  description: string;
+  mostPopular?: boolean;
+  reassurances: readonly string[];
+}[] = [
   {
     value: "bi-monthly",
-    label: "Bi-Monthly Subscription",
-    description: "Delivered every 2 months, 20% off",
+    label: "Bi-Monthly",
+    description: "Delivered every 2 months",
+    mostPopular: true,
+    reassurances: ["Save 20% per shipment", "Cancel anytime", "Priority dispatch"],
   },
   {
     value: "annual",
-    label: "Annual Subscription",
-    description: "6 shipments per year, 20% off, billed annually",
+    label: "Annual",
+    description: "6 shipments, billed once",
+    reassurances: ["Save 20% per shipment", "Cancel anytime", "Locked-in price"],
+  },
+  {
+    value: "one-time",
+    label: "One-Time",
+    description: "Single delivery",
+    reassurances: ["Full price", "No commitment", "Standard dispatch"],
   },
 ];
 
@@ -32,7 +43,7 @@ const FRAGRANCE_LABELS: Record<string, string> = {
 export default function CartPage() {
   const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
-  const [plan, setPlan] = useState<SubscriptionPlan>("one-time");
+  const [plan, setPlan] = useState<SubscriptionPlan>("bi-monthly");
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -155,21 +166,27 @@ export default function CartPage() {
           )}
 
           <div className="cart-plan-section">
-            <h2 className="cart-plan-title">Subscription Plan</h2>
+            <h2 className="cart-plan-title">Choose your rhythm</h2>
             <div className="cart-plan-options">
               {PLAN_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
-                  className={`cart-plan-option${plan === opt.value ? " selected" : ""}`}
+                  aria-pressed={plan === opt.value}
+                  className={`cart-plan-option${plan === opt.value ? " selected" : ""}${opt.mostPopular ? " is-popular" : ""}`}
                   onClick={() => setPlan(opt.value)}
                 >
-                  <span className="cart-plan-radio">
-                    {plan === opt.value && <span className="cart-plan-radio-dot" />}
-                  </span>
+                  {opt.mostPopular && (
+                    <span className="cart-plan-popular">Most Popular</span>
+                  )}
                   <span className="cart-plan-content">
                     <span className="cart-plan-label">{opt.label}</span>
                     <span className="cart-plan-desc">{opt.description}</span>
+                    <ul className="cart-plan-reassurances">
+                      {opt.reassurances.map((r) => (
+                        <li key={r}>{r}</li>
+                      ))}
+                    </ul>
                   </span>
                 </button>
               ))}
@@ -219,6 +236,8 @@ export default function CartPage() {
           >
             Proceed to Checkout
           </button>
+
+          <TrustStrip />
 
           <button
             type="button"

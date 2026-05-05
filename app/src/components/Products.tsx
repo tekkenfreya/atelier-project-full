@@ -117,6 +117,10 @@ export default function Products() {
           </div>
 
           <div className="featured__copy">
+            <span className="featured__halo featured__fade">
+              <span className="featured__halo-dot" aria-hidden />
+              Edition MMXXVI · By Consultation
+            </span>
             <span className="featured__eyebrow featured__fade">
               Your Custom Formula Awaits
             </span>
@@ -127,12 +131,18 @@ export default function Products() {
               Each bottle is composed from 185 botanical actives — no two alike.
             </p>
 
+            <ul className="featured__anchors featured__fade">
+              <li>185 botanical actives</li>
+              <li>Composed in Sofia</li>
+              <li>Bespoke to your skin</li>
+            </ul>
+
             <form
               className="featured__name-form featured__fade"
               onSubmit={handleSubmit}
             >
               <label className="featured__name-label" htmlFor="featured-name">
-                Begin
+                Compose your formula
               </label>
               <div className="featured__name-row">
                 <input

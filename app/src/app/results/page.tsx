@@ -19,6 +19,7 @@ import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
 import { supabase } from "@/lib/supabase";
 import BotanicalCard from "@/components/results/BotanicalCard";
 import type { BotanicalItem } from "@/components/results/ProductScene";
+import "./disclosure.css";
 
 const ProductScene = dynamic(() => import("@/components/results/ProductScene"), {
   ssr: false,
@@ -147,6 +148,7 @@ export default function ResultsPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("analysis");
+  const [expandedIng, setExpandedIng] = useState<string | null>(null);
 
   const savedQuizRef = useRef(false);
   const tabContentRef = useRef<HTMLDivElement>(null);
@@ -422,6 +424,11 @@ export default function ResultsPage() {
           <h1 className="rd-title">
             {customerName ? `${customerName}\u2019s` : "Your"} Skin Profile
           </h1>
+          <ul className="rd-trust-anchors">
+            <li>Composed from 185 botanicals</li>
+            <li>Personalised in Sofia</li>
+            <li>Made for your profile</li>
+          </ul>
         </div>
 
         {/* 3D Botanical Carousel */}
@@ -499,6 +506,10 @@ export default function ResultsPage() {
                     i.function?.includes("Phase-Shot") ||
                     i.function?.includes("Extract")
                 );
+                const visibleActives = actives.slice(0, 4);
+                const expandedIngredient = visibleActives.find(
+                  (i) => i.id === expandedIng
+                );
 
                 return (
                   <div
@@ -515,10 +526,35 @@ export default function ResultsPage() {
                     </div>
 
                     <div className="rd-product-actives">
-                      {actives.slice(0, 4).map((ing) => (
-                        <span key={ing.id} className="rd-active-tag">{ing.name}</span>
+                      {visibleActives.map((ing) => (
+                        <button
+                          key={ing.id}
+                          type="button"
+                          className={`rd-active-tag${expandedIng === ing.id ? " rd-active-tag-on" : ""}`}
+                          onClick={() =>
+                            setExpandedIng(expandedIng === ing.id ? null : ing.id)
+                          }
+                          aria-expanded={expandedIng === ing.id}
+                        >
+                          {ing.name}
+                        </button>
                       ))}
                     </div>
+
+                    {expandedIngredient && (
+                      <div className="rd-active-detail">
+                        {expandedIngredient.scientific_name && (
+                          <p className="rd-active-detail-sci">
+                            {expandedIngredient.scientific_name}
+                          </p>
+                        )}
+                        {expandedIngredient.function && (
+                          <p className="rd-active-detail-fn">
+                            {expandedIngredient.function}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                     <div className="rd-product-reasons">
                       {scored.reasons.map((reason, i) => (

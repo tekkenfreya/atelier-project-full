@@ -1,0 +1,104 @@
+/* ================================================================
+   Results page — progressive disclosure on ingredient tags +
+   trust anchors strip. Co-located so it lands in a route-scoped
+   chunk and avoids the globals.css silent-drop bug noted in
+   CLAUDE.md. Imported directly from app/results/page.tsx.
+   ================================================================ */
+
+/* Convert active-tag from passive label to clickable disclosure */
+.rd-active-tag {
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+  font-family: "Satoshi", sans-serif;
+}
+
+.rd-active-tag:hover {
+  background: rgba(139, 125, 60, 0.12);
+  border-color: rgba(139, 125, 60, 0.4);
+}
+
+.rd-active-tag-on {
+  background: var(--accent, #8b7d3c);
+  color: var(--bg-cream, #f5f0e8);
+  border-color: var(--accent, #8b7d3c);
+}
+
+.rd-active-tag-on:hover {
+  background: var(--accent, #8b7d3c);
+  color: var(--bg-cream, #f5f0e8);
+  border-color: var(--accent, #8b7d3c);
+}
+
+/* Inline disclosure panel that appears under the tag row when an
+   active is selected. Animates in via CSS keyframe (no GSAP needed). */
+.rd-active-detail {
+  margin-top: 0.6rem;
+  padding: 0.7rem 0.85rem;
+  background: rgba(139, 125, 60, 0.05);
+  border: 1px solid var(--border, rgba(61, 58, 46, 0.12));
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  animation: rd-detail-fade 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes rd-detail-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rd-active-detail-sci {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--text-primary, #3d3a2e);
+  margin: 0;
+}
+
+.rd-active-detail-fn {
+  font-family: "Satoshi", sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary, rgba(61, 58, 46, 0.72));
+  margin: 0;
+}
+
+/* Trust anchors strip at the top of the results header — factual
+   brand statements, no fabricated metrics. */
+.rd-trust-anchors {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary, rgba(61, 58, 46, 0.72));
+}
+
+.rd-trust-anchors li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rd-trust-anchors li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent, #8b7d3c);
+  flex-shrink: 0;
+}
