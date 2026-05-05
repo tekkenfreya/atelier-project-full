@@ -25,10 +25,17 @@ nav.nav {
   box-shadow: none;
 }
 
-/* Link cluster — JetBrains Mono uppercase */
+/* Link cluster — JetBrains Mono uppercase.
+   Container layer removed: links float on the page surface, no
+   secondary glass pill behind them. */
 .nav .nav__links {
   gap: 2px;
   padding: 5px;
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .nav .nav__links a {

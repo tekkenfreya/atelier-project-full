@@ -9,8 +9,8 @@
   position: relative;
   width: min(1480px, calc(100% - 48px));
   margin: 24px auto 0;
-  height: calc(100vh - 132px);
-  min-height: 560px;
+  height: calc(100vh - 220px);
+  min-height: 520px;
   overflow: hidden;
   background: #0c0a08;
   border-radius: 24px;
@@ -205,8 +205,8 @@
   .atelier .hero-v {
     width: calc(100% - 24px);
     margin: 14px auto 0;
-    height: calc(100vh - 100px);
-    min-height: 520px;
+    height: calc(100vh - 180px);
+    min-height: 480px;
     border-radius: 18px;
   }
   .atelier .hero-v__mark {
