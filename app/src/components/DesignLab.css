@@ -17,9 +17,11 @@
   bottom: 18px;
   left: 18px;
   z-index: 9999;
-  width: 260px;
+  width: 300px;
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
   padding: 14px 14px 12px;
-  background: rgba(31, 29, 26, 0.92);
+  background: rgba(31, 29, 26, 0.94);
   color: rgba(255, 252, 242, 0.92);
   border: 1px solid rgba(255, 252, 242, 0.18);
   border-radius: 14px;
@@ -31,7 +33,7 @@
   letter-spacing: 0.04em;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .design-lab__head {
@@ -95,13 +97,30 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255, 252, 242, 0.08);
+}
+.design-lab__row:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .design-lab__label {
-  font-size: 9px;
-  letter-spacing: 0.18em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 252, 242, 0.55);
+  color: rgba(255, 252, 242, 0.92);
+}
+
+.design-lab__where {
+  font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 9.5px;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  color: rgba(255, 252, 242, 0.5);
+  text-transform: none;
+  margin-bottom: 2px;
 }
 
 .design-lab__select {
@@ -121,12 +140,39 @@
   border-color: rgba(255, 252, 242, 0.4);
 }
 
+/* Live preview rendered in the chosen font so the swap is visible
+   without scrolling the page. Each row sets fontFamily inline. */
+.design-lab__preview {
+  display: block;
+  margin-top: 4px;
+  padding: 8px 10px;
+  background: rgba(255, 252, 242, 0.06);
+  border: 1px dashed rgba(255, 252, 242, 0.14);
+  border-radius: 6px;
+  color: rgba(255, 252, 242, 0.92);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.design-lab__swatches {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.design-lab__swatch {
+  flex: 1;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 252, 242, 0.12);
+}
+
 .design-lab__hint {
   margin: 4px 0 0;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 252, 242, 0.42);
+  text-align: center;
 }
 
 /* ================================================================

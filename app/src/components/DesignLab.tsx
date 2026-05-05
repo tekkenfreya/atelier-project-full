@@ -5,18 +5,13 @@ import "./DesignLab.css";
 
 /**
  * Floating dev panel for live A/B-ing typography (display, body,
- * mono) and palette. Hidden by default. Activate with `?lab=1` once
- * — the panel persists itself in localStorage. Shift+L toggles
- * open/closed after activation. Use `?lab=0` to deactivate.
+ * mono) and palette. Hidden by default. Activate with `?lab=1`
+ * once — the panel persists itself in localStorage. Shift+L
+ * toggles open/closed after activation. `?lab=0` to deactivate.
  *
- * Fonts whose families are not statically loaded in app/layout.tsx
- * are pulled from Google Fonts via a single aggregated stylesheet
- * link, only when the lab activates — so prod page weight is
- * unchanged for normal visitors.
- *
- * To add a font: append to the relevant array. The override CSS
- * (mapping data-*-font attributes to the right CSS tokens) is
- * generated once at activation from the same arrays.
+ * Each row is labelled in plain English with a "where it shows up"
+ * hint and a live preview rendered in the selected font, so the
+ * relationship between dropdown and surface is immediately obvious.
  */
 
 type Font = {
@@ -77,13 +72,54 @@ const MONOS: readonly Font[] = [
   { id: "azeret-mono", label: "Azeret Mono", stack: '"Azeret Mono", ui-monospace, Menlo, monospace', google: "Azeret+Mono:ital,wght@0,100..900;1,100..900" },
 ];
 
-type Palette = { id: string; label: string };
+type Palette = {
+  id: string;
+  label: string;
+  /** Four representative swatches: bg, ink, accent-1, accent-2. Used
+   *  for the live preview row only — the full palette is set by the
+   *  matching CSS rule in DesignLab.css. */
+  swatches: readonly [string, string, string, string];
+};
 
 const PALETTES: readonly Palette[] = [
-  { id: "default", label: "Warm botanical (default)" },
-  { id: "alt-1", label: "Alt 1 — slate & moss (placeholder)" },
-  { id: "alt-2", label: "Alt 2 — porcelain & rust (placeholder)" },
+  {
+    id: "default",
+    label: "Warm botanical (default)",
+    swatches: ["#f3ecdf", "#1f1d1a", "#a3a05e", "#d4a373"],
+  },
+  {
+    id: "alt-1",
+    label: "Slate & moss (placeholder)",
+    swatches: ["#e9e6e0", "#1a1d1f", "#7a8d6a", "#a99175"],
+  },
+  {
+    id: "alt-2",
+    label: "Porcelain & rust (placeholder)",
+    swatches: ["#f6f1ea", "#2a1f17", "#9aa48a", "#c87c52"],
+  },
 ];
+
+/** Plain-English description of where each token actually shows up. */
+const SLOTS = {
+  display: {
+    label: "Headlines · italic serif",
+    where: "Big titles · 'Atelier Rusalka' wordmark · 'Let's begin with your name.'",
+    sample: "Let’s begin with your name.",
+    sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
+  },
+  body: {
+    label: "Paragraph text · sans",
+    where: "Body copy · descriptions · form inputs · most readable text",
+    sample: "Each bottle is composed from 185 botanical actives — no two alike.",
+    sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
+  },
+  mono: {
+    label: "Captions & buttons · mono",
+    where: "Eyebrows · CTAs · the promo strip · category labels · fine print",
+    sample: "EDITION MMXXVI · 60% OFF",
+    sampleStyle: { fontStyle: "normal", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase" as const },
+  },
+} as const;
 
 const STORAGE_KEYS = {
   active: "atelier-lab",
@@ -132,9 +168,6 @@ function buildOverrideCss(): string {
   addRules("body-font", SANS, "--ed-sans", "--sans", DEFAULTS.body);
   addRules("mono-font", MONOS, "--ed-mono", "--mono", DEFAULTS.mono);
 
-  // Force the .atelier wrapper to honour the body swap (it has its
-  // own font-family declaration that resolves --sans at parse time
-  // — re-pointing the variable is enough because var() is live).
   rules.push(`.atelier { font-family: var(--sans); }`);
 
   return rules.join("\n");
@@ -166,8 +199,6 @@ export default function DesignLab() {
     setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? DEFAULTS.palette);
   }, []);
 
-  // Inject Google Fonts stylesheet + dynamic override CSS once
-  // when the lab activates. Cleaned up if the component unmounts.
   useEffect(() => {
     if (!active) return;
 
@@ -236,6 +267,13 @@ export default function DesignLab() {
 
   if (!active || !open) return null;
 
+  const displayStack =
+    SERIFS.find((f) => f.id === display)?.stack ?? SERIFS[0].stack;
+  const bodyStack = SANS.find((f) => f.id === body)?.stack ?? SANS[0].stack;
+  const monoStack = MONOS.find((f) => f.id === mono)?.stack ?? MONOS[0].stack;
+  const activePalette =
+    PALETTES.find((p) => p.id === palette) ?? PALETTES[0];
+
   return (
     <aside className="design-lab" aria-label="Design lab">
       <header className="design-lab__head">
@@ -260,8 +298,9 @@ export default function DesignLab() {
         </div>
       </header>
 
-      <label className="design-lab__row">
-        <span className="design-lab__label">Display · serif</span>
+      <div className="design-lab__row">
+        <span className="design-lab__label">{SLOTS.display.label}</span>
+        <span className="design-lab__where">{SLOTS.display.where}</span>
         <select
           className="design-lab__select"
           value={display}
@@ -273,10 +312,17 @@ export default function DesignLab() {
             </option>
           ))}
         </select>
-      </label>
+        <span
+          className="design-lab__preview"
+          style={{ fontFamily: displayStack, ...SLOTS.display.sampleStyle }}
+        >
+          {SLOTS.display.sample}
+        </span>
+      </div>
 
-      <label className="design-lab__row">
-        <span className="design-lab__label">Body · sans</span>
+      <div className="design-lab__row">
+        <span className="design-lab__label">{SLOTS.body.label}</span>
+        <span className="design-lab__where">{SLOTS.body.where}</span>
         <select
           className="design-lab__select"
           value={body}
@@ -288,10 +334,17 @@ export default function DesignLab() {
             </option>
           ))}
         </select>
-      </label>
+        <span
+          className="design-lab__preview"
+          style={{ fontFamily: bodyStack, ...SLOTS.body.sampleStyle }}
+        >
+          {SLOTS.body.sample}
+        </span>
+      </div>
 
-      <label className="design-lab__row">
-        <span className="design-lab__label">Data · mono</span>
+      <div className="design-lab__row">
+        <span className="design-lab__label">{SLOTS.mono.label}</span>
+        <span className="design-lab__where">{SLOTS.mono.where}</span>
         <select
           className="design-lab__select"
           value={mono}
@@ -303,10 +356,19 @@ export default function DesignLab() {
             </option>
           ))}
         </select>
-      </label>
+        <span
+          className="design-lab__preview"
+          style={{ fontFamily: monoStack, ...SLOTS.mono.sampleStyle }}
+        >
+          {SLOTS.mono.sample}
+        </span>
+      </div>
 
-      <label className="design-lab__row">
-        <span className="design-lab__label">Palette</span>
+      <div className="design-lab__row">
+        <span className="design-lab__label">Colour palette</span>
+        <span className="design-lab__where">
+          Page background, ink, botanical accents
+        </span>
         <select
           className="design-lab__select"
           value={palette}
@@ -318,7 +380,16 @@ export default function DesignLab() {
             </option>
           ))}
         </select>
-      </label>
+        <div className="design-lab__swatches" aria-hidden>
+          {activePalette.swatches.map((c, i) => (
+            <span
+              key={i}
+              className="design-lab__swatch"
+              style={{ background: c }}
+            />
+          ))}
+        </div>
+      </div>
 
       <p className="design-lab__hint">Shift + L to toggle · ?lab=0 to disable</p>
     </aside>
