@@ -101,8 +101,15 @@ type SlotTarget = {
     /** Concrete page surfaces this slot controls. First entry is
      *  the most recognisable / dominant surface and is rendered
      *  with extra emphasis. The optional selector lets the user
-     *  click a chip to flash the matching elements on the page. */
-    surfaces: readonly { label: string; selector?: string }[];
+     *  click a chip to flash the matching elements on the page.
+     *  `wide: true` marks selectors that match a huge area
+     *  (e.g. the whole .atelier wrapper) so they get skipped when
+     *  the picker batch-flashes every surface for the slot. */
+    surfaces: readonly {
+      label: string;
+      selector?: string;
+      wide?: boolean;
+    }[];
     sample: string;
     sampleStyle: React.CSSProperties;
   };
@@ -160,7 +167,7 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
         { label: "Subscription details", selector: ".lux-sub__card-cadence, .lux-sub__card-notes li" },
         { label: "Subscription button", selector: ".sub__cta, .lux-sub__card-cta" },
         { label: "Footer detail rows", selector: ".lux-footer__detail-row, .footer-row" },
-        { label: "Default homepage body", selector: ".atelier" },
+        { label: "Default homepage body", selector: ".atelier", wide: true },
       ],
       sample: "Bi-monthly cadence — billed every 60 days, dispatched on the 1st.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
@@ -433,7 +440,10 @@ export default function DesignLab() {
       const slot = findSlotForElement(target);
       unhighlight();
       setPicking(false);
-      if (slot) flashSlot(slot);
+      if (slot) {
+        flashSlot(slot);
+        flashSlotSurfaces(slot);
+      }
     }
 
     function onKey(e: KeyboardEvent) {
@@ -508,7 +518,7 @@ export default function DesignLab() {
 
   /** Click a surface chip → outline the matching DOM elements for
    *  ~1.6s so the user sees which page elements that slot owns. */
-  function flashSurface(selector: string) {
+  function flashSurface(selector: string, durationMs = 1600) {
     if (!selector) return;
     const els = Array.from(
       document.querySelectorAll<HTMLElement>(selector),
@@ -525,7 +535,23 @@ export default function DesignLab() {
         el.style.outlineOffset = "";
         el.style.transition = "";
       }
-    }, 1600);
+    }, durationMs);
+  }
+
+  /** After the picker resolves a slot, outline every other element
+   *  the slot also controls — so the user sees the slot's full
+   *  footprint, not just the one element they pointed at. Wide
+   *  selectors (e.g. ".atelier" itself) are excluded so the
+   *  highlight does not box the entire homepage. */
+  function flashSlotSurfaces(key: SlotKey) {
+    const surfaces = SLOT_TARGETS[key].ui.surfaces;
+    const selectors = surfaces
+      .filter((s): s is { label: string; selector: string; wide?: boolean } =>
+        !!s.selector && !s.wide,
+      )
+      .map((s) => s.selector);
+    if (selectors.length === 0) return;
+    flashSurface(selectors.join(", "), 2200);
   }
 
   function reset() {
