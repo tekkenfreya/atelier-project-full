@@ -85,6 +85,18 @@ const MONOS: readonly Font[] = [
 
 type SlotKey = "display" | "edDisplay" | "body" | "edBody" | "mono";
 
+type Override = {
+  /** Stable id for React list keys; derived from selector + fontId. */
+  id: string;
+  /** The CSS selector that scopes this override (e.g. ".cart-title"). */
+  selector: string;
+  /** Which font from the slot's source pool to apply. */
+  fontId: string;
+  /** Slot the picked element originally mapped to — used to look
+   *  up the candidate pool when re-rendering the overrides list. */
+  slotKey: SlotKey;
+};
+
 type SlotTarget = {
   /** The data-* attribute on <html> the lab toggles for this slot. */
   attr: string;
@@ -312,12 +324,27 @@ export default function DesignLab() {
   /** When set, the matching slot row pulses for ~2.5s — used both
    *  by the picker (page → slot) and by chip clicks (slot → page). */
   const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
+  /** A picked element waiting to be tuned: the user can choose a
+   *  font that applies ONLY to its selector instead of the whole
+   *  slot. Cleared on apply or cancel. */
+  const [pickedTarget, setPickedTarget] = useState<{
+    selector: string;
+    currentFamily: string;
+    slotKey: SlotKey;
+    draftFontId: string;
+  } | null>(null);
+  /** Active per-element overrides. Each one becomes one CSS rule
+   *  injected into a dedicated <style> tag — slot-wide swaps still
+   *  fire, but overrides win because they use !important. */
+  const [overrides, setOverrides] = useState<Override[]>([]);
 
-  /** Latest selections kept in a ref so the picker's click handler
-   *  can read fresh font ids without forcing a listener re-bind on
-   *  every keystroke. */
+  /** Latest state kept in refs so document-level handlers can read
+   *  fresh values without forcing a listener re-bind every render. */
   const selectionsRef = useRef(selections);
   selectionsRef.current = selections;
+  const overridesRef = useRef(overrides);
+  overridesRef.current = overrides;
+  const overridesStyleRef = useRef<HTMLStyleElement | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -396,6 +423,35 @@ export default function DesignLab() {
     localStorage.setItem(STORAGE_KEYS.palette, palette);
   }, [active, palette]);
 
+  /** Keep a single <style> tag in <head> whose contents are rebuilt
+   *  every time `overrides` changes. Using one mutable element
+   *  avoids creating + tearing down a node per edit. */
+  useEffect(() => {
+    if (!active) return;
+    const styleEl = document.createElement("style");
+    styleEl.setAttribute("data-design-lab", "fine-overrides");
+    document.head.appendChild(styleEl);
+    overridesStyleRef.current = styleEl;
+    return () => {
+      styleEl.remove();
+      overridesStyleRef.current = null;
+    };
+  }, [active]);
+
+  useEffect(() => {
+    const styleEl = overridesStyleRef.current;
+    if (!styleEl) return;
+    const rules = overrides
+      .map((o) => {
+        const slot = SLOT_TARGETS[o.slotKey];
+        const font = slot.source.find((f) => f.id === o.fontId);
+        if (!font) return "";
+        return `${o.selector} { font-family: ${font.stack} !important; }`;
+      })
+      .filter(Boolean);
+    styleEl.textContent = rules.join("\n");
+  }, [overrides]);
+
   /** Element picker. When `picking` is true, hovering outlines the
    *  element under the cursor and clicking identifies which slot
    *  controls it — then highlights that slot row in the panel. */
@@ -443,6 +499,23 @@ export default function DesignLab() {
       if (slot) {
         flashSlot(slot);
         flashSlotSurfaces(slot);
+        const selector = bestSelectorFor(target);
+        const family = getComputedStyle(target)
+          .fontFamily.split(",")[0]
+          .replace(/['"]/g, "")
+          .trim();
+        // Seed the dropdown with whatever font is currently winning
+        // — the slot-wide selection if no override covers this
+        // selector, or the existing override's font if there is one.
+        const existing = overridesRef.current.find(
+          (o) => o.selector === selector,
+        );
+        setPickedTarget({
+          selector,
+          currentFamily: family,
+          slotKey: slot,
+          draftFontId: existing?.fontId ?? selectionsRef.current[slot],
+        });
       }
     }
 
@@ -471,10 +544,34 @@ export default function DesignLab() {
     setSelections((prev) => ({ ...prev, [key]: value }));
   }
 
+  /** Build a CSS selector that scopes an override to "this kind of
+   *  element". Joins all component-level classes for high
+   *  specificity; falls back to the tag name when an element is
+   *  unclassed. Animation/utility helpers and the lab's own
+   *  classes are filtered out. */
+  function bestSelectorFor(el: HTMLElement): string {
+    if (el.id) return `#${el.id}`;
+    const skip = /^(design-lab|featured__fade|atelier)(_|-|$)/;
+    const classes = Array.from(el.classList).filter((c) => !skip.test(c));
+    if (classes.length === 0) return el.tagName.toLowerCase();
+    return classes.map((c) => `.${c}`).join("");
+  }
+
   /** Match a DOM element's computed font-family to one of the five
-   *  slot definitions. Disambiguates display-vs-editorial by
-   *  whether the element lives inside the .atelier wrapper. */
+   *  slot definitions. If an active override already targets this
+   *  element, prefer that override's slot — otherwise the picker
+   *  would return null after a swap because the rendered font no
+   *  longer matches any slot's current value. Disambiguates
+   *  display-vs-editorial by whether the element lives inside the
+   *  .atelier wrapper. */
   function findSlotForElement(el: HTMLElement): SlotKey | null {
+    for (const o of overridesRef.current) {
+      try {
+        if (el.matches(o.selector)) return o.slotKey;
+      } catch {
+        // Malformed selector — ignore and fall through.
+      }
+    }
     const inAtelier = !!el.closest(".atelier");
     const family = (getComputedStyle(el).fontFamily.split(",")[0] || "")
       .replace(/['"]/g, "")
@@ -536,6 +633,32 @@ export default function DesignLab() {
         el.style.transition = "";
       }
     }, durationMs);
+  }
+
+  /** Apply the draft font selection from the fine-tune panel as an
+   *  override and close the panel. */
+  function applyOverride() {
+    if (!pickedTarget) return;
+    const id = `${pickedTarget.selector}::${pickedTarget.draftFontId}`;
+    const next: Override = {
+      id,
+      selector: pickedTarget.selector,
+      fontId: pickedTarget.draftFontId,
+      slotKey: pickedTarget.slotKey,
+    };
+    setOverrides((prev) => {
+      const filtered = prev.filter((o) => o.selector !== next.selector);
+      return [...filtered, next];
+    });
+    setPickedTarget(null);
+  }
+
+  function removeOverride(id: string) {
+    setOverrides((prev) => prev.filter((o) => o.id !== id));
+  }
+
+  function clearAllOverrides() {
+    setOverrides([]);
   }
 
   /** After the picker resolves a slot, outline every other element
@@ -609,6 +732,49 @@ export default function DesignLab() {
           Click any text on the page to find its slot · Esc to cancel
         </p>
       )}
+
+      {pickedTarget && (() => {
+        const slot = SLOT_TARGETS[pickedTarget.slotKey];
+        return (
+          <div className="design-lab__ft" role="region" aria-label="Fine-tune picked element">
+            <div className="design-lab__ft-head">
+              <span className="design-lab__ft-tag">Override only this</span>
+              <button
+                type="button"
+                className="design-lab__close design-lab__close--ft"
+                onClick={() => setPickedTarget(null)}
+                aria-label="Cancel fine-tune"
+              >
+                ×
+              </button>
+            </div>
+            <code className="design-lab__ft-selector">{pickedTarget.selector}</code>
+            <span className="design-lab__ft-current">
+              Currently · {pickedTarget.currentFamily}
+            </span>
+            <select
+              className="design-lab__select"
+              value={pickedTarget.draftFontId}
+              onChange={(e) =>
+                setPickedTarget({ ...pickedTarget, draftFontId: e.target.value })
+              }
+            >
+              {slot.source.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.id === slot.defaultId ? `${f.label} (default)` : f.label}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="design-lab__ft-apply"
+              onClick={applyOverride}
+            >
+              Apply override
+            </button>
+          </div>
+        );
+      })()}
 
       {SLOT_ORDER.map((key) => {
         const slot = SLOT_TARGETS[key];
@@ -685,6 +851,49 @@ export default function DesignLab() {
           ))}
         </div>
       </div>
+
+      {overrides.length > 0 && (
+        <div className="design-lab__row design-lab__row--overrides">
+          <div className="design-lab__overrides-head">
+            <span className="design-lab__label">
+              Per-element overrides ({overrides.length})
+            </span>
+            <button
+              type="button"
+              className="design-lab__reset"
+              onClick={clearAllOverrides}
+              aria-label="Clear all overrides"
+            >
+              Clear all
+            </button>
+          </div>
+          <ul className="design-lab__overrides-list">
+            {overrides.map((o) => {
+              const slot = SLOT_TARGETS[o.slotKey];
+              const font = slot.source.find((f) => f.id === o.fontId);
+              return (
+                <li key={o.id} className="design-lab__override">
+                  <code className="design-lab__override-sel">{o.selector}</code>
+                  <span className="design-lab__override-arrow" aria-hidden>
+                    →
+                  </span>
+                  <span className="design-lab__override-font">
+                    {font?.label ?? o.fontId}
+                  </span>
+                  <button
+                    type="button"
+                    className="design-lab__override-remove"
+                    onClick={() => removeOverride(o.id)}
+                    aria-label={`Remove override for ${o.selector}`}
+                  >
+                    ×
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       <p className="design-lab__hint">Shift + L to toggle · ?lab=0 to disable</p>
     </aside>
