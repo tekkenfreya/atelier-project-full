@@ -349,17 +349,19 @@ export default function DesignLab() {
   /** When set, the matching slot row pulses for ~2.5s — used both
    *  by the picker (page → slot) and by chip clicks (slot → page). */
   const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
-  /** A picked element waiting to be tuned: the user can choose a
-   *  font that applies ONLY to its selector instead of the whole
-   *  slot. Cleared on apply or cancel. The sample text is the
-   *  picked element's own visible content so the live preview
-   *  shows the user exactly what their swap looks like. */
+  /** A picked element being tuned. Changes apply live, so this
+   *  state primarily drives the panel UI; the override list is the
+   *  source of truth for what's actually rendered. The
+   *  `originalOverrideFontId` lets Cancel revert to whatever was
+   *  in effect at pick time — undefined when there was no prior
+   *  override on this selector. */
   const [pickedTarget, setPickedTarget] = useState<{
     selector: string;
     currentFamily: string;
     slotKey: SlotKey;
     draftFontId: string;
     sample: string;
+    originalOverrideFontId: string | undefined;
   } | null>(null);
   /** Active per-element overrides. Each one becomes one CSS rule
    *  injected into a dedicated <style> tag — slot-wide swaps still
@@ -588,6 +590,7 @@ export default function DesignLab() {
           slotKey: slot,
           draftFontId: existing?.fontId ?? selectionsRef.current[slot],
           sample,
+          originalOverrideFontId: existing?.fontId,
         });
       }
     }
@@ -618,16 +621,36 @@ export default function DesignLab() {
   }
 
   /** Build a CSS selector that scopes an override to "this kind of
-   *  element". Joins all component-level classes for high
-   *  specificity; falls back to the tag name when an element is
-   *  unclassed. Animation/utility helpers and the lab's own
-   *  classes are filtered out. */
+   *  element". Joins all of the element's component-level classes
+   *  for high specificity. Animation/utility helpers (and the lab's
+   *  own internals) are filtered out. The .atelier wrapper class is
+   *  treated as no-class — overriding `.atelier` would scope the
+   *  rule to the entire homepage, which is never what the user
+   *  meant when they picked some text inside it. When the picked
+   *  element has no useful classes, walks up to the nearest classed
+   *  ancestor and emits "<ancestor-classes> <tag>" so an unclassed
+   *  <a> inside .nav__links resolves to ".nav__links a" instead of
+   *  the dangerously-broad bare tag. */
   function bestSelectorFor(el: HTMLElement): string {
     if (el.id) return `#${el.id}`;
-    const skip = /^(design-lab|featured__fade|atelier)(_|-|$)/;
-    const classes = Array.from(el.classList).filter((c) => !skip.test(c));
-    if (classes.length === 0) return el.tagName.toLowerCase();
-    return classes.map((c) => `.${c}`).join("");
+
+    const skip = /^(design-lab|featured__fade)/;
+    const isUseful = (c: string) => !skip.test(c) && c !== "atelier";
+
+    const own = Array.from(el.classList).filter(isUseful);
+    if (own.length > 0) return own.map((c) => `.${c}`).join("");
+
+    let ancestor: HTMLElement | null = el.parentElement;
+    while (ancestor && ancestor.tagName !== "HTML") {
+      const classes = Array.from(ancestor.classList).filter(isUseful);
+      if (classes.length > 0) {
+        const ancestorSel = classes.map((c) => `.${c}`).join("");
+        return `${ancestorSel} ${el.tagName.toLowerCase()}`;
+      }
+      ancestor = ancestor.parentElement;
+    }
+
+    return el.tagName.toLowerCase();
   }
 
   /** Match a DOM element's computed font-family to one of the five
@@ -708,21 +731,54 @@ export default function DesignLab() {
     }, durationMs);
   }
 
-  /** Apply the draft font selection from the fine-tune panel as an
-   *  override and close the panel. */
-  function applyOverride() {
+  /** Update the draft font for the currently-picked element AND
+   *  apply it to the page in the same beat — so the user sees the
+   *  swap as soon as they touch the dropdown. No "Apply" step.
+   *
+   *  Picking the slot's default again removes the override entirely,
+   *  so cycling through fonts and returning to the default cleans
+   *  up after itself. */
+  function setDraftFont(fontId: string) {
     if (!pickedTarget) return;
-    const id = `${pickedTarget.selector}::${pickedTarget.draftFontId}`;
-    const next: Override = {
-      id,
-      selector: pickedTarget.selector,
-      fontId: pickedTarget.draftFontId,
-      slotKey: pickedTarget.slotKey,
-    };
+    setPickedTarget({ ...pickedTarget, draftFontId: fontId });
+
+    const slotDefault = selectionsRef.current[pickedTarget.slotKey];
+    if (fontId === slotDefault) {
+      setOverrides((prev) =>
+        prev.filter((o) => o.selector !== pickedTarget.selector),
+      );
+      return;
+    }
+
     setOverrides((prev) => {
-      const filtered = prev.filter((o) => o.selector !== next.selector);
-      return [...filtered, next];
+      const filtered = prev.filter(
+        (o) => o.selector !== pickedTarget.selector,
+      );
+      return [
+        ...filtered,
+        {
+          id: `${pickedTarget.selector}::${fontId}`,
+          selector: pickedTarget.selector,
+          fontId,
+          slotKey: pickedTarget.slotKey,
+        },
+      ];
     });
+  }
+
+  /** Close the fine-tune panel and revert the override to whatever
+   *  the user had at the moment they opened the panel — used by the
+   *  Cancel button. */
+  function cancelFineTune(originalFontId: string | undefined) {
+    if (!pickedTarget) return;
+    if (originalFontId !== undefined) {
+      setDraftFont(originalFontId);
+    } else {
+      // No prior override — strip whatever live edit landed.
+      setOverrides((prev) =>
+        prev.filter((o) => o.selector !== pickedTarget.selector),
+      );
+    }
     setPickedTarget(null);
   }
 
@@ -862,15 +918,20 @@ export default function DesignLab() {
         const draftFont =
           slot.source.find((f) => f.id === pickedTarget.draftFontId) ??
           slot.source[0];
+        const isLive =
+          pickedTarget.draftFontId !== selectionsRef.current[pickedTarget.slotKey];
         return (
           <div className="design-lab__ft" role="region" aria-label="Fine-tune picked element">
             <div className="design-lab__ft-head">
-              <span className="design-lab__ft-tag">Override only this</span>
+              <span className="design-lab__ft-tag">
+                Override only this{isLive ? " · live" : ""}
+              </span>
               <button
                 type="button"
                 className="design-lab__close design-lab__close--ft"
                 onClick={() => setPickedTarget(null)}
-                aria-label="Cancel fine-tune"
+                aria-label="Close fine-tune (keep override)"
+                title="Close (keep override)"
               >
                 ×
               </button>
@@ -882,9 +943,7 @@ export default function DesignLab() {
             <select
               className="design-lab__select"
               value={pickedTarget.draftFontId}
-              onChange={(e) =>
-                setPickedTarget({ ...pickedTarget, draftFontId: e.target.value })
-              }
+              onChange={(e) => setDraftFont(e.target.value)}
             >
               {slot.source.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -898,13 +957,23 @@ export default function DesignLab() {
             >
               {pickedTarget.sample}
             </span>
-            <button
-              type="button"
-              className="design-lab__ft-apply"
-              onClick={applyOverride}
-            >
-              Apply override
-            </button>
+            <div className="design-lab__ft-actions">
+              <button
+                type="button"
+                className="design-lab__ft-cancel"
+                onClick={() => cancelFineTune(pickedTarget.originalOverrideFontId)}
+                title="Revert to the font in effect when you picked this element"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="design-lab__ft-apply"
+                onClick={() => setPickedTarget(null)}
+              >
+                Keep
+              </button>
+            </div>
           </div>
         );
       })()}

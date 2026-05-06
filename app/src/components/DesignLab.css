@@ -228,22 +228,43 @@
   color: rgba(255, 252, 242, 0.65);
 }
 
-.design-lab__ft-apply {
+.design-lab__ft-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 6px;
+}
+
+.design-lab__ft-apply,
+.design-lab__ft-cancel {
   height: 30px;
   border-radius: 8px;
-  border: none;
-  background: #d4a373;
-  color: #1f1d1a;
   font-family: inherit;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.design-lab__ft-apply {
+  border: none;
+  background: #d4a373;
+  color: #1f1d1a;
 }
 .design-lab__ft-apply:hover {
   background: #c8956b;
+}
+
+.design-lab__ft-cancel {
+  background: transparent;
+  color: rgba(255, 252, 242, 0.78);
+  border: 1px solid rgba(255, 252, 242, 0.22);
+}
+.design-lab__ft-cancel:hover {
+  background: rgba(255, 100, 100, 0.18);
+  border-color: rgba(255, 100, 100, 0.45);
+  color: #ffd4d4;
 }
 
 /* ============================================================
