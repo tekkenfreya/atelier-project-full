@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import "./DesignLab.css";
 
 /**
@@ -121,6 +122,11 @@ type SlotTarget = {
       label: string;
       selector?: string;
       wide?: boolean;
+      /** Page route where this surface is guaranteed to render.
+       *  Omit when the surface lives on multiple routes (e.g. nav,
+       *  promo strip) — chip homing will then just scroll on the
+       *  current page. */
+      route?: string;
     }[];
     sample: string;
     sampleStyle: React.CSSProperties;
@@ -140,9 +146,9 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
       label: "Homepage headlines · italic serif",
       surfaces: [
         { label: "Atelier wordmark", selector: ".nav__logo" },
-        { label: "Featured “Let’s begin…”", selector: ".featured__name" },
-        { label: "Brand line", selector: ".featured__brand-line" },
-        { label: "Italic input", selector: ".featured__name-input" },
+        { label: "Featured “Let’s begin…”", selector: ".featured__name", route: "/" },
+        { label: "Brand line", selector: ".featured__brand-line", route: "/" },
+        { label: "Italic input", selector: ".featured__name-input", route: "/" },
       ],
       sample: "Let’s begin with your name.",
       sampleStyle: { fontStyle: "italic", fontSize: "18px", letterSpacing: "-0.01em" },
@@ -156,10 +162,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Inner-page display · serif",
       surfaces: [
-        { label: "Cart titles", selector: ".cart-title, .cart-summary-title, .cart-item-name, .cart-plan-title" },
-        { label: "Checkout titles", selector: ".checkout-title" },
-        { label: "Results product name", selector: ".rd-product-name" },
-        { label: "Scientific names", selector: ".rd-active-detail-sci" },
+        { label: "Cart titles", selector: ".cart-title, .cart-summary-title, .cart-item-name, .cart-plan-title", route: "/cart" },
+        { label: "Checkout titles", selector: ".checkout-title", route: "/checkout" },
+        { label: "Results product name", selector: ".rd-product-name", route: "/results" },
+        { label: "Scientific names", selector: ".rd-active-detail-sci", route: "/results" },
       ],
       sample: "Your Skin Profile",
       sampleStyle: { fontStyle: "normal", fontSize: "18px", letterSpacing: "-0.01em" },
@@ -176,10 +182,10 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Homepage body · sans",
       surfaces: [
-        { label: "Subscription details", selector: ".lux-sub__card-cadence, .lux-sub__card-notes li" },
-        { label: "Subscription button", selector: ".sub__cta, .lux-sub__card-cta" },
-        { label: "Footer detail rows", selector: ".lux-footer__detail-row, .footer-row" },
-        { label: "Default homepage body", selector: ".atelier", wide: true },
+        { label: "Subscription details", selector: ".lux-sub__card-cadence, .lux-sub__card-notes li", route: "/" },
+        { label: "Subscription button", selector: ".sub__cta, .lux-sub__card-cta", route: "/" },
+        { label: "Footer detail rows", selector: ".lux-footer__detail-row, .footer-row", route: "/" },
+        { label: "Default homepage body", selector: ".atelier", wide: true, route: "/" },
       ],
       sample: "Bi-monthly cadence — billed every 60 days, dispatched on the 1st.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
@@ -193,11 +199,11 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
     ui: {
       label: "Inner-page body · sans",
       surfaces: [
-        { label: "Cart item details", selector: ".cart-item-details, .cart-item-category, .cart-item-price" },
-        { label: "Cart plan cards", selector: ".cart-plan-label, .cart-plan-desc, .cart-plan-reassurances li" },
-        { label: "Quiz body", selector: ".quiz-question-body, .quiz-option-label" },
-        { label: "Results details", selector: ".rd-product-skin, .rd-reason, .rd-active-detail-fn" },
-        { label: "Trust strip", selector: ".trust-strip__item" },
+        { label: "Cart item details", selector: ".cart-item-details, .cart-item-category, .cart-item-price", route: "/cart" },
+        { label: "Cart plan cards", selector: ".cart-plan-label, .cart-plan-desc, .cart-plan-reassurances li", route: "/cart" },
+        { label: "Quiz body", selector: ".quiz-question-body, .quiz-option-label", route: "/quiz" },
+        { label: "Results details", selector: ".rd-product-skin, .rd-reason, .rd-active-detail-fn", route: "/results" },
+        { label: "Trust strip", selector: ".trust-strip__item", route: "/cart" },
       ],
       sample: "Your bespoke moisturizer is calibrated to oily skin.",
       sampleStyle: { fontStyle: "normal", fontSize: "12px", letterSpacing: "0" },
@@ -216,8 +222,8 @@ const SLOT_TARGETS: Record<SlotKey, SlotTarget> = {
       surfaces: [
         { label: "Navigation links", selector: ".nav__links a" },
         { label: "Nav CTA", selector: ".nav__cta" },
-        { label: "Hero mark", selector: ".hero-v__mark" },
-        { label: "“Begin” button", selector: ".hero-v__cta" },
+        { label: "Hero mark", selector: ".hero-v__mark", route: "/" },
+        { label: "“Begin” button", selector: ".hero-v__cta", route: "/" },
         { label: "Promo strip", selector: ".promo-bar" },
         { label: "Eyebrows", selector: ".featured__eyebrow, .featured__halo, .featured__anchors, .cart-label, .checkout-label, .rd-label" },
       ],
@@ -307,8 +313,18 @@ function buildOverrideCss(): string {
 }
 
 export default function DesignLab() {
+  const router = useRouter();
+  const pathname = usePathname();
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(true);
+  /** When chip homing has to navigate to a different route, the
+   *  scroll/flash is queued here and consumed once the pathname
+   *  matches. Cleared if 4s elapse without the right route landing
+   *  (so a failed navigation never leaves stale work pending). */
+  const [pendingHome, setPendingHome] = useState<{
+    selector: string;
+    route: string;
+  } | null>(null);
   const [selections, setSelections] = useState<Record<SlotKey, string>>({
     display: SLOT_TARGETS.display.defaultId,
     edDisplay: SLOT_TARGETS.edDisplay.defaultId,
@@ -326,12 +342,15 @@ export default function DesignLab() {
   const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
   /** A picked element waiting to be tuned: the user can choose a
    *  font that applies ONLY to its selector instead of the whole
-   *  slot. Cleared on apply or cancel. */
+   *  slot. Cleared on apply or cancel. The sample text is the
+   *  picked element's own visible content so the live preview
+   *  shows the user exactly what their swap looks like. */
   const [pickedTarget, setPickedTarget] = useState<{
     selector: string;
     currentFamily: string;
     slotKey: SlotKey;
     draftFontId: string;
+    sample: string;
   } | null>(null);
   /** Active per-element overrides. Each one becomes one CSS rule
    *  injected into a dedicated <style> tag — slot-wide swaps still
@@ -452,6 +471,34 @@ export default function DesignLab() {
     styleEl.textContent = rules.join("\n");
   }, [overrides]);
 
+  /** Pending-home consumer: when the route a chip asked us to
+   *  navigate to lands, scroll + flash the queued selector. The
+   *  short timeout gives the new page a tick to render before we
+   *  query for matches. */
+  useEffect(() => {
+    if (!pendingHome) return;
+    if (pathname !== pendingHome.route) return;
+    const handle = window.setTimeout(() => {
+      const first = document.querySelector<HTMLElement>(pendingHome.selector);
+      if (first) {
+        first.scrollIntoView({ behavior: "smooth", block: "center" });
+        flashSurface(pendingHome.selector);
+      }
+      setPendingHome(null);
+    }, 350);
+    return () => window.clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingHome, pathname]);
+
+  /** Safety net — never leave a pending home queued indefinitely
+   *  if the route never resolves (e.g. the user navigates away
+   *  manually before the queued route lands). */
+  useEffect(() => {
+    if (!pendingHome) return;
+    const handle = window.setTimeout(() => setPendingHome(null), 4000);
+    return () => window.clearTimeout(handle);
+  }, [pendingHome]);
+
   /** Element picker. When `picking` is true, hovering outlines the
    *  element under the cursor and clicking identifies which slot
    *  controls it — then highlights that slot row in the panel. */
@@ -504,6 +551,15 @@ export default function DesignLab() {
           .fontFamily.split(",")[0]
           .replace(/['"]/g, "")
           .trim();
+        // Capture the picked element's visible text for the live
+        // preview. Truncated so a long paragraph doesn't blow up
+        // the panel; falls back to the slot's default sample when
+        // the element has no inline text (e.g. icon-only buttons).
+        const text = (target.textContent ?? "").replace(/\s+/g, " ").trim();
+        const sample =
+          text.length > 0
+            ? text.slice(0, 90)
+            : SLOT_TARGETS[slot].ui.sample;
         // Seed the dropdown with whatever font is currently winning
         // — the slot-wide selection if no override covers this
         // selector, or the existing override's font if there is one.
@@ -515,6 +571,7 @@ export default function DesignLab() {
           currentFamily: family,
           slotKey: slot,
           draftFontId: existing?.fontId ?? selectionsRef.current[slot],
+          sample,
         });
       }
     }
@@ -661,6 +718,23 @@ export default function DesignLab() {
     setOverrides([]);
   }
 
+  /** Scroll the first matching element into view and flash the
+   *  whole match set. If nothing matches on the current page and
+   *  a route hint is provided, navigate first — the pending-home
+   *  effect picks up the flash once the new route lands. */
+  function homeToSurface(selector: string, route?: string) {
+    const first = document.querySelector<HTMLElement>(selector);
+    if (first) {
+      first.scrollIntoView({ behavior: "smooth", block: "center" });
+      flashSurface(selector);
+      return;
+    }
+    if (route) {
+      setPendingHome({ selector, route });
+      router.push(route);
+    }
+  }
+
   /** After the picker resolves a slot, outline every other element
    *  the slot also controls — so the user sees the slot's full
    *  footprint, not just the one element they pointed at. Wide
@@ -735,6 +809,9 @@ export default function DesignLab() {
 
       {pickedTarget && (() => {
         const slot = SLOT_TARGETS[pickedTarget.slotKey];
+        const draftFont =
+          slot.source.find((f) => f.id === pickedTarget.draftFontId) ??
+          slot.source[0];
         return (
           <div className="design-lab__ft" role="region" aria-label="Fine-tune picked element">
             <div className="design-lab__ft-head">
@@ -765,6 +842,12 @@ export default function DesignLab() {
                 </option>
               ))}
             </select>
+            <span
+              className="design-lab__preview"
+              style={{ fontFamily: draftFont.stack, ...slot.ui.sampleStyle }}
+            >
+              {pickedTarget.sample}
+            </span>
             <button
               type="button"
               className="design-lab__ft-apply"
@@ -793,9 +876,19 @@ export default function DesignLab() {
                   <button
                     type="button"
                     className={`design-lab__chip${i === 0 ? " design-lab__chip--key" : ""}${s.selector ? "" : " design-lab__chip--static"}`}
-                    onClick={s.selector ? () => flashSurface(s.selector!) : undefined}
+                    onClick={
+                      s.selector
+                        ? () => homeToSurface(s.selector!, s.route)
+                        : undefined
+                    }
                     disabled={!s.selector}
-                    title={s.selector ? "Click to flash this surface on the page" : undefined}
+                    title={
+                      s.selector
+                        ? s.route
+                          ? `Scroll to this on ${s.route}`
+                          : "Scroll to this surface on the current page"
+                        : undefined
+                    }
                   >
                     {s.label}
                   </button>
