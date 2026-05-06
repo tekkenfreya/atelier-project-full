@@ -15,7 +15,6 @@
 .design-lab {
   position: fixed;
   bottom: 18px;
-  left: 18px;
   z-index: 9999;
   width: 300px;
   max-height: calc(100vh - 36px);
@@ -34,6 +33,66 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.design-lab--bl {
+  left: 18px;
+  right: auto;
+}
+.design-lab--br {
+  right: 18px;
+  left: auto;
+}
+
+/* ============================================================
+   Collapsed chip — replaces the panel when the user minimises.
+   Always visible, low-footprint, durable affordance to re-open.
+   ============================================================ */
+
+.design-lab-chip {
+  position: fixed;
+  bottom: 18px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 12px;
+  background: rgba(31, 29, 26, 0.92);
+  color: rgba(255, 252, 242, 0.92);
+  border: 1px solid rgba(255, 252, 242, 0.2);
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: background 0.2s ease, transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.design-lab-chip:hover {
+  background: rgba(31, 29, 26, 0.98);
+  border-color: rgba(255, 252, 242, 0.36);
+  transform: translateY(-1px);
+}
+
+.design-lab-chip--bl {
+  left: 18px;
+}
+.design-lab-chip--br {
+  right: 18px;
+}
+
+.design-lab-chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d4a373;
+  box-shadow: 0 0 8px rgba(212, 163, 115, 0.7);
 }
 
 .design-lab__head {
@@ -58,7 +117,8 @@
 
 .design-lab__reset,
 .design-lab__close,
-.design-lab__pick {
+.design-lab__pick,
+.design-lab__side {
   background: transparent;
   border: 1px solid rgba(255, 252, 242, 0.2);
   color: rgba(255, 252, 242, 0.85);
@@ -66,6 +126,20 @@
   cursor: pointer;
   padding: 0;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.design-lab__side {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
+.design-lab__side:hover {
+  background: rgba(255, 252, 242, 0.12);
+  border-color: rgba(255, 252, 242, 0.4);
 }
 
 .design-lab__reset,

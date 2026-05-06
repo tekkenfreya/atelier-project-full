@@ -265,7 +265,7 @@ const PALETTES: readonly Palette[] = [
   },
 ];
 
-const STORAGE_KEYS: Record<SlotKey | "active" | "palette", string> = {
+const STORAGE_KEYS: Record<SlotKey | "active" | "palette" | "position", string> = {
   active: "atelier-lab",
   display: "atelier-lab-display",
   edDisplay: "atelier-lab-ed-display",
@@ -273,7 +273,10 @@ const STORAGE_KEYS: Record<SlotKey | "active" | "palette", string> = {
   edBody: "atelier-lab-ed-body",
   mono: "atelier-lab-mono",
   palette: "atelier-lab-palette",
+  position: "atelier-lab-position",
 };
+
+type LabPosition = "bl" | "br";
 
 function buildGoogleFontsUrl(fonts: readonly Font[]): string {
   const seen = new Set<string>();
@@ -316,7 +319,13 @@ export default function DesignLab() {
   const router = useRouter();
   const pathname = usePathname();
   const [active, setActive] = useState(false);
+  /** When false, the lab collapses into a small floating chip at
+   *  the corner. The chip is always visible so the user has a
+   *  durable affordance to re-open the panel. */
   const [open, setOpen] = useState(true);
+  /** Which corner the panel + collapsed chip dock to. Persisted
+   *  so the user's preference survives reloads. */
+  const [position, setPosition] = useState<LabPosition>("bl");
   /** When chip homing has to navigate to a different route, the
    *  scroll/flash is queued here and consumed once the pathname
    *  matches. Cleared if 4s elapse without the right route landing
@@ -385,7 +394,14 @@ export default function DesignLab() {
       mono: localStorage.getItem(STORAGE_KEYS.mono) ?? SLOT_TARGETS.mono.defaultId,
     });
     setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? "default");
+    const storedPos = localStorage.getItem(STORAGE_KEYS.position);
+    if (storedPos === "br" || storedPos === "bl") setPosition(storedPos);
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    localStorage.setItem(STORAGE_KEYS.position, position);
+  }, [active, position]);
 
   // Inject Google Fonts stylesheet + dynamic override CSS once when
   // the lab activates. Cleaned up if the component unmounts.
@@ -762,13 +778,31 @@ export default function DesignLab() {
     setPalette("default");
   }
 
-  if (!active || !open) return null;
+  if (!active) return null;
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        className={`design-lab-chip design-lab-chip--${position}`}
+        onClick={() => setOpen(true)}
+        aria-label="Open design lab"
+        title="Open design lab (Shift + L)"
+      >
+        <span className="design-lab-chip__dot" aria-hidden />
+        Lab
+      </button>
+    );
+  }
 
   const activePalette =
     PALETTES.find((p) => p.id === palette) ?? PALETTES[0];
 
   return (
-    <aside className="design-lab" aria-label="Design lab">
+    <aside
+      className={`design-lab design-lab--${position}`}
+      aria-label="Design lab"
+    >
       <header className="design-lab__head">
         <span className="design-lab__title">Design Lab</span>
         <div className="design-lab__head-actions">
@@ -792,9 +826,25 @@ export default function DesignLab() {
           </button>
           <button
             type="button"
+            className="design-lab__side"
+            onClick={() => setPosition((p) => (p === "bl" ? "br" : "bl"))}
+            aria-label={
+              position === "bl"
+                ? "Move panel to right side"
+                : "Move panel to left side"
+            }
+            title={
+              position === "bl" ? "Move to right" : "Move to left"
+            }
+          >
+            ↔
+          </button>
+          <button
+            type="button"
             className="design-lab__close"
             onClick={() => setOpen(false)}
-            aria-label="Hide design lab"
+            aria-label="Minimise design lab"
+            title="Minimise"
           >
             ×
           </button>
