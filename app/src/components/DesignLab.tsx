@@ -352,6 +352,55 @@ const STORAGE_KEYS: Record<SlotKey | "active" | "palette" | "position", string> 
 
 type LabPosition = "bl" | "br";
 
+type LabView = "type" | "map";
+
+/** Curated sitemap of the customer-facing routes Edson reviews
+ *  during typography + conversion passes. The lab's "Map" view
+ *  renders this as a clickable list so any page can be opened
+ *  without walking through the consultation flow each time.
+ *
+ *  Quiz step deep-linking is intentionally not exposed yet — the
+ *  quiz page does not parse a `?step=N` query param. Extending
+ *  that is a separate quiz refactor; for now /quiz appears as a
+ *  single entry with a note about its multi-step nature. */
+type SitemapPage = {
+  path: string;
+  label: string;
+  description?: string;
+  /** Disabled if the route exists but typically requires auth or
+   *  prior state (e.g. /confirmation only loads after a checkout
+   *  redirect from Stripe). User can still click it. */
+  needs?: string;
+};
+
+const SITEMAP: readonly { section: string; pages: readonly SitemapPage[] }[] = [
+  {
+    section: "Marketing flow",
+    pages: [
+      { path: "/", label: "Home", description: "Hero · featured · subscription · footer" },
+      { path: "/quiz", label: "Consultation Quiz", description: "Multi-step form (~31 questions)" },
+      { path: "/results", label: "Results", description: "Recommended formula + regimen", needs: "completed quiz" },
+      { path: "/cart", label: "Cart", description: "Plan selection · trust strip" },
+      { path: "/checkout", label: "Checkout", description: "Stripe redirect", needs: "items in cart" },
+      { path: "/confirmation", label: "Confirmation", description: "Post-payment screen", needs: "Stripe redirect" },
+    ],
+  },
+  {
+    section: "Customer area",
+    pages: [
+      { path: "/account", label: "Account", description: "Dashboard · orders · settings" },
+    ],
+  },
+  {
+    section: "Reference",
+    pages: [
+      { path: "/ingredients", label: "Ingredients", description: "Botanical glossary" },
+      { path: "/analysis", label: "Analysis", description: "Skin profile breakdown", needs: "completed quiz" },
+      { path: "/report", label: "Detailed Report", description: "Long-form regimen explanation", needs: "completed quiz" },
+    ],
+  },
+];
+
 function buildGoogleFontsUrl(fonts: readonly Font[]): string {
   const seen = new Set<string>();
   const families: string[] = [];
@@ -400,6 +449,9 @@ export default function DesignLab() {
   /** Which corner the panel + collapsed chip dock to. Persisted
    *  so the user's preference survives reloads. */
   const [position, setPosition] = useState<LabPosition>("bl");
+  /** Which top-level view is showing: type tools or the sitemap.
+   *  Tabs in the panel header swap between them. */
+  const [view, setView] = useState<LabView>("type");
   /** When chip homing has to navigate to a different route, the
    *  scroll/flash is queued here and consumed once the pathname
    *  matches. Cleared if 4s elapse without the right route landing
@@ -1003,24 +1055,28 @@ export default function DesignLab() {
       <header className="design-lab__head">
         <span className="design-lab__title">Design Lab</span>
         <div className="design-lab__head-actions">
-          <button
-            type="button"
-            className={`design-lab__pick${picking ? " design-lab__pick--on" : ""}`}
-            onClick={() => setPicking((p) => !p)}
-            aria-pressed={picking}
-            aria-label="Pick text on the page to identify its slot"
-            title="Click, then point at any text on the page"
-          >
-            {picking ? "Cancel" : "Pick"}
-          </button>
-          <button
-            type="button"
-            className="design-lab__reset"
-            onClick={reset}
-            aria-label="Reset to defaults"
-          >
-            Reset
-          </button>
+          {view === "type" && (
+            <button
+              type="button"
+              className={`design-lab__pick${picking ? " design-lab__pick--on" : ""}`}
+              onClick={() => setPicking((p) => !p)}
+              aria-pressed={picking}
+              aria-label="Pick text on the page to identify its slot"
+              title="Click, then point at any text on the page"
+            >
+              {picking ? "Cancel" : "Pick"}
+            </button>
+          )}
+          {view === "type" && (
+            <button
+              type="button"
+              className="design-lab__reset"
+              onClick={reset}
+              aria-label="Reset to defaults"
+            >
+              Reset
+            </button>
+          )}
           <button
             type="button"
             className="design-lab__side"
@@ -1048,13 +1104,87 @@ export default function DesignLab() {
         </div>
       </header>
 
-      {picking && (
+      <div className="design-lab__tabs" role="tablist" aria-label="Lab view">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={view === "type"}
+          className={`design-lab__tab${view === "type" ? " design-lab__tab--on" : ""}`}
+          onClick={() => setView("type")}
+        >
+          Type
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={view === "map"}
+          className={`design-lab__tab${view === "map" ? " design-lab__tab--on" : ""}`}
+          onClick={() => setView("map")}
+        >
+          Map
+        </button>
+      </div>
+
+      {view === "type" && picking && (
         <p className="design-lab__pick-hint">
           Click any text on the page to find its slot · Esc to cancel
         </p>
       )}
 
-      {pickedTarget && (() => {
+      {view === "map" && (
+        <div className="design-lab__map">
+          {SITEMAP.map((group) => (
+            <section key={group.section} className="design-lab__map-group">
+              <h3 className="design-lab__map-section">{group.section}</h3>
+              <ul className="design-lab__map-list">
+                {group.pages.map((page) => {
+                  const isCurrent = pathname === page.path;
+                  return (
+                    <li key={page.path}>
+                      <button
+                        type="button"
+                        className={`design-lab__map-row${isCurrent ? " design-lab__map-row--current" : ""}`}
+                        onClick={() => router.push(page.path)}
+                        title={
+                          page.needs
+                            ? `Needs: ${page.needs}`
+                            : `Open ${page.path}`
+                        }
+                      >
+                        <span className="design-lab__map-label">
+                          {page.label}
+                          {isCurrent && (
+                            <span className="design-lab__map-here" aria-label="You are here">
+                              ◉
+                            </span>
+                          )}
+                        </span>
+                        <code className="design-lab__map-path">{page.path}</code>
+                        {page.description && (
+                          <span className="design-lab__map-desc">
+                            {page.description}
+                          </span>
+                        )}
+                        {page.needs && (
+                          <span className="design-lab__map-needs">
+                            Needs · {page.needs}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+          <p className="design-lab__map-note">
+            Quiz step deep-linking is not wired yet — open <code>/quiz</code>{" "}
+            and walk through manually for now.
+          </p>
+        </div>
+      )}
+
+      {view === "type" && pickedTarget && (() => {
         const slot = SLOT_TARGETS[pickedTarget.slotKey];
         // Override font may come from any pool, so look up
         // across all categories.
@@ -1145,7 +1275,7 @@ export default function DesignLab() {
         );
       })()}
 
-      {SLOT_ORDER.map((key) => {
+      {view === "type" && SLOT_ORDER.map((key) => {
         const slot = SLOT_TARGETS[key];
         const value = selections[key];
         const stack =
@@ -1202,36 +1332,38 @@ export default function DesignLab() {
         );
       })}
 
-      <div className="design-lab__row">
-        <span className="design-lab__label">Colour palette</span>
-        <ul className="design-lab__surfaces" aria-label="What this slot controls">
-          <li className="design-lab__chip design-lab__chip--key">Page background</li>
-          <li className="design-lab__chip">Ink</li>
-          <li className="design-lab__chip">Botanical accents</li>
-        </ul>
-        <select
-          className="design-lab__select"
-          value={palette}
-          onChange={(e) => setPalette(e.target.value)}
-        >
-          {PALETTES.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.label}
-            </option>
-          ))}
-        </select>
-        <div className="design-lab__swatches" aria-hidden>
-          {activePalette.swatches.map((c, i) => (
-            <span
-              key={i}
-              className="design-lab__swatch"
-              style={{ background: c }}
-            />
-          ))}
+      {view === "type" && (
+        <div className="design-lab__row">
+          <span className="design-lab__label">Colour palette</span>
+          <ul className="design-lab__surfaces" aria-label="What this slot controls">
+            <li className="design-lab__chip design-lab__chip--key">Page background</li>
+            <li className="design-lab__chip">Ink</li>
+            <li className="design-lab__chip">Botanical accents</li>
+          </ul>
+          <select
+            className="design-lab__select"
+            value={palette}
+            onChange={(e) => setPalette(e.target.value)}
+          >
+            {PALETTES.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+          <div className="design-lab__swatches" aria-hidden>
+            {activePalette.swatches.map((c, i) => (
+              <span
+                key={i}
+                className="design-lab__swatch"
+                style={{ background: c }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {overrides.length > 0 && (
+      {view === "type" && overrides.length > 0 && (
         <div className="design-lab__row design-lab__row--overrides">
           <div className="design-lab__overrides-head">
             <span className="design-lab__label">

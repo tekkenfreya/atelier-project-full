@@ -503,6 +503,165 @@
   text-align: center;
 }
 
+/* ============================================================
+   View tabs — Type vs Map
+   ============================================================ */
+
+.design-lab__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(255, 252, 242, 0.06);
+  border: 1px solid rgba(255, 252, 242, 0.1);
+  border-radius: 100px;
+}
+
+.design-lab__tab {
+  flex: 1;
+  height: 26px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 252, 242, 0.6);
+  font-family: inherit;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.design-lab__tab:hover {
+  color: rgba(255, 252, 242, 0.9);
+}
+
+.design-lab__tab--on {
+  background: rgba(255, 252, 242, 0.16);
+  color: rgba(255, 252, 242, 0.96);
+}
+
+/* ============================================================
+   Sitemap view — clickable list of every customer route, grouped
+   ============================================================ */
+
+.design-lab__map {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.design-lab__map-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.design-lab__map-section {
+  margin: 0 0 2px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.55);
+}
+
+.design-lab__map-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.design-lab__map-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 9px 11px;
+  background: rgba(255, 252, 242, 0.04);
+  border: 1px solid rgba(255, 252, 242, 0.08);
+  border-radius: 8px;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.design-lab__map-row:hover {
+  background: rgba(255, 252, 242, 0.08);
+  border-color: rgba(255, 252, 242, 0.22);
+  transform: translateY(-1px);
+}
+
+.design-lab__map-row--current {
+  background: rgba(212, 163, 115, 0.16);
+  border-color: rgba(212, 163, 115, 0.5);
+}
+
+.design-lab__map-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 252, 242, 0.95);
+  text-transform: none;
+}
+
+.design-lab__map-here {
+  color: #d4a373;
+  font-size: 10px;
+}
+
+.design-lab__map-path {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0;
+  color: #d4a373;
+  background: transparent;
+}
+
+.design-lab__map-desc {
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 252, 242, 0.55);
+  text-transform: none;
+  line-height: 1.35;
+}
+
+.design-lab__map-needs {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(212, 163, 115, 0.7);
+  margin-top: 2px;
+}
+
+.design-lab__map-note {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: rgba(212, 163, 115, 0.08);
+  border: 1px dashed rgba(212, 163, 115, 0.3);
+  border-radius: 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 252, 242, 0.65);
+  line-height: 1.5;
+}
+
+.design-lab__map-note code {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: #d4a373;
+}
+
 /* ================================================================
    Palette overrides — driven by data-palette on <html>.
    Each block redefines the .atelier palette tokens. Replace the
