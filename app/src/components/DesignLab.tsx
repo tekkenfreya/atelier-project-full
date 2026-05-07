@@ -363,6 +363,101 @@ type LabView = "type" | "map";
  *  quiz page does not parse a `?step=N` query param. Extending
  *  that is a separate quiz refactor; for now /quiz appears as a
  *  single entry with a note about its multi-step nature. */
+/** Curated bundles of font + palette choices Edson can audition
+ *  with one click. Each preset names every slot and the palette,
+ *  so applying one wipes back to a known-good set rather than the
+ *  factory defaults. Reset stays as the strict factory option. */
+type Preset = {
+  id: string;
+  label: string;
+  /** A short composer-credit-style line (the dominant typefaces)
+   *  shown beneath the preset name. */
+  byline: string;
+  fonts: Record<SlotKey, string>;
+  palette: string;
+};
+
+const PRESETS: readonly Preset[] = [
+  {
+    id: "atelier-default",
+    label: "Atelier Default",
+    byline: "Fraunces · Inter · JetBrains Mono",
+    fonts: {
+      display: "fraunces",
+      edDisplay: "cormorant",
+      body: "inter",
+      edBody: "satoshi",
+      mono: "jetbrains-mono",
+    },
+    palette: "default",
+  },
+  {
+    id: "modern-editorial",
+    label: "Modern Editorial",
+    byline: "Bodoni Moda · Manrope · Geist Mono",
+    fonts: {
+      display: "bodoni-moda",
+      edDisplay: "source-serif",
+      body: "manrope",
+      edBody: "plus-jakarta",
+      mono: "geist-mono",
+    },
+    palette: "alt-1",
+  },
+  {
+    id: "old-world",
+    label: "Old World",
+    byline: "Playfair · EB Garamond · IBM Plex Mono",
+    fonts: {
+      display: "playfair",
+      edDisplay: "eb-garamond",
+      body: "lato",
+      edBody: "ibm-plex-sans",
+      mono: "ibm-plex-mono",
+    },
+    palette: "alt-2",
+  },
+  {
+    id: "apothecary-dark",
+    label: "Apothecary Dark",
+    byline: "Spectral · Hanken Grotesk · Geist Mono",
+    fonts: {
+      display: "spectral",
+      edDisplay: "cormorant",
+      body: "hanken-grotesk",
+      edBody: "geist",
+      mono: "geist-mono",
+    },
+    palette: "alt-3",
+  },
+  {
+    id: "couture",
+    label: "Couture",
+    byline: "Italiana · Hanken · Cousine",
+    fonts: {
+      display: "italiana",
+      edDisplay: "bodoni-moda",
+      body: "hanken-grotesk",
+      edBody: "instrument-sans",
+      mono: "cousine",
+    },
+    palette: "alt-6",
+  },
+  {
+    id: "soft-linen",
+    label: "Soft Linen",
+    byline: "Cormorant Infant · Outfit · DM Mono",
+    fonts: {
+      display: "cormorant-infant",
+      edDisplay: "cormorant",
+      body: "outfit",
+      edBody: "figtree",
+      mono: "dm-mono",
+    },
+    palette: "alt-4",
+  },
+];
+
 type SitemapPage = {
   path: string;
   label: string;
@@ -1032,6 +1127,34 @@ export default function DesignLab() {
     setPickedTarget(null);
   }
 
+  /** Apply one of the curated presets — sets every slot and the
+   *  palette in one beat, and clears any per-element overrides
+   *  (presets are holistic looks; lingering overrides would fight
+   *  the new direction). */
+  function applyPreset(presetId: string) {
+    const preset = PRESETS.find((p) => p.id === presetId);
+    if (!preset) return;
+    setSelections({ ...preset.fonts });
+    setPalette(preset.palette);
+    setOverrides([]);
+    setPickedTarget(null);
+  }
+
+  /** Detect which preset (if any) the current state matches, so
+   *  the active preset chip can be highlighted. Returns null when
+   *  the user has drifted off-preset (custom font swap or palette
+   *  change). */
+  function activePresetId(): string | null {
+    for (const preset of PRESETS) {
+      if (preset.palette !== palette) continue;
+      const match = (Object.keys(preset.fonts) as SlotKey[]).every(
+        (k) => preset.fonts[k] === selections[k],
+      );
+      if (match) return preset.id;
+    }
+    return null;
+  }
+
   if (!active) return null;
 
   if (!open) {
@@ -1129,6 +1252,30 @@ export default function DesignLab() {
           Map
         </button>
       </div>
+
+      {view === "type" && (() => {
+        const active = activePresetId();
+        return (
+          <div className="design-lab__presets" role="region" aria-label="Design presets">
+            <span className="design-lab__presets-label">Presets</span>
+            <ul className="design-lab__presets-list">
+              {PRESETS.map((p) => (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    className={`design-lab__preset${active === p.id ? " design-lab__preset--on" : ""}`}
+                    onClick={() => applyPreset(p.id)}
+                    title={p.byline}
+                  >
+                    <span className="design-lab__preset-name">{p.label}</span>
+                    <span className="design-lab__preset-byline">{p.byline}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })()}
 
       {view === "type" && picking && (
         <p className="design-lab__pick-hint">
