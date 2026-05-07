@@ -65,8 +65,9 @@
 /* --- Testimonial grid --- */
 
 .lux-proof__grid {
+  /* Fluid — the three cards expand with the viewport so the
+     proof strip stays in proportion with the wider hero / nav. */
   list-style: none;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0;
   display: grid;

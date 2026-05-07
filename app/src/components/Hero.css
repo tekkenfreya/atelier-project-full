@@ -9,7 +9,7 @@
 
 .atelier .hero-v {
   position: relative;
-  width: min(1680px, calc(100% - 32px));
+  width: calc(100% - 32px);
   margin: 24px auto 0;
   height: calc(100vh - 254px);
   min-height: 500px;

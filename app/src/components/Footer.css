@@ -21,7 +21,8 @@
 }
 
 .lux-foot__inner {
-  max-width: 1200px;
+  /* Fluid — scales with viewport. Inner text columns keep their
+     own ch-based caps for readability. */
   margin: 0 auto;
   display: flex;
   flex-direction: column;

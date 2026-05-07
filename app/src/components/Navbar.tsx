@@ -18,6 +18,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const [cartCount, setCartCount] = useState(0);
   const [isAuthed, setIsAuthed] = useState(false);
+  /** Mobile menu visible when the inline `.nav__links` are
+   *  hidden by the <980px breakpoint. The hamburger toggle next
+   *  to the icons opens an overlay with the same routes. */
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     function syncCartCount() {
@@ -54,6 +58,11 @@ export default function Navbar() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const isAccountActive =
     pathname === "/account" || pathname.startsWith("/account/");
@@ -101,6 +110,35 @@ export default function Navbar() {
       </ul>
 
       <div className="nav__right">
+        <button
+          type="button"
+          className={`nav__menu-toggle${menuOpen ? " nav__menu-toggle--open" : ""}`}
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          {menuOpen ? (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+              <path
+                d="M1 1l12 12M13 1L1 13"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden>
+              <path
+                d="M0 1h20M0 7h20M0 13h20"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
+        </button>
+
         <button
           type="button"
           className={`nav__icon ${isAccountActive ? "nav__icon--active" : ""}`}
@@ -157,6 +195,53 @@ export default function Navbar() {
           Take the Quiz
         </button>
       </div>
+
+      {menuOpen && (
+        <div
+          id="nav-mobile-menu"
+          className="nav__menu"
+          role="dialog"
+          aria-label="Site navigation"
+        >
+          <ul className="nav__menu-list">
+            <li>
+              <Link href="/#products" onClick={() => setMenuOpen(false)}>
+                Skincare
+              </Link>
+            </li>
+            <li>
+              <Link href="/accessories" onClick={() => setMenuOpen(false)}>
+                Accessories
+              </Link>
+            </li>
+            <li>
+              <Link href="/ingredients" onClick={() => setMenuOpen(false)}>
+                Our ingredients
+              </Link>
+            </li>
+            <li>
+              <Link href="/#about" onClick={() => setMenuOpen(false)}>
+                About us
+              </Link>
+            </li>
+            <li>
+              <Link href="/#reviews" onClick={() => setMenuOpen(false)}>
+                Reviews
+              </Link>
+            </li>
+            <li>
+              <Link href="/gift" onClick={() => setMenuOpen(false)}>
+                Gift Kyrill
+              </Link>
+            </li>
+            <li>
+              <Link href="/#subscription" onClick={() => setMenuOpen(false)}>
+                Subscribe
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
     </nav>
   );
 }

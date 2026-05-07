@@ -19,7 +19,8 @@
 }
 
 .lux-sub__inner {
-  max-width: 1080px;
+  /* Fluid — keeps proportion with hero / nav at any viewport. The
+     header text cap below preserves readable line lengths. */
   margin: 0 auto;
   position: relative;
   z-index: 1;
