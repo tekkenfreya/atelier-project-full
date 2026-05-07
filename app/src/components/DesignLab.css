@@ -854,6 +854,29 @@
   margin-top: 2px;
 }
 
+.design-lab__map-mock,
+.design-lab__map-mock-inline {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(0.78 0.13 150);
+}
+
+.design-lab__map-mock {
+  margin-top: 2px;
+}
+
+.design-lab__map-mock-inline {
+  font-size: 8px;
+  padding: 1px 6px;
+  background: oklch(0.78 0.13 150 / 0.12);
+  border: 1px solid oklch(0.78 0.13 150 / 0.4);
+  border-radius: 100px;
+  white-space: nowrap;
+  color: oklch(0.85 0.13 150);
+}
+
 .design-lab__map-note {
   margin: 4px 0 0;
   padding: 8px 10px;

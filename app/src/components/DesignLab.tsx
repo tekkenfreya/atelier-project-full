@@ -473,7 +473,72 @@ type SitemapPage = {
    *  prior state (e.g. /confirmation only loads after a checkout
    *  redirect from Stripe). User can still click it. */
   needs?: string;
+  /** Optional state seeder. Called RIGHT BEFORE the lab navigates
+   *  to this route — used to bypass front-end guards on pages that
+   *  expect specific sessionStorage entries. Only included for
+   *  routes whose guards we can fake convincingly without a live
+   *  back-end (cart, checkout, results, report, confirmation). */
+  mock?: () => void;
 };
+
+/** Mock helpers — write the minimum sessionStorage required for
+ *  each gated page to render its design review surface. Quality
+ *  of the rendered output depends on whether the page also calls
+ *  an API that needs valid data; for /results and /report the
+ *  matcher will best-effort match these answers, falling back to
+ *  the empty / error state when nothing scores. */
+
+function seedCart() {
+  sessionStorage.setItem(
+    "cartItems",
+    JSON.stringify([
+      {
+        productId: "demo-cleanser",
+        productName: "Demo Cleanser",
+        category: "Cleanser",
+        skinType: "Combination",
+        fragranceOption: "F1",
+        price: 23,
+      },
+      {
+        productId: "demo-serum",
+        productName: "Demo Serum",
+        category: "Serum",
+        skinType: "Combination",
+        fragranceOption: "F1",
+        price: 50,
+      },
+      {
+        productId: "demo-moisturizer",
+        productName: "Demo Moisturizer",
+        category: "Moisturizer",
+        skinType: "Combination",
+        fragranceOption: "F1",
+        price: 41,
+      },
+    ]),
+  );
+  sessionStorage.setItem("subscriptionPlan", "bi-monthly");
+  sessionStorage.setItem("customerName", "Edson");
+}
+
+function seedQuizAnswers() {
+  sessionStorage.setItem(
+    "quizAnswers",
+    JSON.stringify({
+      1: "25–34",
+      4: "Urban / City centre",
+      12: [
+        "Dryness or dehydration",
+        "Fine lines or wrinkles",
+        "Dullness or tired-looking skin",
+      ],
+      24: ["Hydration", "Anti-aging", "Brightening"],
+      31: "Light, fresh botanical notes",
+    }),
+  );
+  sessionStorage.setItem("customerName", "Edson");
+}
 
 const SITEMAP: readonly { section: string; pages: readonly SitemapPage[] }[] = [
   {
@@ -481,10 +546,10 @@ const SITEMAP: readonly { section: string; pages: readonly SitemapPage[] }[] = [
     pages: [
       { path: "/", label: "Home", description: "Hero · featured · subscription · footer" },
       { path: "/quiz", label: "Consultation Quiz", description: "Multi-step form (~31 questions)" },
-      { path: "/results", label: "Results", description: "Recommended formula + regimen", needs: "completed quiz" },
-      { path: "/cart", label: "Cart", description: "Plan selection · trust strip" },
-      { path: "/checkout", label: "Checkout", description: "Stripe redirect", needs: "items in cart" },
-      { path: "/confirmation", label: "Confirmation", description: "Post-payment screen", needs: "Stripe redirect" },
+      { path: "/results", label: "Results", description: "Recommended formula + regimen", needs: "completed quiz", mock: seedQuizAnswers },
+      { path: "/cart", label: "Cart", description: "Plan selection · trust strip", mock: seedCart },
+      { path: "/checkout", label: "Checkout", description: "Stripe redirect", needs: "items in cart", mock: seedCart },
+      { path: "/confirmation?session_id=demo", label: "Confirmation", description: "Post-payment screen", needs: "Stripe redirect" },
     ],
   },
   {
@@ -497,8 +562,8 @@ const SITEMAP: readonly { section: string; pages: readonly SitemapPage[] }[] = [
     section: "Reference",
     pages: [
       { path: "/ingredients", label: "Ingredients", description: "Botanical glossary" },
-      { path: "/analysis", label: "Analysis", description: "Skin profile breakdown", needs: "completed quiz" },
-      { path: "/report", label: "Detailed Report", description: "Long-form regimen explanation", needs: "completed quiz" },
+      { path: "/analysis", label: "Analysis", description: "Skin profile breakdown", needs: "completed quiz", mock: seedQuizAnswers },
+      { path: "/report", label: "Detailed Report", description: "Long-form regimen explanation", needs: "completed quiz", mock: seedQuizAnswers },
     ],
   },
 ];
@@ -1431,15 +1496,28 @@ export default function DesignLab() {
               <h3 className="design-lab__map-section">{group.section}</h3>
               <ul className="design-lab__map-list">
                 {group.pages.map((page) => {
-                  const isCurrent = pathname === page.path;
+                  // Compare pathname against the path's bare route
+                  // (sans query string) so /confirmation?session_id=…
+                  // still highlights when the user is on that page.
+                  const bare = page.path.split("?")[0];
+                  const isCurrent = pathname === bare;
                   return (
                     <li key={page.path}>
                       <button
                         type="button"
                         className={`design-lab__map-row${isCurrent ? " design-lab__map-row--current" : ""}`}
-                        onClick={() => router.push(page.path)}
+                        onClick={() => {
+                          // Seed any required state BEFORE
+                          // navigating, so guards on the
+                          // destination page see the mocked data
+                          // and render normally.
+                          if (page.mock) page.mock();
+                          router.push(page.path);
+                        }}
                         title={
-                          page.needs
+                          page.mock
+                            ? "Auto-seeds demo state, then opens this page"
+                            : page.needs
                             ? `Needs: ${page.needs}`
                             : `Open ${page.path}`
                         }
@@ -1458,10 +1536,19 @@ export default function DesignLab() {
                             {page.description}
                           </span>
                         )}
-                        {page.needs && (
-                          <span className="design-lab__map-needs">
-                            Needs · {page.needs}
+                        {/* Auto-seeded routes show a green hint;
+                            otherwise show the "Needs:" gate so the
+                            user knows why the route might fail. */}
+                        {page.mock ? (
+                          <span className="design-lab__map-mock">
+                            ↻ Auto-seeds demo state
                           </span>
+                        ) : (
+                          page.needs && (
+                            <span className="design-lab__map-needs">
+                              Needs · {page.needs}
+                            </span>
+                          )
                         )}
                       </button>
                     </li>
@@ -1471,8 +1558,14 @@ export default function DesignLab() {
             </section>
           ))}
           <p className="design-lab__map-note">
-            Quiz step deep-linking is not wired yet — open <code>/quiz</code>{" "}
-            and walk through manually for now.
+            Routes flagged{" "}
+            <span className="design-lab__map-mock-inline">
+              ↻ Auto-seeds demo state
+            </span>{" "}
+            populate sessionStorage with sample data before
+            navigating, so design review never requires walking the
+            real flow. Quiz step deep-linking is still pending —
+            open <code>/quiz</code> for the form itself.
           </p>
         </div>
       )}
