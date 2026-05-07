@@ -656,6 +656,21 @@
   cursor: default;
 }
 
+/* Static chips are descriptive labels (e.g. the "Page background"
+   / "Ink" / "Botanical accents" labels under Colour palette).
+   They share the chip visual but should not respond to hover. */
+.design-lab__chip--static:hover {
+  background: rgba(255, 252, 242, 0.08);
+  border-color: rgba(255, 252, 242, 0.06);
+  color: rgba(255, 252, 242, 0.62);
+  transform: none;
+}
+.design-lab__chip--static.design-lab__chip--key:hover {
+  background: rgba(255, 252, 242, 0.18);
+  border-color: rgba(255, 252, 242, 0.22);
+  color: rgba(255, 252, 242, 0.96);
+}
+
 /* Slot row flashes for ~2.5s when the picker identifies it as the
    one controlling the clicked element. */
 .design-lab__row--flash {

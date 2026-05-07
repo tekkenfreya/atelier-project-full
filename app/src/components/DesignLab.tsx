@@ -2121,9 +2121,21 @@ export default function DesignLab() {
               <div className="design-lab__section-body">
           <span className="design-lab__label">Colour palette</span>
           <ul className="design-lab__surfaces" aria-label="What this slot controls">
-            <li className="design-lab__chip design-lab__chip--key">Page background</li>
-            <li className="design-lab__chip">Ink</li>
-            <li className="design-lab__chip">Botanical accents</li>
+            <li>
+              <span className="design-lab__chip design-lab__chip--key design-lab__chip--static">
+                Page background
+              </span>
+            </li>
+            <li>
+              <span className="design-lab__chip design-lab__chip--static">
+                Ink
+              </span>
+            </li>
+            <li>
+              <span className="design-lab__chip design-lab__chip--static">
+                Botanical accents
+              </span>
+            </li>
           </ul>
           <select
             className="design-lab__select"
@@ -2180,11 +2192,26 @@ export default function DesignLab() {
               className="design-lab__surfaces"
               aria-label="What this slot controls"
             >
-              <li className="design-lab__chip design-lab__chip--key">Hero</li>
-              <li className="design-lab__chip">Featured panel</li>
-              <li className="design-lab__chip">Cart cards</li>
-              <li className="design-lab__chip">Subscription cards</li>
-              <li className="design-lab__chip">Results cards</li>
+              {(
+                [
+                  { label: "Hero", selector: ".atelier .hero-v", route: "/", key: true },
+                  { label: "Featured panel", selector: ".atelier .featured__panel", route: "/", key: false },
+                  { label: "Cart cards", selector: ".cart-item, .cart-plan-option, .cart-summary, .cart-bundle-note", route: "/cart", key: false },
+                  { label: "Subscription cards", selector: ".lux-sub__card", route: "/", key: false },
+                  { label: "Results cards", selector: ".rd-product-card", route: "/results", key: false },
+                ] as const
+              ).map((c) => (
+                <li key={c.label}>
+                  <button
+                    type="button"
+                    className={`design-lab__chip${c.key ? " design-lab__chip--key" : ""}`}
+                    onClick={() => homeToSurface(c.selector, c.route)}
+                    title={`Scroll to this on ${c.route}`}
+                  >
+                    {c.label}
+                  </button>
+                </li>
+              ))}
             </ul>
             <select
               className="design-lab__select"
