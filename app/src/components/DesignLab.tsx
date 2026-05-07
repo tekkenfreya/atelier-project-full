@@ -310,7 +310,144 @@ type Palette = {
   id: string;
   label: string;
   swatches: readonly [string, string, string, string];
+  /** Custom palettes carry their hex colours so the lab can
+   *  inject CSS for them. Curated palettes leave this undefined
+   *  — their CSS is hand-written in DesignLab.css. */
+  colors?: PaletteColors;
+  /** Marks user-saved palettes so the dropdown can render a
+   *  delete button. */
+  custom?: boolean;
 };
+
+/** The five hex colours the user controls when customising a
+ *  palette. Supporting tokens (bg-deep, bg-tint, ink-soft,
+ *  ink-mute, ink-faint, line, moss-deep, rose-deep, amber-deep)
+ *  are auto-derived from these via simple darken / lighten /
+ *  alpha math, so the user doesn't have to manage 14 inputs. */
+type PaletteColors = {
+  bg: string;
+  ink: string;
+  accent1: string;
+  accent2: string;
+  accent3: string;
+};
+
+/** Palette colours for the curated set, stored as hex so the
+ *  custom-palette editor can seed its inputs from any starting
+ *  point. The hex values approximate the oklch declarations in
+ *  DesignLab.css; the editor uses these to populate the colour
+ *  pickers, while the curated CSS rules continue to render the
+ *  oklch originals when no draft is active. */
+const CURATED_PALETTE_COLORS: Record<string, PaletteColors> = {
+  default: {
+    bg: "#f3ecdf",
+    ink: "#1f1d1a",
+    accent1: "#a3a05e",
+    accent2: "#d4a373",
+    accent3: "#caa15a",
+  },
+  "alt-1": {
+    bg: "#e9e6e0",
+    ink: "#1a1d1f",
+    accent1: "#7a8d6a",
+    accent2: "#a99175",
+    accent3: "#caa15a",
+  },
+  "alt-2": {
+    bg: "#f6f1ea",
+    ink: "#2a1f17",
+    accent1: "#9aa48a",
+    accent2: "#c87c52",
+    accent3: "#caa15a",
+  },
+  "alt-3": {
+    bg: "#0f1218",
+    ink: "#f4ead7",
+    accent1: "#7d8a5c",
+    accent2: "#caa15a",
+    accent3: "#caa15a",
+  },
+  "alt-4": {
+    bg: "#faf6ed",
+    ink: "#322d23",
+    accent1: "#8a7a4f",
+    accent2: "#b58a5d",
+    accent3: "#caa15a",
+  },
+  "alt-5": {
+    bg: "#eee8db",
+    ink: "#1c2118",
+    accent1: "#6e8064",
+    accent2: "#c66c4f",
+    accent3: "#caa15a",
+  },
+  "alt-6": {
+    bg: "#1a1813",
+    ink: "#ece4d3",
+    accent1: "#a39156",
+    accent2: "#d9b06e",
+    accent3: "#caa15a",
+  },
+};
+
+/* ------------------------------------------------------------
+   Hex / RGB helpers — used to auto-derive supporting palette
+   tokens (deeps, tints, alphas) from the five user-controlled
+   colours so the custom palette renders cohesively.
+   ------------------------------------------------------------*/
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(full || "0", 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  const c = (x: number) =>
+    Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+
+function darkenHex(hex: string, amount: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex(r * (1 - amount), g * (1 - amount), b * (1 - amount));
+}
+
+function lightenHex(hex: string, amount: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex(
+    r + (255 - r) * amount,
+    g + (255 - g) * amount,
+    b + (255 - b) * amount,
+  );
+}
+
+function withAlpha(hex: string, alpha: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/** Build the CSS rule body for a palette — the five user
+ *  colours plus their auto-derived supporting tokens. */
+function buildPaletteRule(id: string, colors: PaletteColors): string {
+  return `html[data-palette="${id}"] .atelier {
+    --bg: ${colors.bg};
+    --bg-deep: ${darkenHex(colors.bg, 0.05)};
+    --bg-tint: ${lightenHex(colors.bg, 0.04)};
+    --ink: ${colors.ink};
+    --ink-soft: ${lightenHex(colors.ink, 0.18)};
+    --ink-mute: ${withAlpha(colors.ink, 0.62)};
+    --ink-faint: ${withAlpha(colors.ink, 0.38)};
+    --line: ${withAlpha(colors.ink, 0.14)};
+    --moss: ${colors.accent1};
+    --moss-deep: ${darkenHex(colors.accent1, 0.22)};
+    --rose: ${colors.accent2};
+    --rose-deep: ${darkenHex(colors.accent2, 0.22)};
+    --amber: ${colors.accent3};
+    --amber-deep: ${darkenHex(colors.accent3, 0.22)};
+  }`;
+}
 
 const PALETTES: readonly Palette[] = [
   {
@@ -357,7 +494,8 @@ const STORAGE_KEYS: Record<
   | "position"
   | "customPresets"
   | "cardRadius"
-  | "expanded",
+  | "expanded"
+  | "customPalettes",
   string
 > = {
   active: "atelier-lab",
@@ -371,6 +509,7 @@ const STORAGE_KEYS: Record<
   customPresets: "atelier-lab-custom-presets",
   cardRadius: "atelier-lab-card-radius",
   expanded: "atelier-lab-expanded",
+  customPalettes: "atelier-lab-custom-palettes",
 };
 
 type LabPosition = "bl" | "br";
@@ -732,6 +871,45 @@ function buildOverrideCss(): string {
   return rules.join("\n");
 }
 
+/** A single hex colour input — combines a native colour picker
+ *  with a text input so the user can type a hex code or pick from
+ *  the system swatch popup. Used by the custom-palette editor. */
+function PaletteSwatchInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="design-lab__palette-input">
+      <span className="design-lab__palette-input-label">{label}</span>
+      <span className="design-lab__palette-input-row">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <input
+          type="text"
+          className="design-lab__palette-input-hex"
+          value={value}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (/^#[0-9a-fA-F]{0,6}$/.test(v)) onChange(v);
+          }}
+          spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
+          maxLength={7}
+        />
+      </span>
+    </label>
+  );
+}
+
 export default function DesignLab() {
   const router = useRouter();
   const pathname = usePathname();
@@ -816,6 +994,17 @@ export default function DesignLab() {
   /** When true, the inline "name your preset" form is showing. */
   const [savingPreset, setSavingPreset] = useState(false);
   const [presetDraftName, setPresetDraftName] = useState("");
+  /** User-saved custom palettes; appear in the palette dropdown
+   *  alongside the curated set. */
+  const [customPalettes, setCustomPalettes] = useState<Palette[]>([]);
+  /** When non-null, the user is editing a draft palette — its
+   *  hex colours override the currently-selected palette via
+   *  CSS injection until they Save or Cancel. */
+  const [paletteDraft, setPaletteDraft] = useState<PaletteColors | null>(null);
+  /** Toggle for the inline "name your custom palette" form. */
+  const [savingPalette, setSavingPalette] = useState(false);
+  const [paletteDraftName, setPaletteDraftName] = useState("");
+  const customPalettesStyleRef = useRef<HTMLStyleElement | null>(null);
 
   /** Latest state kept in refs so document-level handlers can read
    *  fresh values without forcing a listener re-bind every render. */
@@ -873,7 +1062,56 @@ export default function DesignLab() {
       // Corrupt entry — wipe it so future loads start clean.
       localStorage.removeItem(STORAGE_KEYS.customPresets);
     }
+    try {
+      const rawPalettes = localStorage.getItem(STORAGE_KEYS.customPalettes);
+      if (rawPalettes) {
+        const parsed = JSON.parse(rawPalettes);
+        if (Array.isArray(parsed)) setCustomPalettes(parsed as Palette[]);
+      }
+    } catch {
+      localStorage.removeItem(STORAGE_KEYS.customPalettes);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    localStorage.setItem(
+      STORAGE_KEYS.customPalettes,
+      JSON.stringify(customPalettes),
+    );
+  }, [active, customPalettes]);
+
+  /** Inject one <style> tag whose contents are rebuilt every time
+   *  customPalettes or paletteDraft changes. Custom palettes get
+   *  their canonical id rule; the draft (when present) overrides
+   *  the currently-selected palette id in place, so users see live
+   *  edits without first saving. */
+  useEffect(() => {
+    if (!active) return;
+    const styleEl = document.createElement("style");
+    styleEl.setAttribute("data-design-lab", "custom-palettes");
+    document.head.appendChild(styleEl);
+    customPalettesStyleRef.current = styleEl;
+    return () => {
+      styleEl.remove();
+      customPalettesStyleRef.current = null;
+    };
+  }, [active]);
+
+  useEffect(() => {
+    const styleEl = customPalettesStyleRef.current;
+    if (!styleEl) return;
+    const rules: string[] = [];
+    for (const p of customPalettes) {
+      if (p.colors) rules.push(buildPaletteRule(p.id, p.colors));
+    }
+    if (paletteDraft) {
+      // Override whichever palette is currently selected in place,
+      // so the draft is visible without changing data-palette.
+      rules.push(buildPaletteRule(palette, paletteDraft));
+    }
+    styleEl.textContent = rules.join("\n");
+  }, [customPalettes, paletteDraft, palette]);
 
   useEffect(() => {
     if (!active) return;
@@ -1473,6 +1711,11 @@ export default function DesignLab() {
     // factory defaults", not just the slot dropdowns.
     setOverrides([]);
     setPickedTarget(null);
+    // Discard any in-progress palette edit; saved custom palettes
+    // and presets are user data and survive reset.
+    setPaletteDraft(null);
+    setSavingPalette(false);
+    setPaletteDraftName("");
   }
 
   /** Apply a preset (curated or custom) — sets every slot and the
@@ -1537,6 +1780,63 @@ export default function DesignLab() {
 
   function deleteCustomPreset(id: string) {
     setCustomPresets((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  /** Get the colours of the currently-selected palette, whether
+   *  it's curated, custom, or being drafted. Used to seed the
+   *  custom-palette editor when it opens. */
+  function paletteColorsFor(id: string): PaletteColors {
+    const custom = customPalettes.find((p) => p.id === id);
+    if (custom?.colors) return { ...custom.colors };
+    return (
+      CURATED_PALETTE_COLORS[id] ?? CURATED_PALETTE_COLORS.default
+    );
+  }
+
+  /** Begin editing — seed the draft from the current palette so
+   *  the colour pickers reflect what's already on screen. */
+  function startPaletteEdit() {
+    setPaletteDraft(paletteColorsFor(palette));
+  }
+
+  function updatePaletteDraft(field: keyof PaletteColors, value: string) {
+    setPaletteDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
+  }
+
+  function discardPaletteDraft() {
+    setPaletteDraft(null);
+    setSavingPalette(false);
+    setPaletteDraftName("");
+  }
+
+  function commitCustomPalette() {
+    if (!paletteDraft) return;
+    const trimmed = paletteDraftName.trim();
+    if (!trimmed) return;
+    const id = `palette-${Date.now()}`;
+    const swatches: [string, string, string, string] = [
+      paletteDraft.bg,
+      paletteDraft.ink,
+      paletteDraft.accent1,
+      paletteDraft.accent2,
+    ];
+    const newPalette: Palette = {
+      id,
+      label: trimmed,
+      swatches,
+      colors: { ...paletteDraft },
+      custom: true,
+    };
+    setCustomPalettes((prev) => [...prev, newPalette]);
+    setPalette(id);
+    setPaletteDraft(null);
+    setSavingPalette(false);
+    setPaletteDraftName("");
+  }
+
+  function deleteCustomPalette(id: string) {
+    setCustomPalettes((prev) => prev.filter((p) => p.id !== id));
+    if (palette === id) setPalette("default");
   }
 
   if (!active) return null;
@@ -2097,8 +2397,11 @@ export default function DesignLab() {
 
       {view === "type" && (() => {
         const isOpen = expanded.palette;
+        const allPalettes: Palette[] = [...PALETTES, ...customPalettes];
         const activePalette =
-          PALETTES.find((p) => p.id === palette) ?? PALETTES[0];
+          allPalettes.find((p) => p.id === palette) ?? allPalettes[0];
+        const draft = paletteDraft;
+        const editing = !!draft;
         return (
           <div
             className={`design-lab__row design-lab__section${isOpen ? " design-lab__section--open" : ""}`}
@@ -2114,49 +2417,183 @@ export default function DesignLab() {
               </span>
               <span className="design-lab__section-label">Colour palette</span>
               <span className="design-lab__section-summary">
-                {activePalette.label}
+                {editing ? `${activePalette.label} (editing)` : activePalette.label}
               </span>
             </button>
             {isOpen && (
               <div className="design-lab__section-body">
-          <span className="design-lab__label">Colour palette</span>
-          <ul className="design-lab__surfaces" aria-label="What this slot controls">
-            <li>
-              <span className="design-lab__chip design-lab__chip--key design-lab__chip--static">
-                Page background
-              </span>
-            </li>
-            <li>
-              <span className="design-lab__chip design-lab__chip--static">
-                Ink
-              </span>
-            </li>
-            <li>
-              <span className="design-lab__chip design-lab__chip--static">
-                Botanical accents
-              </span>
-            </li>
-          </ul>
-          <select
-            className="design-lab__select"
-            value={palette}
-            onChange={(e) => setPalette(e.target.value)}
-          >
-            {PALETTES.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-          <div className="design-lab__swatches" aria-hidden>
-            {activePalette.swatches.map((c, i) => (
-              <span
-                key={i}
-                className="design-lab__swatch"
-                style={{ background: c }}
-              />
-            ))}
-          </div>
+                <select
+                  className="design-lab__select"
+                  value={palette}
+                  onChange={(e) => {
+                    setPalette(e.target.value);
+                    setPaletteDraft(null);
+                  }}
+                >
+                  <optgroup label="Curated">
+                    {PALETTES.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                  {customPalettes.length > 0 && (
+                    <optgroup label="Custom">
+                      {customPalettes.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+
+                <div className="design-lab__swatches" aria-hidden>
+                  {activePalette.swatches.map((c, i) => (
+                    <span
+                      key={i}
+                      className="design-lab__swatch"
+                      style={{ background: c }}
+                    />
+                  ))}
+                </div>
+
+                {!editing ? (
+                  <button
+                    type="button"
+                    className="design-lab__palette-edit"
+                    onClick={startPaletteEdit}
+                    title="Open the hex inputs to customise this palette"
+                  >
+                    + Customise colours
+                  </button>
+                ) : (
+                  <div className="design-lab__palette-editor">
+                    <PaletteSwatchInput
+                      label="Background"
+                      value={draft.bg}
+                      onChange={(v) => updatePaletteDraft("bg", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Ink (text)"
+                      value={draft.ink}
+                      onChange={(v) => updatePaletteDraft("ink", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Accent A · Moss"
+                      value={draft.accent1}
+                      onChange={(v) => updatePaletteDraft("accent1", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Accent B · Rose"
+                      value={draft.accent2}
+                      onChange={(v) => updatePaletteDraft("accent2", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Accent C · Amber"
+                      value={draft.accent3}
+                      onChange={(v) => updatePaletteDraft("accent3", v)}
+                    />
+                    {savingPalette ? (
+                      <form
+                        className="design-lab__preset-form"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          commitCustomPalette();
+                        }}
+                      >
+                        <input
+                          className="design-lab__preset-input"
+                          type="text"
+                          value={paletteDraftName}
+                          onChange={(e) => setPaletteDraftName(e.target.value)}
+                          placeholder="Palette name"
+                          autoFocus
+                          maxLength={48}
+                          onKeyDown={(e) => {
+                            if (e.key === "Escape") {
+                              setSavingPalette(false);
+                              setPaletteDraftName("");
+                            }
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          className="design-lab__preset-save design-lab__preset-save--commit"
+                          disabled={!paletteDraftName.trim()}
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          className="design-lab__preset-cancel"
+                          onClick={() => {
+                            setSavingPalette(false);
+                            setPaletteDraftName("");
+                          }}
+                          aria-label="Cancel naming"
+                        >
+                          ×
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="design-lab__ft-actions">
+                        <button
+                          type="button"
+                          className="design-lab__ft-cancel"
+                          onClick={discardPaletteDraft}
+                        >
+                          Discard
+                        </button>
+                        <button
+                          type="button"
+                          className="design-lab__ft-apply"
+                          onClick={() => {
+                            setPaletteDraftName(
+                              `My palette ${customPalettes.length + 1}`,
+                            );
+                            setSavingPalette(true);
+                          }}
+                        >
+                          Save as palette
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {customPalettes.length > 0 && !editing && (
+                  <ul className="design-lab__custom-palettes">
+                    {customPalettes.map((p) => (
+                      <li key={p.id} className="design-lab__custom-palette">
+                        <span className="design-lab__custom-palette-swatches" aria-hidden>
+                          {p.swatches.map((c, i) => (
+                            <span
+                              key={i}
+                              className="design-lab__custom-palette-dot"
+                              style={{ background: c }}
+                            />
+                          ))}
+                        </span>
+                        <button
+                          type="button"
+                          className="design-lab__custom-palette-name"
+                          onClick={() => setPalette(p.id)}
+                        >
+                          {p.label}
+                        </button>
+                        <button
+                          type="button"
+                          className="design-lab__preset-delete"
+                          onClick={() => deleteCustomPalette(p.id)}
+                          aria-label={`Delete palette ${p.label}`}
+                        >
+                          ×
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </div>

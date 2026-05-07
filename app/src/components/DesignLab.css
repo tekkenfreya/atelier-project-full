@@ -736,6 +736,148 @@
   border: 1px solid rgba(255, 252, 242, 0.12);
 }
 
+/* ============================================================
+   Custom palette editor — five hex pickers + save form.
+   ============================================================ */
+
+.design-lab__palette-edit {
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 13px;
+  background: rgba(212, 163, 115, 0.18);
+  color: #f1d8b5;
+  border: 1px dashed rgba(212, 163, 115, 0.55);
+  font-family: inherit;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.design-lab__palette-edit:hover {
+  background: rgba(212, 163, 115, 0.3);
+  border-color: rgba(212, 163, 115, 0.75);
+}
+
+.design-lab__palette-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px;
+  background: rgba(212, 163, 115, 0.08);
+  border: 1px dashed rgba(212, 163, 115, 0.4);
+  border-radius: 10px;
+}
+
+.design-lab__palette-input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.design-lab__palette-input-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.78);
+}
+
+.design-lab__palette-input-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.design-lab__palette-input input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid rgba(255, 252, 242, 0.22);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+.design-lab__palette-input input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 5px;
+}
+.design-lab__palette-input input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 5px;
+}
+
+.design-lab__palette-input-hex {
+  width: 78px;
+  height: 26px;
+  padding: 0 8px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 6px;
+  color: rgba(255, 252, 242, 0.95);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+.design-lab__palette-input-hex:focus {
+  outline: none;
+  border-color: rgba(212, 163, 115, 0.65);
+}
+
+/* Custom palettes list — shown beneath the curated swatches when
+   there are saved palettes. Each row is a swatch strip + name + ×. */
+.design-lab__custom-palettes {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.design-lab__custom-palette {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 6px;
+  background: rgba(255, 252, 242, 0.04);
+  border: 1px solid rgba(255, 252, 242, 0.08);
+  border-radius: 8px;
+}
+
+.design-lab__custom-palette-swatches {
+  display: flex;
+  gap: 2px;
+}
+
+.design-lab__custom-palette-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 252, 242, 0.18);
+}
+
+.design-lab__custom-palette-name {
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 252, 242, 0.92);
+  cursor: pointer;
+  padding: 0;
+}
+.design-lab__custom-palette-name:hover {
+  color: #f1d8b5;
+}
+
 /* Card-radius preview row — a small box rendered at the chosen
    radius so the user sees the corner shape without scrolling. */
 .design-lab__radius-preview {
