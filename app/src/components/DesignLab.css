@@ -19,6 +19,9 @@
   width: 300px;
   max-height: calc(100vh - 36px);
   overflow-y: auto;
+  /* Reserve space for the custom scrollbar so the right edge of
+     the panel doesn't reflow when content grows past viewport. */
+  scrollbar-gutter: stable;
   padding: 14px 14px 12px;
   background: rgba(31, 29, 26, 0.94);
   color: rgba(255, 252, 242, 0.92);
@@ -33,6 +36,26 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* Firefox scrollbar styling. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 252, 242, 0.32) rgba(0, 0, 0, 0.18);
+}
+
+/* Webkit scrollbar — always visible (macOS otherwise auto-hides). */
+.design-lab::-webkit-scrollbar {
+  width: 8px;
+}
+.design-lab::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+}
+.design-lab::-webkit-scrollbar-thumb {
+  background: rgba(255, 252, 242, 0.28);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.design-lab::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 252, 242, 0.5);
 }
 
 .design-lab--bl {
@@ -496,6 +519,85 @@
 .design-lab__row:last-of-type {
   border-bottom: none;
   padding-bottom: 0;
+}
+
+/* ============================================================
+   Collapsible sections — used by Presets, every type slot,
+   Palette, Card corners. The header button shows the section
+   label + a one-line summary of the current state, so the user
+   can scan what's set without expanding anything.
+   ============================================================ */
+
+.design-lab__section {
+  /* Override the row's default vertical gap when collapsed —
+     header alone, no body, so no internal gap needed. */
+  gap: 0;
+  padding-bottom: 0;
+  border-bottom: 1px dashed rgba(255, 252, 242, 0.08);
+}
+.design-lab__section:last-of-type {
+  border-bottom: none;
+}
+.design-lab__section--open {
+  padding-bottom: 10px;
+}
+
+.design-lab__section-head {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 6px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 252, 242, 0.92);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  border-radius: 6px;
+}
+
+.design-lab__section-head:hover {
+  background: rgba(255, 252, 242, 0.06);
+}
+
+.design-lab__section-chevron {
+  font-size: 9px;
+  color: rgba(255, 252, 242, 0.5);
+  transition: transform 0.18s ease;
+}
+
+.design-lab__section--open .design-lab__section-chevron {
+  transform: rotate(90deg);
+  color: #d4a373;
+}
+
+.design-lab__section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.92);
+}
+
+.design-lab__section-summary {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 252, 242, 0.55);
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.design-lab__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px 0 0;
 }
 
 .design-lab__label {

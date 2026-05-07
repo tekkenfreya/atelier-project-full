@@ -356,7 +356,8 @@ const STORAGE_KEYS: Record<
   | "palette"
   | "position"
   | "customPresets"
-  | "cardRadius",
+  | "cardRadius"
+  | "expanded",
   string
 > = {
   active: "atelier-lab",
@@ -369,6 +370,7 @@ const STORAGE_KEYS: Record<
   position: "atelier-lab-position",
   customPresets: "atelier-lab-custom-presets",
   cardRadius: "atelier-lab-card-radius",
+  expanded: "atelier-lab-expanded",
 };
 
 type LabPosition = "bl" | "br";
@@ -747,6 +749,19 @@ export default function DesignLab() {
   /** Card corner-radius preset. Maps via CARD_RADII to a value
    *  injected into --card-radius. */
   const [cardRadius, setCardRadius] = useState<string>("soft");
+  /** Open / closed state per collapsible section. All collapsed
+   *  by default — section headers show a summary so the user can
+   *  see what's set without expanding. Persisted to localStorage. */
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    presets: false,
+    display: false,
+    edDisplay: false,
+    body: false,
+    edBody: false,
+    mono: false,
+    palette: false,
+    cards: false,
+  });
   /** When chip homing has to navigate to a different route, the
    *  scroll/flash is queued here and consumed once the pathname
    *  matches. Cleared if 4s elapse without the right route landing
@@ -833,6 +848,17 @@ export default function DesignLab() {
     const storedRadius = localStorage.getItem(STORAGE_KEYS.cardRadius);
     if (storedRadius && CARD_RADII.some((r) => r.id === storedRadius)) {
       setCardRadius(storedRadius);
+    }
+    try {
+      const rawExpanded = localStorage.getItem(STORAGE_KEYS.expanded);
+      if (rawExpanded) {
+        const parsed = JSON.parse(rawExpanded);
+        if (parsed && typeof parsed === "object") {
+          setExpanded((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {
+      localStorage.removeItem(STORAGE_KEYS.expanded);
     }
     const storedPos = localStorage.getItem(STORAGE_KEYS.position);
     if (storedPos === "br" || storedPos === "bl") setPosition(storedPos);
@@ -922,6 +948,24 @@ export default function DesignLab() {
     document.documentElement.setAttribute("data-card-radius", cardRadius);
     localStorage.setItem(STORAGE_KEYS.cardRadius, cardRadius);
   }, [active, cardRadius]);
+
+  useEffect(() => {
+    if (!active) return;
+    localStorage.setItem(STORAGE_KEYS.expanded, JSON.stringify(expanded));
+  }, [active, expanded]);
+
+  function toggleSection(key: string) {
+    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function toggleAllSections() {
+    const someClosed = Object.values(expanded).some((v) => !v);
+    setExpanded((prev) => {
+      const next: Record<string, boolean> = {};
+      for (const k of Object.keys(prev)) next[k] = someClosed;
+      return next;
+    });
+  }
 
   /** Keep a single <style> tag in <head> whose contents are rebuilt
    *  every time `overrides` changes. Using one mutable element
@@ -1539,6 +1583,19 @@ export default function DesignLab() {
             <button
               type="button"
               className="design-lab__reset"
+              onClick={toggleAllSections}
+              aria-label="Expand or collapse all sections"
+              title="Expand / collapse all"
+            >
+              {Object.values(expanded).some((v) => !v)
+                ? "Expand all"
+                : "Collapse"}
+            </button>
+          )}
+          {view === "type" && (
+            <button
+              type="button"
+              className="design-lab__reset"
               onClick={reset}
               aria-label="Reset to defaults"
             >
@@ -1596,8 +1653,29 @@ export default function DesignLab() {
       {view === "type" && (() => {
         const active = activePresetId();
         const allPresets: Preset[] = [...PRESETS, ...customPresets];
+        const activeName =
+          allPresets.find((p) => p.id === active)?.label ?? "Custom mix";
+        const isOpen = expanded.presets;
         return (
-          <div className="design-lab__presets" role="region" aria-label="Design presets">
+          <div
+            className={`design-lab__presets design-lab__section${isOpen ? " design-lab__section--open" : ""}`}
+            role="region"
+            aria-label="Design presets"
+          >
+            <button
+              type="button"
+              className="design-lab__section-head"
+              onClick={() => toggleSection("presets")}
+              aria-expanded={isOpen}
+            >
+              <span className="design-lab__section-chevron" aria-hidden>
+                ▶
+              </span>
+              <span className="design-lab__section-label">Presets</span>
+              <span className="design-lab__section-summary">{activeName}</span>
+            </button>
+            {isOpen && (
+              <div className="design-lab__section-body">
             <div className="design-lab__presets-head">
               <span className="design-lab__presets-label">Presets</span>
               {!savingPreset ? (
@@ -1686,6 +1764,8 @@ export default function DesignLab() {
                 </li>
               ))}
             </ul>
+              </div>
+            )}
           </div>
         );
       })()}
@@ -1942,13 +2022,30 @@ export default function DesignLab() {
       {view === "type" && SLOT_ORDER.map((key) => {
         const slot = SLOT_TARGETS[key];
         const value = selections[key];
-        const stack =
-          slot.source.find((f) => f.id === value)?.stack ?? slot.source[0].stack;
+        const font = slot.source.find((f) => f.id === value);
+        const stack = font?.stack ?? slot.source[0].stack;
+        const isOpen = expanded[key];
         return (
           <div
-            className={`design-lab__row${activeSlot === key ? " design-lab__row--flash" : ""}`}
+            className={`design-lab__row design-lab__section${isOpen ? " design-lab__section--open" : ""}${activeSlot === key ? " design-lab__row--flash" : ""}`}
             key={key}
           >
+            <button
+              type="button"
+              className="design-lab__section-head"
+              onClick={() => toggleSection(key)}
+              aria-expanded={isOpen}
+            >
+              <span className="design-lab__section-chevron" aria-hidden>
+                ▶
+              </span>
+              <span className="design-lab__section-label">{slot.ui.label}</span>
+              <span className="design-lab__section-summary">
+                {font?.label ?? value}
+              </span>
+            </button>
+            {isOpen && (
+              <div className="design-lab__section-body">
             <span className="design-lab__label">{slot.ui.label}</span>
             <ul className="design-lab__surfaces" aria-label="What this slot controls">
               {slot.ui.surfaces.map((s, i) => (
@@ -1992,12 +2089,36 @@ export default function DesignLab() {
             >
               {slot.ui.sample}
             </span>
+              </div>
+            )}
           </div>
         );
       })}
 
-      {view === "type" && (
-        <div className="design-lab__row">
+      {view === "type" && (() => {
+        const isOpen = expanded.palette;
+        const activePalette =
+          PALETTES.find((p) => p.id === palette) ?? PALETTES[0];
+        return (
+          <div
+            className={`design-lab__row design-lab__section${isOpen ? " design-lab__section--open" : ""}`}
+          >
+            <button
+              type="button"
+              className="design-lab__section-head"
+              onClick={() => toggleSection("palette")}
+              aria-expanded={isOpen}
+            >
+              <span className="design-lab__section-chevron" aria-hidden>
+                ▶
+              </span>
+              <span className="design-lab__section-label">Colour palette</span>
+              <span className="design-lab__section-summary">
+                {activePalette.label}
+              </span>
+            </button>
+            {isOpen && (
+              <div className="design-lab__section-body">
           <span className="design-lab__label">Colour palette</span>
           <ul className="design-lab__surfaces" aria-label="What this slot controls">
             <li className="design-lab__chip design-lab__chip--key">Page background</li>
@@ -2024,14 +2145,36 @@ export default function DesignLab() {
               />
             ))}
           </div>
-        </div>
-      )}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {view === "type" && (() => {
         const activeRadius =
           CARD_RADII.find((r) => r.id === cardRadius) ?? CARD_RADII[2];
+        const isOpen = expanded.cards;
         return (
-          <div className="design-lab__row">
+          <div
+            className={`design-lab__row design-lab__section${isOpen ? " design-lab__section--open" : ""}`}
+          >
+            <button
+              type="button"
+              className="design-lab__section-head"
+              onClick={() => toggleSection("cards")}
+              aria-expanded={isOpen}
+            >
+              <span className="design-lab__section-chevron" aria-hidden>
+                ▶
+              </span>
+              <span className="design-lab__section-label">Card corners</span>
+              <span className="design-lab__section-summary">
+                {activeRadius.label}
+              </span>
+            </button>
+            {isOpen && (
+              <div className="design-lab__section-body">
             <span className="design-lab__label">Card corners</span>
             <ul
               className="design-lab__surfaces"
@@ -2063,6 +2206,8 @@ export default function DesignLab() {
                 {activeRadius.value}
               </span>
             </div>
+              </div>
+            )}
           </div>
         );
       })()}
