@@ -43,14 +43,32 @@ const SERIFS: readonly Font[] = [
   { id: "crimson-pro", label: "Crimson Pro", stack: '"Crimson Pro", Georgia, serif', google: "Crimson+Pro:ital,wght@0,200..900;1,200..900" },
   { id: "lora", label: "Lora", stack: '"Lora", Georgia, serif', google: "Lora:ital,wght@0,400..700;1,400..700" },
   { id: "dm-serif-display", label: "DM Serif Display", stack: '"DM Serif Display", Georgia, serif', google: "DM+Serif+Display:ital@0;1" },
+  { id: "dm-serif-text", label: "DM Serif Text", stack: '"DM Serif Text", Georgia, serif', google: "DM+Serif+Text:ital@0;1" },
   { id: "spectral", label: "Spectral", stack: '"Spectral", Georgia, serif', google: "Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700" },
   { id: "bodoni-moda", label: "Bodoni Moda", stack: '"Bodoni Moda", Georgia, serif', google: "Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900" },
   { id: "italiana", label: "Italiana", stack: '"Italiana", Georgia, serif', google: "Italiana" },
+  { id: "italianno", label: "Italianno", stack: '"Italianno", "Brush Script MT", cursive', google: "Italianno" },
   { id: "source-serif", label: "Source Serif 4", stack: '"Source Serif 4", Georgia, serif', google: "Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900" },
   { id: "libre-caslon", label: "Libre Caslon Text", stack: '"Libre Caslon Text", Georgia, serif', google: "Libre+Caslon+Text:ital,wght@0,400;0,700;1,400" },
   { id: "tenor-sans", label: "Tenor Sans", stack: '"Tenor Sans", Georgia, serif', google: "Tenor+Sans" },
   { id: "cardo", label: "Cardo", stack: '"Cardo", Georgia, serif', google: "Cardo:ital,wght@0,400;0,700;1,400" },
   { id: "marcellus", label: "Marcellus", stack: '"Marcellus", Georgia, serif', google: "Marcellus" },
+  { id: "merriweather", label: "Merriweather", stack: '"Merriweather", Georgia, serif', google: "Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900" },
+  { id: "pt-serif", label: "PT Serif", stack: '"PT Serif", Georgia, serif', google: "PT+Serif:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "newsreader", label: "Newsreader", stack: '"Newsreader", Georgia, serif', google: "Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800" },
+  { id: "alegreya", label: "Alegreya", stack: '"Alegreya", Georgia, serif', google: "Alegreya:ital,wght@0,400..900;1,400..900" },
+  { id: "vidaloka", label: "Vidaloka", stack: '"Vidaloka", Georgia, serif', google: "Vidaloka" },
+  { id: "yeseva-one", label: "Yeseva One", stack: '"Yeseva One", Georgia, serif', google: "Yeseva+One" },
+  { id: "abril-fatface", label: "Abril Fatface", stack: '"Abril Fatface", Georgia, serif', google: "Abril+Fatface" },
+  { id: "cinzel", label: "Cinzel", stack: '"Cinzel", Georgia, serif', google: "Cinzel:wght@400..900" },
+  { id: "roboto-slab", label: "Roboto Slab", stack: '"Roboto Slab", Georgia, serif', google: "Roboto+Slab:wght@100..900" },
+  { id: "arvo", label: "Arvo", stack: '"Arvo", Georgia, serif', google: "Arvo:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "tinos", label: "Tinos", stack: '"Tinos", Georgia, serif', google: "Tinos:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "lustria", label: "Lustria", stack: '"Lustria", Georgia, serif', google: "Lustria" },
+  { id: "old-standard", label: "Old Standard TT", stack: '"Old Standard TT", Georgia, serif', google: "Old+Standard+TT:ital,wght@0,400;0,700;1,400" },
+  { id: "cormorant-sc", label: "Cormorant SC", stack: '"Cormorant SC", "Cormorant Garamond", Georgia, serif', google: "Cormorant+SC:wght@300;400;500;600;700" },
+  { id: "cormorant-infant", label: "Cormorant Infant", stack: '"Cormorant Infant", Georgia, serif', google: "Cormorant+Infant:ital,wght@0,300..700;1,300..700" },
+  { id: "ibm-plex-serif", label: "IBM Plex Serif", stack: '"IBM Plex Serif", Georgia, serif', google: "IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500" },
 ];
 
 const SANS: readonly Font[] = [
@@ -70,6 +88,22 @@ const SANS: readonly Font[] = [
   { id: "be-vietnam", label: "Be Vietnam Pro", stack: '"Be Vietnam Pro", system-ui, -apple-system, sans-serif', google: "Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500" },
   { id: "figtree", label: "Figtree", stack: '"Figtree", system-ui, -apple-system, sans-serif', google: "Figtree:ital,wght@0,300..900;1,300..900" },
   { id: "epilogue", label: "Epilogue", stack: '"Epilogue", system-ui, -apple-system, sans-serif', google: "Epilogue:ital,wght@0,100..900;1,100..900" },
+  { id: "ibm-plex-sans", label: "IBM Plex Sans", stack: '"IBM Plex Sans", system-ui, -apple-system, sans-serif', google: "IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500" },
+  { id: "karla", label: "Karla", stack: '"Karla", system-ui, -apple-system, sans-serif', google: "Karla:ital,wght@0,200..800;1,200..800" },
+  { id: "mulish", label: "Mulish", stack: '"Mulish", system-ui, -apple-system, sans-serif', google: "Mulish:ital,wght@0,200..1000;1,200..1000" },
+  { id: "onest", label: "Onest", stack: '"Onest", system-ui, -apple-system, sans-serif', google: "Onest:wght@100..900" },
+  { id: "lato", label: "Lato", stack: '"Lato", system-ui, -apple-system, sans-serif', google: "Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900" },
+  { id: "rubik", label: "Rubik", stack: '"Rubik", system-ui, -apple-system, sans-serif', google: "Rubik:ital,wght@0,300..900;1,300..900" },
+  { id: "source-sans-3", label: "Source Sans 3", stack: '"Source Sans 3", system-ui, -apple-system, sans-serif', google: "Source+Sans+3:ital,wght@0,200..900;1,200..900" },
+  { id: "barlow", label: "Barlow", stack: '"Barlow", system-ui, -apple-system, sans-serif', google: "Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700" },
+  { id: "heebo", label: "Heebo", stack: '"Heebo", system-ui, -apple-system, sans-serif', google: "Heebo:wght@100..900" },
+  { id: "quicksand", label: "Quicksand", stack: '"Quicksand", system-ui, -apple-system, sans-serif', google: "Quicksand:wght@300..700" },
+  { id: "comfortaa", label: "Comfortaa (rounded)", stack: '"Comfortaa", system-ui, -apple-system, sans-serif', google: "Comfortaa:wght@300..700" },
+  { id: "cabin", label: "Cabin", stack: '"Cabin", system-ui, -apple-system, sans-serif', google: "Cabin:ital,wght@0,400..700;1,400..700" },
+  { id: "lexend", label: "Lexend (legibility)", stack: '"Lexend", system-ui, -apple-system, sans-serif', google: "Lexend:wght@100..900" },
+  { id: "roboto", label: "Roboto", stack: '"Roboto", system-ui, -apple-system, sans-serif', google: "Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700" },
+  { id: "open-sans", label: "Open Sans", stack: '"Open Sans", system-ui, -apple-system, sans-serif', google: "Open+Sans:ital,wght@0,300..800;1,300..800" },
+  { id: "nunito-sans", label: "Nunito Sans", stack: '"Nunito Sans", system-ui, -apple-system, sans-serif', google: "Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000" },
 ];
 
 const MONOS: readonly Font[] = [
@@ -82,9 +116,29 @@ const MONOS: readonly Font[] = [
   { id: "inconsolata", label: "Inconsolata", stack: '"Inconsolata", ui-monospace, Menlo, monospace', google: "Inconsolata:wght@200..900" },
   { id: "roboto-mono", label: "Roboto Mono", stack: '"Roboto Mono", ui-monospace, Menlo, monospace', google: "Roboto+Mono:ital,wght@0,100..700;1,100..700" },
   { id: "azeret-mono", label: "Azeret Mono", stack: '"Azeret Mono", ui-monospace, Menlo, monospace', google: "Azeret+Mono:ital,wght@0,100..900;1,100..900" },
+  { id: "anonymous-pro", label: "Anonymous Pro", stack: '"Anonymous Pro", ui-monospace, Menlo, monospace', google: "Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "cousine", label: "Cousine", stack: '"Cousine", ui-monospace, Menlo, monospace', google: "Cousine:ital,wght@0,400;0,700;1,400;1,700" },
+  { id: "cutive-mono", label: "Cutive Mono", stack: '"Cutive Mono", ui-monospace, Menlo, monospace', google: "Cutive+Mono" },
+  { id: "spline-sans-mono", label: "Spline Sans Mono", stack: '"Spline Sans Mono", ui-monospace, Menlo, monospace', google: "Spline+Sans+Mono:ital,wght@0,300..700;1,300..700" },
+  { id: "fragment-mono", label: "Fragment Mono", stack: '"Fragment Mono", ui-monospace, Menlo, monospace', google: "Fragment+Mono:ital@0;1" },
+  { id: "reddit-mono", label: "Reddit Mono", stack: '"Reddit Mono", ui-monospace, Menlo, monospace', google: "Reddit+Mono:wght@200..900" },
+  { id: "nova-mono", label: "Nova Mono", stack: '"Nova Mono", ui-monospace, Menlo, monospace', google: "Nova+Mono" },
+  { id: "b612-mono", label: "B612 Mono", stack: '"B612 Mono", ui-monospace, Menlo, monospace', google: "B612+Mono:ital,wght@0,400;0,700;1,400;1,700" },
 ];
 
 type SlotKey = "display" | "edDisplay" | "body" | "edBody" | "mono";
+
+/** Lookup a font by id across every category. The slot dropdowns
+ *  are still scoped to their own pool, but per-element overrides
+ *  (the fine-tune panel) can choose any font — so we need a
+ *  global lookup for the override CSS rule + previews. */
+function findFontAcrossPools(fontId: string): Font | undefined {
+  return (
+    SERIFS.find((f) => f.id === fontId) ??
+    SANS.find((f) => f.id === fontId) ??
+    MONOS.find((f) => f.id === fontId)
+  );
+}
 
 type Override = {
   /** Stable id for React list keys; derived from selector + fontId. */
@@ -255,13 +309,33 @@ const PALETTES: readonly Palette[] = [
   },
   {
     id: "alt-1",
-    label: "Slate & moss (placeholder)",
+    label: "Slate & moss",
     swatches: ["#e9e6e0", "#1a1d1f", "#7a8d6a", "#a99175"],
   },
   {
     id: "alt-2",
-    label: "Porcelain & rust (placeholder)",
+    label: "Porcelain & rust",
     swatches: ["#f6f1ea", "#2a1f17", "#9aa48a", "#c87c52"],
+  },
+  {
+    id: "alt-3",
+    label: "Midnight chamomile",
+    swatches: ["#0f1218", "#f4ead7", "#7d8a5c", "#caa15a"],
+  },
+  {
+    id: "alt-4",
+    label: "Pale linen",
+    swatches: ["#faf6ed", "#322d23", "#8a7a4f", "#b58a5d"],
+  },
+  {
+    id: "alt-5",
+    label: "Sage & terracotta",
+    swatches: ["#eee8db", "#1c2118", "#6e8064", "#c66c4f"],
+  },
+  {
+    id: "alt-6",
+    label: "Charcoal & gilt",
+    swatches: ["#1a1813", "#ece4d3", "#a39156", "#d9b06e"],
   },
 ];
 
@@ -480,8 +554,10 @@ export default function DesignLab() {
     if (!styleEl) return;
     const rules = overrides
       .map((o) => {
-        const slot = SLOT_TARGETS[o.slotKey];
-        const font = slot.source.find((f) => f.id === o.fontId);
+        // Cross-category lookup so an override can target any
+        // font from any pool (e.g. a serif on the mono-controlled
+        // promo strip).
+        const font = findFontAcrossPools(o.fontId);
         if (!font) return "";
         return `${o.selector} { font-family: ${font.stack} !important; }`;
       })
@@ -563,8 +639,13 @@ export default function DesignLab() {
       setPicking(false);
       if (slot) {
         flashSlot(slot);
-        flashSlotSurfaces(slot);
         const selector = bestSelectorFor(target);
+        // Two-tier picker outline: bright on the elements the
+        // override will modify (the picked selector's match set),
+        // dim on the rest of the slot's footprint — so the user
+        // sees what they're about to change vs what merely shares
+        // the slot.
+        flashPickerResolution(slot, target, selector);
         const family = getComputedStyle(target)
           .fontFamily.split(",")[0]
           .replace(/['"]/g, "")
@@ -807,20 +888,80 @@ export default function DesignLab() {
     }
   }
 
-  /** After the picker resolves a slot, outline every other element
-   *  the slot also controls — so the user sees the slot's full
-   *  footprint, not just the one element they pointed at. Wide
-   *  selectors (e.g. ".atelier" itself) are excluded so the
-   *  highlight does not box the entire homepage. */
-  function flashSlotSurfaces(key: SlotKey) {
-    const surfaces = SLOT_TARGETS[key].ui.surfaces;
-    const selectors = surfaces
+  /** Apply a bright solid outline to a set of elements — used to
+   *  identify the elements that will actually change when the user
+   *  edits the picked surface. */
+  function flashElementsBright(els: readonly HTMLElement[], durationMs = 2800) {
+    if (els.length === 0) return;
+    for (const el of els) {
+      el.style.transition =
+        "outline-color 0.2s ease, outline-offset 0.2s ease";
+      el.style.outline = "2px solid #d4a373";
+      el.style.outlineOffset = "3px";
+    }
+    window.setTimeout(() => {
+      for (const el of els) {
+        el.style.outline = "";
+        el.style.outlineOffset = "";
+        el.style.transition = "";
+      }
+    }, durationMs);
+  }
+
+  /** Apply a faint dashed outline — used for "these elements share
+   *  the slot but are NOT what your override will modify". */
+  function flashElementsDim(els: readonly HTMLElement[], durationMs = 1800) {
+    if (els.length === 0) return;
+    for (const el of els) {
+      el.style.transition = "outline-color 0.2s ease";
+      el.style.outline = "1px dashed rgba(212, 163, 115, 0.45)";
+      el.style.outlineOffset = "2px";
+    }
+    window.setTimeout(() => {
+      for (const el of els) {
+        el.style.outline = "";
+        el.style.outlineOffset = "";
+        el.style.transition = "";
+      }
+    }, durationMs);
+  }
+
+  /** Visualise picker resolution with a clear hierarchy:
+   *  - elements matching the picked selector → solid bright outline
+   *  - other slot surfaces → dashed dim outline
+   *  So the user sees what their override will actually touch
+   *  versus what merely shares the same slot. */
+  function flashPickerResolution(
+    key: SlotKey,
+    target: HTMLElement,
+    pickedSelector: string,
+  ) {
+    let pickedEls: HTMLElement[] = [];
+    try {
+      pickedEls = Array.from(
+        document.querySelectorAll<HTMLElement>(pickedSelector),
+      );
+    } catch {
+      pickedEls = [];
+    }
+    const pickedSet = new Set<HTMLElement>(pickedEls);
+    pickedSet.add(target);
+
+    const surfaceSel = SLOT_TARGETS[key].ui.surfaces
       .filter((s): s is { label: string; selector: string; wide?: boolean } =>
         !!s.selector && !s.wide,
       )
-      .map((s) => s.selector);
-    if (selectors.length === 0) return;
-    flashSurface(selectors.join(", "), 2200);
+      .map((s) => s.selector)
+      .join(", ");
+    const relatedEls: HTMLElement[] = [];
+    if (surfaceSel) {
+      for (const el of document.querySelectorAll<HTMLElement>(surfaceSel)) {
+        if (!pickedSet.has(el)) relatedEls.push(el);
+      }
+    }
+
+    flashElementsBright(Array.from(pickedSet));
+    flashElementsDim(relatedEls);
   }
 
   function reset() {
@@ -915,9 +1056,10 @@ export default function DesignLab() {
 
       {pickedTarget && (() => {
         const slot = SLOT_TARGETS[pickedTarget.slotKey];
+        // Override font may come from any pool, so look up
+        // across all categories.
         const draftFont =
-          slot.source.find((f) => f.id === pickedTarget.draftFontId) ??
-          slot.source[0];
+          findFontAcrossPools(pickedTarget.draftFontId) ?? slot.source[0];
         const isLive =
           pickedTarget.draftFontId !== selectionsRef.current[pickedTarget.slotKey];
         return (
@@ -945,11 +1087,36 @@ export default function DesignLab() {
               value={pickedTarget.draftFontId}
               onChange={(e) => setDraftFont(e.target.value)}
             >
-              {slot.source.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.id === slot.defaultId ? `${f.label} (default)` : f.label}
-                </option>
-              ))}
+              {/* Per-element overrides are NOT locked to the slot's
+                  pool — the user is allowed to assign any font to
+                  the picked surface. Three optgroups expose the
+                  full catalogue with the slot's natural pool first
+                  for ease of finding the slot default. */}
+              {(() => {
+                const POOLS: { label: string; fonts: readonly Font[] }[] = [
+                  { label: "Serif", fonts: SERIFS },
+                  { label: "Sans", fonts: SANS },
+                  { label: "Mono", fonts: MONOS },
+                ];
+                // Order the slot's natural pool first; the others
+                // follow in their canonical sequence. The slot
+                // default is marked inline so the user can spot it
+                // even after the order shifts.
+                const slotPool = slot.source;
+                const ordered = [
+                  POOLS.find((p) => p.fonts === slotPool),
+                  ...POOLS.filter((p) => p.fonts !== slotPool),
+                ].filter((p): p is { label: string; fonts: readonly Font[] } => !!p);
+                return ordered.map(({ label, fonts }) => (
+                  <optgroup key={label} label={label}>
+                    {fonts.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.id === slot.defaultId ? `${f.label} (slot default)` : f.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ));
+              })()}
             </select>
             <span
               className="design-lab__preview"
@@ -1081,8 +1248,9 @@ export default function DesignLab() {
           </div>
           <ul className="design-lab__overrides-list">
             {overrides.map((o) => {
-              const slot = SLOT_TARGETS[o.slotKey];
-              const font = slot.source.find((f) => f.id === o.fontId);
+              // Override font may be from any pool — not just the
+              // slot the picked element originally mapped to.
+              const font = findFontAcrossPools(o.fontId);
               return (
                 <li key={o.id} className="design-lab__override">
                   <code className="design-lab__override-sel">{o.selector}</code>

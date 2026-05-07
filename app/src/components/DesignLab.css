@@ -527,7 +527,7 @@ html[data-palette="alt-1"] .atelier {
   --amber-deep: oklch(0.54 0.07 80);
 }
 
-/* Alt 2 — porcelain & rust (placeholder) */
+/* Alt 2 — porcelain & rust */
 html[data-palette="alt-2"] .atelier {
   --bg: #f6f1ea;
   --bg-deep: #ede5d8;
@@ -543,4 +543,76 @@ html[data-palette="alt-2"] .atelier {
   --rose-deep: oklch(0.48 0.12 30);
   --amber: oklch(0.74 0.10 60);
   --amber-deep: oklch(0.52 0.10 55);
+}
+
+/* Alt 3 — midnight chamomile (dark mode w/ warm gold) */
+html[data-palette="alt-3"] .atelier {
+  --bg: #0f1218;
+  --bg-deep: #14181f;
+  --bg-tint: #1a1f27;
+  --ink: #f4ead7;
+  --ink-soft: #d8cdb6;
+  --ink-mute: rgba(244, 234, 215, 0.62);
+  --ink-faint: rgba(244, 234, 215, 0.34);
+  --line: rgba(244, 234, 215, 0.14);
+  --moss: oklch(0.62 0.06 130);
+  --moss-deep: oklch(0.42 0.06 130);
+  --rose: oklch(0.6 0.06 30);
+  --rose-deep: oklch(0.42 0.07 30);
+  --amber: oklch(0.74 0.09 75);
+  --amber-deep: oklch(0.54 0.09 70);
+}
+
+/* Alt 4 — pale linen (very soft, low-contrast cream) */
+html[data-palette="alt-4"] .atelier {
+  --bg: #faf6ed;
+  --bg-deep: #f3ecde;
+  --bg-tint: #fffaf0;
+  --ink: #322d23;
+  --ink-soft: #4c4434;
+  --ink-mute: rgba(50, 45, 35, 0.62);
+  --ink-faint: rgba(50, 45, 35, 0.34);
+  --line: rgba(50, 45, 35, 0.12);
+  --moss: oklch(0.66 0.05 120);
+  --moss-deep: oklch(0.46 0.05 120);
+  --rose: oklch(0.78 0.04 30);
+  --rose-deep: oklch(0.58 0.05 30);
+  --amber: oklch(0.78 0.06 75);
+  --amber-deep: oklch(0.58 0.07 70);
+}
+
+/* Alt 5 — sage & terracotta (deeper, more saturated) */
+html[data-palette="alt-5"] .atelier {
+  --bg: #eee8db;
+  --bg-deep: #e3dcc7;
+  --bg-tint: #f7f1e3;
+  --ink: #1c2118;
+  --ink-soft: #2f3525;
+  --ink-mute: rgba(28, 33, 24, 0.62);
+  --ink-faint: rgba(28, 33, 24, 0.32);
+  --line: rgba(28, 33, 24, 0.14);
+  --moss: oklch(0.62 0.07 130);
+  --moss-deep: oklch(0.42 0.07 130);
+  --rose: oklch(0.66 0.13 30);
+  --rose-deep: oklch(0.46 0.14 28);
+  --amber: oklch(0.7 0.12 50);
+  --amber-deep: oklch(0.5 0.12 45);
+}
+
+/* Alt 6 — charcoal & gilt (dark, editorial) */
+html[data-palette="alt-6"] .atelier {
+  --bg: #1a1813;
+  --bg-deep: #211e18;
+  --bg-tint: #2a261d;
+  --ink: #ece4d3;
+  --ink-soft: #cec5b3;
+  --ink-mute: rgba(236, 228, 211, 0.62);
+  --ink-faint: rgba(236, 228, 211, 0.32);
+  --line: rgba(236, 228, 211, 0.14);
+  --moss: oklch(0.6 0.05 125);
+  --moss-deep: oklch(0.42 0.05 125);
+  --rose: oklch(0.62 0.06 30);
+  --rose-deep: oklch(0.44 0.07 28);
+  --amber: oklch(0.75 0.09 75);
+  --amber-deep: oklch(0.55 0.09 70);
 }
