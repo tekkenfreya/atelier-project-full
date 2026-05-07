@@ -1,19 +1,21 @@
 /* ================================================================
    Atelier Rusalka 2026 — Cinematic Video Hero
-   Full-bleed video carousel with minimal editorial chrome.
+   Single hero clip with minimal editorial chrome (the multi-video
+   carousel was removed). Wider canvas + sharper corner radius
+   per the May 2026 visual direction.
    Imported from Hero.tsx; scoped to `.atelier` so inner pages are
-   unaffected. Replaces the legacy lux-hero styles previously here.
+   unaffected.
    ================================================================ */
 
 .atelier .hero-v {
   position: relative;
-  width: min(1480px, calc(100% - 48px));
+  width: min(1680px, calc(100% - 32px));
   margin: 24px auto 0;
   height: calc(100vh - 254px);
   min-height: 500px;
   overflow: hidden;
   background: #0c0a08;
-  border-radius: 24px;
+  border-radius: 16px;
   isolation: isolate;
 }
 
@@ -79,44 +81,6 @@
   font-size: 9px;
 }
 
-/* --- Side prev / next buttons ---------------------------------- */
-
-.atelier .hero-v__nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  width: 56px;
-  height: 56px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 252, 242, 0.10);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255, 252, 242, 0.22);
-  border-radius: 50%;
-  color: rgba(255, 252, 242, 0.90);
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
-  padding: 0;
-}
-
-.atelier .hero-v__nav:hover {
-  background: rgba(255, 252, 242, 0.18);
-  border-color: rgba(255, 252, 242, 0.46);
-}
-
-.atelier .hero-v__nav--prev { left: 28px; }
-.atelier .hero-v__nav--next { right: 28px; }
-
-.atelier .hero-v__nav--prev:hover {
-  transform: translateY(-50%) translateX(-3px);
-}
-.atelier .hero-v__nav--next:hover {
-  transform: translateY(-50%) translateX(3px);
-}
-
 /* --- Bottom-right CTA -----------------------------------------
    Asymmetric placement: the eye stays on the video while the
    pointer drifts to the action, instead of having to dive to the
@@ -169,38 +133,6 @@
   transform: translateX(2px);
 }
 
-/* --- Bottom dot indicators ------------------------------------- */
-
-.atelier .hero-v__dots {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  display: flex;
-  gap: 8px;
-}
-
-.atelier .hero-v__dot {
-  width: 22px;
-  height: 2px;
-  background: rgba(255, 252, 242, 0.32);
-  border: none;
-  border-radius: 1px;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.25s ease, width 0.25s ease;
-}
-
-.atelier .hero-v__dot:hover {
-  background: rgba(255, 252, 242, 0.62);
-}
-
-.atelier .hero-v__dot.is-active {
-  background: rgba(255, 252, 242, 0.95);
-  width: 36px;
-}
-
 /* --- Responsive ------------------------------------------------ */
 
 @media (max-width: 720px) {
@@ -209,7 +141,7 @@
     margin: 14px auto 0;
     height: calc(100vh - 208px);
     min-height: 460px;
-    border-radius: 18px;
+    border-radius: 12px;
   }
   .atelier .hero-v__mark {
     top: 18px;
@@ -218,24 +150,15 @@
     letter-spacing: 0.22em;
     gap: 8px;
   }
-  .atelier .hero-v__nav {
-    width: 44px;
-    height: 44px;
-  }
-  .atelier .hero-v__nav--prev { left: 14px; }
-  .atelier .hero-v__nav--next { right: 14px; }
   .atelier .hero-v__cta {
     font-size: 10.5px;
     padding: 12px 18px;
     letter-spacing: 0.18em;
   }
   .atelier .hero-v__cta-wrap {
-    bottom: 70px;
+    bottom: 32px;
     right: auto;
     left: 50%;
     transform: translateX(-50%);
-  }
-  .atelier .hero-v__dots {
-    bottom: 28px;
   }
 }

@@ -3,7 +3,7 @@ import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "Atelier Rusalka — Personalized Skincare",
+  title: "Kyrill — Personalised Skincare",
   description:
     "Custom-formulated skincare crafted from your unique skin profile. Cleanser, Serum, and Moisturizer — made for you.",
 };

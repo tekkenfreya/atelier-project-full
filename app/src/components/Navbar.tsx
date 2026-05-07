@@ -68,11 +68,11 @@ export default function Navbar() {
         type="button"
         className="nav__logo"
         onClick={() => router.push("/")}
-        aria-label="Atelier Rusalka home"
+        aria-label="Kyrill home"
       >
         <span className="nav__logo-mark" aria-hidden />
-        <span>
-          Atelier <em>Rusalka</em>
+        <span className="nav__logo-text">
+          <em>kyrill</em>
         </span>
       </button>
 
