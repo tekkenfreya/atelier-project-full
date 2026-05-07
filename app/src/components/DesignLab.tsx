@@ -141,15 +141,26 @@ function findFontAcrossPools(fontId: string): Font | undefined {
 }
 
 type Override = {
-  /** Stable id for React list keys; derived from selector + fontId. */
+  /** Stable id for React list keys; selector is unique per override
+   *  (one selector → one rule), so we use it as the id directly. */
   id: string;
   /** The CSS selector that scopes this override (e.g. ".cart-title"). */
   selector: string;
-  /** Which font from the slot's source pool to apply. */
-  fontId: string;
   /** Slot the picked element originally mapped to — used to look
    *  up the candidate pool when re-rendering the overrides list. */
   slotKey: SlotKey;
+  /** Optional font swap. Omit to leave font-family alone. */
+  fontId?: string;
+  /** When true, force `font-style: italic`. Undefined leaves the
+   *  natural style. (We never force `normal` — toggling off just
+   *  drops the field, so naturally-italic elements stay italic.) */
+  italic?: boolean;
+  /** When true, force `font-weight: 700`. */
+  bold?: boolean;
+  /** When true, force `text-decoration: underline`. */
+  underline?: boolean;
+  /** Optional colour override (hex). */
+  color?: string;
 };
 
 type SlotTarget = {
@@ -732,17 +743,24 @@ export default function DesignLab() {
   const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
   /** A picked element being tuned. Changes apply live, so this
    *  state primarily drives the panel UI; the override list is the
-   *  source of truth for what's actually rendered. The
-   *  `originalOverrideFontId` lets Cancel revert to whatever was
-   *  in effect at pick time — undefined when there was no prior
-   *  override on this selector. */
+   *  source of truth for what's actually rendered. `originalOverride`
+   *  lets Cancel revert to whatever was in effect at pick time —
+   *  undefined when there was no prior override on this selector. */
   const [pickedTarget, setPickedTarget] = useState<{
     selector: string;
     currentFamily: string;
     slotKey: SlotKey;
     draftFontId: string;
+    /** Tri-state per text-style toggle: undefined = leave alone,
+     *  true = force on. We never explicitly force "off" — clicking
+     *  a toggle that's already on just drops the field. */
+    draftItalic: boolean | undefined;
+    draftBold: boolean | undefined;
+    draftUnderline: boolean | undefined;
+    /** Hex colour string, or undefined for no colour override. */
+    draftColor: string | undefined;
     sample: string;
-    originalOverrideFontId: string | undefined;
+    originalOverride: Override | undefined;
   } | null>(null);
   /** Active per-element overrides. Each one becomes one CSS rule
    *  injected into a dedicated <style> tag — slot-wide swaps still
@@ -886,12 +904,18 @@ export default function DesignLab() {
     if (!styleEl) return;
     const rules = overrides
       .map((o) => {
-        // Cross-category lookup so an override can target any
-        // font from any pool (e.g. a serif on the mono-controlled
-        // promo strip).
-        const font = findFontAcrossPools(o.fontId);
-        if (!font) return "";
-        return `${o.selector} { font-family: ${font.stack} !important; }`;
+        const decls: string[] = [];
+        if (o.fontId) {
+          const font = findFontAcrossPools(o.fontId);
+          if (font) decls.push(`font-family: ${font.stack}`);
+        }
+        if (o.italic) decls.push("font-style: italic");
+        if (o.bold) decls.push("font-weight: 700");
+        if (o.underline) decls.push("text-decoration: underline");
+        if (o.color) decls.push(`color: ${o.color}`);
+        if (decls.length === 0) return "";
+        const body = decls.map((d) => `${d} !important`).join("; ");
+        return `${o.selector} { ${body}; }`;
       })
       .filter(Boolean);
     styleEl.textContent = rules.join("\n");
@@ -991,9 +1015,9 @@ export default function DesignLab() {
           text.length > 0
             ? text.slice(0, 90)
             : SLOT_TARGETS[slot].ui.sample;
-        // Seed the dropdown with whatever font is currently winning
-        // — the slot-wide selection if no override covers this
-        // selector, or the existing override's font if there is one.
+        // Seed the panel with whatever override (if any) currently
+        // applies to this selector, or with the slot's selection
+        // when there's no override.
         const existing = overridesRef.current.find(
           (o) => o.selector === selector,
         );
@@ -1002,8 +1026,12 @@ export default function DesignLab() {
           currentFamily: family,
           slotKey: slot,
           draftFontId: existing?.fontId ?? selectionsRef.current[slot],
+          draftItalic: existing?.italic,
+          draftBold: existing?.bold,
+          draftUnderline: existing?.underline,
+          draftColor: existing?.color,
           sample,
-          originalOverrideFontId: existing?.fontId,
+          originalOverride: existing,
         });
       }
     }
@@ -1144,50 +1172,101 @@ export default function DesignLab() {
     }, durationMs);
   }
 
-  /** Update the draft font for the currently-picked element AND
-   *  apply it to the page in the same beat — so the user sees the
-   *  swap as soon as they touch the dropdown. No "Apply" step.
+  /** Patch one or more fields on the currently-picked element's
+   *  draft AND immediately apply (or remove) the resulting override
+   *  — every change in the fine-tune panel is live, no separate
+   *  Apply step.
    *
-   *  Picking the slot's default again removes the override entirely,
-   *  so cycling through fonts and returning to the default cleans
-   *  up after itself. */
-  function setDraftFont(fontId: string) {
+   *  Removal rule: if the patched draft has no font swap (or has the
+   *  font set back to the slot default), no italic / bold / underline
+   *  flags, and no colour, the override is dropped entirely. So
+   *  flipping every toggle back off cleans up after itself. */
+  function updateDraft(
+    patch: Partial<{
+      fontId: string;
+      italic: boolean | undefined;
+      bold: boolean | undefined;
+      underline: boolean | undefined;
+      color: string | undefined;
+    }>,
+  ) {
     if (!pickedTarget) return;
-    setPickedTarget({ ...pickedTarget, draftFontId: fontId });
+    const next = { ...pickedTarget };
+    if (patch.fontId !== undefined) next.draftFontId = patch.fontId;
+    if ("italic" in patch) next.draftItalic = patch.italic;
+    if ("bold" in patch) next.draftBold = patch.bold;
+    if ("underline" in patch) next.draftUnderline = patch.underline;
+    if ("color" in patch) next.draftColor = patch.color;
+    setPickedTarget(next);
 
     const slotDefault = selectionsRef.current[pickedTarget.slotKey];
-    if (fontId === slotDefault) {
+    const isFontDefault = next.draftFontId === slotDefault;
+    const hasStyle =
+      next.draftItalic === true ||
+      next.draftBold === true ||
+      next.draftUnderline === true;
+    const hasColor = !!next.draftColor;
+
+    if (isFontDefault && !hasStyle && !hasColor) {
       setOverrides((prev) =>
-        prev.filter((o) => o.selector !== pickedTarget.selector),
+        prev.filter((o) => o.selector !== next.selector),
       );
       return;
     }
 
     setOverrides((prev) => {
-      const filtered = prev.filter(
-        (o) => o.selector !== pickedTarget.selector,
-      );
+      const filtered = prev.filter((o) => o.selector !== next.selector);
       return [
         ...filtered,
         {
-          id: `${pickedTarget.selector}::${fontId}`,
-          selector: pickedTarget.selector,
-          fontId,
-          slotKey: pickedTarget.slotKey,
+          id: next.selector,
+          selector: next.selector,
+          slotKey: next.slotKey,
+          fontId: isFontDefault ? undefined : next.draftFontId,
+          italic: next.draftItalic,
+          bold: next.draftBold,
+          underline: next.draftUnderline,
+          color: next.draftColor,
         },
       ];
     });
   }
 
+  /** Convenience wrappers for the fine-tune dropdown / toggle pills. */
+  function setDraftFont(fontId: string) {
+    updateDraft({ fontId });
+  }
+  function toggleDraftItalic() {
+    updateDraft({
+      italic: pickedTarget?.draftItalic ? undefined : true,
+    });
+  }
+  function toggleDraftBold() {
+    updateDraft({
+      bold: pickedTarget?.draftBold ? undefined : true,
+    });
+  }
+  function toggleDraftUnderline() {
+    updateDraft({
+      underline: pickedTarget?.draftUnderline ? undefined : true,
+    });
+  }
+  function setDraftColor(color: string | undefined) {
+    updateDraft({ color });
+  }
+
   /** Close the fine-tune panel and revert the override to whatever
-   *  the user had at the moment they opened the panel — used by the
-   *  Cancel button. */
-  function cancelFineTune(originalFontId: string | undefined) {
+   *  the user had at the moment they opened the panel. */
+  function cancelFineTune(originalOverride: Override | undefined) {
     if (!pickedTarget) return;
-    if (originalFontId !== undefined) {
-      setDraftFont(originalFontId);
+    if (originalOverride) {
+      setOverrides((prev) => {
+        const filtered = prev.filter(
+          (o) => o.selector !== originalOverride.selector,
+        );
+        return [...filtered, originalOverride];
+      });
     } else {
-      // No prior override — strip whatever live edit landed.
       setOverrides((prev) =>
         prev.filter((o) => o.selector !== pickedTarget.selector),
       );
@@ -1724,16 +1803,87 @@ export default function DesignLab() {
             </select>
             <span
               className="design-lab__preview"
-              style={{ fontFamily: draftFont.stack, ...slot.ui.sampleStyle }}
+              style={{
+                ...slot.ui.sampleStyle,
+                fontFamily: draftFont.stack,
+                ...(pickedTarget.draftItalic === true ? { fontStyle: "italic" } : {}),
+                ...(pickedTarget.draftBold === true ? { fontWeight: 700 } : {}),
+                ...(pickedTarget.draftUnderline === true ? { textDecoration: "underline" } : {}),
+                ...(pickedTarget.draftColor ? { color: pickedTarget.draftColor } : {}),
+              }}
             >
               {pickedTarget.sample}
             </span>
+
+            <div className="design-lab__ft-styles" role="group" aria-label="Text styles">
+              <button
+                type="button"
+                className={`design-lab__ft-style-btn${pickedTarget.draftBold ? " design-lab__ft-style-btn--on" : ""}`}
+                onClick={toggleDraftBold}
+                aria-pressed={!!pickedTarget.draftBold}
+                aria-label="Toggle bold"
+                title="Bold"
+              >
+                <strong>B</strong>
+              </button>
+              <button
+                type="button"
+                className={`design-lab__ft-style-btn${pickedTarget.draftItalic ? " design-lab__ft-style-btn--on" : ""}`}
+                onClick={toggleDraftItalic}
+                aria-pressed={!!pickedTarget.draftItalic}
+                aria-label="Toggle italic"
+                title="Italic"
+              >
+                <em>I</em>
+              </button>
+              <button
+                type="button"
+                className={`design-lab__ft-style-btn${pickedTarget.draftUnderline ? " design-lab__ft-style-btn--on" : ""}`}
+                onClick={toggleDraftUnderline}
+                aria-pressed={!!pickedTarget.draftUnderline}
+                aria-label="Toggle underline"
+                title="Underline"
+              >
+                <span className="design-lab__ft-style-u">U</span>
+              </button>
+
+              <label
+                className={`design-lab__ft-color${pickedTarget.draftColor ? " design-lab__ft-color--on" : ""}`}
+                title="Override text colour"
+              >
+                <input
+                  type="color"
+                  value={pickedTarget.draftColor ?? "#1f1d1a"}
+                  onChange={(e) => setDraftColor(e.target.value)}
+                />
+                <span
+                  className="design-lab__ft-color-swatch"
+                  style={{
+                    background: pickedTarget.draftColor ?? "transparent",
+                  }}
+                  aria-hidden
+                />
+                <span className="design-lab__ft-color-label">Colour</span>
+              </label>
+              {pickedTarget.draftColor && (
+                <button
+                  type="button"
+                  className="design-lab__ft-color-clear"
+                  onClick={() => setDraftColor(undefined)}
+                  aria-label="Clear colour override"
+                  title="Clear colour"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
             <div className="design-lab__ft-actions">
               <button
                 type="button"
                 className="design-lab__ft-cancel"
-                onClick={() => cancelFineTune(pickedTarget.originalOverrideFontId)}
-                title="Revert to the font in effect when you picked this element"
+                onClick={() => cancelFineTune(pickedTarget.originalOverride)}
+                title="Revert to the override (or lack of one) at pick time"
               >
                 Cancel
               </button>
@@ -1854,9 +2004,21 @@ export default function DesignLab() {
           </div>
           <ul className="design-lab__overrides-list">
             {overrides.map((o) => {
-              // Override font may be from any pool — not just the
-              // slot the picked element originally mapped to.
-              const font = findFontAcrossPools(o.fontId);
+              // Override may swap font, force text styles, change
+              // colour, or any combination — build a short summary
+              // for the row label.
+              const font = o.fontId ? findFontAcrossPools(o.fontId) : undefined;
+              const flags: string[] = [];
+              if (o.italic) flags.push("Italic");
+              if (o.bold) flags.push("Bold");
+              if (o.underline) flags.push("Underline");
+              const summary = [
+                font?.label ?? o.fontId,
+                ...flags,
+                o.color ? `Colour ${o.color}` : null,
+              ]
+                .filter(Boolean)
+                .join(" · ");
               return (
                 <li key={o.id} className="design-lab__override">
                   <code className="design-lab__override-sel">{o.selector}</code>
@@ -1864,7 +2026,7 @@ export default function DesignLab() {
                     →
                   </span>
                   <span className="design-lab__override-font">
-                    {font?.label ?? o.fontId}
+                    {summary || "Override"}
                   </span>
                   <button
                     type="button"

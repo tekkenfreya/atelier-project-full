@@ -228,6 +228,131 @@
   color: rgba(255, 252, 242, 0.65);
 }
 
+/* ------------------------------------------------------------
+   Text-style toggles + colour picker (in the fine-tune panel).
+   B / I / U are tri-state toggle pills (off → on → off via clicks);
+   the colour control opens a native colour input and shows a
+   swatch + clear button when active.
+   ------------------------------------------------------------ */
+
+.design-lab__ft-styles {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.design-lab__ft-style-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 252, 242, 0.06);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 7px;
+  color: rgba(255, 252, 242, 0.85);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease;
+}
+.design-lab__ft-style-btn:hover {
+  background: rgba(255, 252, 242, 0.12);
+  border-color: rgba(255, 252, 242, 0.32);
+}
+.design-lab__ft-style-btn--on {
+  background: #d4a373;
+  border-color: #d4a373;
+  color: #1f1d1a;
+}
+.design-lab__ft-style-btn--on:hover {
+  background: #c8956b;
+  border-color: #c8956b;
+}
+.design-lab__ft-style-u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.design-lab__ft-color {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px 0 6px;
+  background: rgba(255, 252, 242, 0.06);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.design-lab__ft-color:hover {
+  background: rgba(255, 252, 242, 0.12);
+  border-color: rgba(255, 252, 242, 0.32);
+}
+.design-lab__ft-color--on {
+  background: rgba(212, 163, 115, 0.18);
+  border-color: rgba(212, 163, 115, 0.5);
+}
+
+.design-lab__ft-color input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.design-lab__ft-color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 252, 242, 0.3);
+  flex-shrink: 0;
+}
+.design-lab__ft-color--on .design-lab__ft-color-swatch {
+  border-color: rgba(255, 252, 242, 0.55);
+}
+
+.design-lab__ft-color-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.78);
+}
+.design-lab__ft-color--on .design-lab__ft-color-label {
+  color: #f1d8b5;
+}
+
+.design-lab__ft-color-clear {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 50%;
+  color: rgba(255, 252, 242, 0.7);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.design-lab__ft-color-clear:hover {
+  background: rgba(255, 100, 100, 0.18);
+  border-color: rgba(255, 100, 100, 0.45);
+  color: #ffd4d4;
+}
+
 .design-lab__ft-actions {
   display: grid;
   grid-template-columns: 1fr 2fr;
