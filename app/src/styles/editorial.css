@@ -36,6 +36,16 @@
   --ed-gold-hi: #a6954a;
   --ed-line: rgba(61, 58, 46, 0.1);
   --ed-line-strong: rgba(61, 58, 46, 0.2);
+
+  /* Unified card-corner radius — applies to every "panel" /
+     "card" surface that opts in (hero, featured, subscription
+     cards, cart plan options + summary, cart items, results
+     product cards). Buttons, pills, icons, inputs, and the
+     design-lab chrome keep their own literal radii. The design
+     lab's "Card style" dropdown flips this token so the whole
+     site swaps between sharp, subtle, soft, rounded, and
+     pillowy corners in one beat. */
+  --card-radius: 16px;
 }
 
 /* --------------------------------------------------------------------

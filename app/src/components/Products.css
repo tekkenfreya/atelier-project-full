@@ -15,7 +15,7 @@
 .atelier .featured__panel {
   position: relative;
   background: var(--bg-deep);
-  border-radius: 32px;
+  border-radius: var(--card-radius);
   padding: 96px 80px 96px;
   /* overflow: visible by default — bottle visual extends above the
      top edge of the panel for the Prose-style "poke-out" effect. */

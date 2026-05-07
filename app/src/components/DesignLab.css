@@ -619,6 +619,42 @@
   border: 1px solid rgba(255, 252, 242, 0.12);
 }
 
+/* Card-radius preview row — a small box rendered at the chosen
+   radius so the user sees the corner shape without scrolling. */
+.design-lab__radius-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.design-lab__radius-box {
+  width: 38px;
+  height: 38px;
+  background: rgba(212, 163, 115, 0.4);
+  border: 1px solid rgba(212, 163, 115, 0.7);
+}
+.design-lab__radius-value {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: rgba(255, 252, 242, 0.6);
+}
+
+/* The card-radius CSS variable lives at :root with a 16px default;
+   data-card-radius on <html> overrides for non-default presets. */
+
+html[data-card-radius="sharp"] {
+  --card-radius: 0px;
+}
+html[data-card-radius="subtle"] {
+  --card-radius: 6px;
+}
+html[data-card-radius="rounded"] {
+  --card-radius: 24px;
+}
+html[data-card-radius="pillowy"] {
+  --card-radius: 36px;
+}
+
 .design-lab__hint {
   margin: 4px 0 0;
   font-size: 9px;

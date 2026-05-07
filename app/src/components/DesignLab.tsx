@@ -351,7 +351,12 @@ const PALETTES: readonly Palette[] = [
 ];
 
 const STORAGE_KEYS: Record<
-  SlotKey | "active" | "palette" | "position" | "customPresets",
+  | SlotKey
+  | "active"
+  | "palette"
+  | "position"
+  | "customPresets"
+  | "cardRadius",
   string
 > = {
   active: "atelier-lab",
@@ -363,9 +368,30 @@ const STORAGE_KEYS: Record<
   palette: "atelier-lab-palette",
   position: "atelier-lab-position",
   customPresets: "atelier-lab-custom-presets",
+  cardRadius: "atelier-lab-card-radius",
 };
 
 type LabPosition = "bl" | "br";
+
+/** Card-corner radius presets — applied via the --card-radius
+ *  CSS variable to every panel that opts in (hero, featured,
+ *  subscription cards, cart plan options + summary, cart items,
+ *  results product cards). Buttons / pills / icons / inputs keep
+ *  their literal radii. */
+type CardRadius = {
+  id: string;
+  label: string;
+  /** CSS length applied to --card-radius. */
+  value: string;
+};
+
+const CARD_RADII: readonly CardRadius[] = [
+  { id: "sharp", label: "Sharp", value: "0px" },
+  { id: "subtle", label: "Subtle", value: "6px" },
+  { id: "soft", label: "Soft (default)", value: "16px" },
+  { id: "rounded", label: "Rounded", value: "24px" },
+  { id: "pillowy", label: "Pillowy", value: "36px" },
+];
 
 type LabView = "type" | "map";
 
@@ -718,6 +744,9 @@ export default function DesignLab() {
   /** Which top-level view is showing: type tools or the sitemap.
    *  Tabs in the panel header swap between them. */
   const [view, setView] = useState<LabView>("type");
+  /** Card corner-radius preset. Maps via CARD_RADII to a value
+   *  injected into --card-radius. */
+  const [cardRadius, setCardRadius] = useState<string>("soft");
   /** When chip homing has to navigate to a different route, the
    *  scroll/flash is queued here and consumed once the pathname
    *  matches. Cleared if 4s elapse without the right route landing
@@ -801,6 +830,10 @@ export default function DesignLab() {
       mono: localStorage.getItem(STORAGE_KEYS.mono) ?? SLOT_TARGETS.mono.defaultId,
     });
     setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? "default");
+    const storedRadius = localStorage.getItem(STORAGE_KEYS.cardRadius);
+    if (storedRadius && CARD_RADII.some((r) => r.id === storedRadius)) {
+      setCardRadius(storedRadius);
+    }
     const storedPos = localStorage.getItem(STORAGE_KEYS.position);
     if (storedPos === "br" || storedPos === "bl") setPosition(storedPos);
     // Load custom presets — guarded against malformed JSON.
@@ -883,6 +916,12 @@ export default function DesignLab() {
     document.documentElement.setAttribute("data-palette", palette);
     localStorage.setItem(STORAGE_KEYS.palette, palette);
   }, [active, palette]);
+
+  useEffect(() => {
+    if (!active) return;
+    document.documentElement.setAttribute("data-card-radius", cardRadius);
+    localStorage.setItem(STORAGE_KEYS.cardRadius, cardRadius);
+  }, [active, cardRadius]);
 
   /** Keep a single <style> tag in <head> whose contents are rebuilt
    *  every time `overrides` changes. Using one mutable element
@@ -1384,6 +1423,7 @@ export default function DesignLab() {
       mono: SLOT_TARGETS.mono.defaultId,
     });
     setPalette("default");
+    setCardRadius("soft");
     // Also clear every per-element override and any open
     // fine-tune panel — Reset should mean "everything back to
     // factory defaults", not just the slot dropdowns.
@@ -1986,6 +2026,46 @@ export default function DesignLab() {
           </div>
         </div>
       )}
+
+      {view === "type" && (() => {
+        const activeRadius =
+          CARD_RADII.find((r) => r.id === cardRadius) ?? CARD_RADII[2];
+        return (
+          <div className="design-lab__row">
+            <span className="design-lab__label">Card corners</span>
+            <ul
+              className="design-lab__surfaces"
+              aria-label="What this slot controls"
+            >
+              <li className="design-lab__chip design-lab__chip--key">Hero</li>
+              <li className="design-lab__chip">Featured panel</li>
+              <li className="design-lab__chip">Cart cards</li>
+              <li className="design-lab__chip">Subscription cards</li>
+              <li className="design-lab__chip">Results cards</li>
+            </ul>
+            <select
+              className="design-lab__select"
+              value={cardRadius}
+              onChange={(e) => setCardRadius(e.target.value)}
+            >
+              {CARD_RADII.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+            <div className="design-lab__radius-preview" aria-hidden>
+              <span
+                className="design-lab__radius-box"
+                style={{ borderRadius: activeRadius.value }}
+              />
+              <span className="design-lab__radius-value">
+                {activeRadius.value}
+              </span>
+            </div>
+          </div>
+        );
+      })()}
 
       {view === "type" && overrides.length > 0 && (
         <div className="design-lab__row design-lab__row--overrides">
