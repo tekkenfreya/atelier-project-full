@@ -463,6 +463,94 @@ const PRESETS: readonly Preset[] = [
     },
     palette: "alt-4",
   },
+
+  /* ──────────────────────────────────────────────────────────
+     Brand-inspired presets — each mirrors the typography of a
+     well-known luxury skincare / fragrance house, mapped to the
+     closest free Google Fonts substitutes already loaded by the
+     lab. Defaults are chosen so the homepage + cart + results
+     all read in-character with the source brand. The byline
+     names the substitutes, not the originals, so the user knows
+     exactly what's actually rendering.
+     ──────────────────────────────────────────────────────────*/
+  {
+    id: "brand-aesop",
+    label: "Aesop · Apothecary",
+    byline: "Tenor Sans · Hanken Grotesk · JetBrains Mono",
+    fonts: {
+      display: "tenor-sans",
+      edDisplay: "marcellus",
+      body: "hanken-grotesk",
+      edBody: "inter",
+      mono: "jetbrains-mono",
+    },
+    palette: "default",
+  },
+  {
+    id: "brand-le-labo",
+    label: "Le Labo · Laboratoire",
+    byline: "Marcellus · Inter · Geist Mono",
+    fonts: {
+      display: "marcellus",
+      edDisplay: "bodoni-moda",
+      body: "inter",
+      edBody: "plus-jakarta",
+      mono: "geist-mono",
+    },
+    palette: "alt-4",
+  },
+  {
+    id: "brand-glossier",
+    label: "Glossier · Studio",
+    byline: "DM Serif Display · Outfit · JetBrains Mono",
+    fonts: {
+      display: "dm-serif-display",
+      edDisplay: "lora",
+      body: "outfit",
+      edBody: "figtree",
+      mono: "jetbrains-mono",
+    },
+    palette: "alt-4",
+  },
+  {
+    id: "brand-augustinus-bader",
+    label: "Augustinus Bader · Award",
+    byline: "Bodoni Moda · Hanken Grotesk · IBM Plex Mono",
+    fonts: {
+      display: "bodoni-moda",
+      edDisplay: "cormorant",
+      body: "hanken-grotesk",
+      edBody: "inter",
+      mono: "ibm-plex-mono",
+    },
+    palette: "alt-6",
+  },
+  {
+    id: "brand-dr-sturm",
+    label: "Dr. Sturm · Clinical",
+    byline: "Marcellus · Public Sans · IBM Plex Mono",
+    fonts: {
+      display: "marcellus",
+      edDisplay: "source-serif",
+      body: "public-sans",
+      edBody: "ibm-plex-sans",
+      mono: "ibm-plex-mono",
+    },
+    palette: "alt-1",
+  },
+  {
+    id: "brand-tatcha",
+    label: "Tatcha · Kyoto",
+    byline: "Cormorant Infant · Lato · DM Mono",
+    fonts: {
+      display: "cormorant-infant",
+      edDisplay: "lora",
+      body: "lato",
+      edBody: "hanken-grotesk",
+      mono: "dm-mono",
+    },
+    palette: "alt-2",
+  },
 ];
 
 type SitemapPage = {
