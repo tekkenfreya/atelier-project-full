@@ -339,7 +339,10 @@ const PALETTES: readonly Palette[] = [
   },
 ];
 
-const STORAGE_KEYS: Record<SlotKey | "active" | "palette" | "position", string> = {
+const STORAGE_KEYS: Record<
+  SlotKey | "active" | "palette" | "position" | "customPresets",
+  string
+> = {
   active: "atelier-lab",
   display: "atelier-lab-display",
   edDisplay: "atelier-lab-ed-display",
@@ -348,6 +351,7 @@ const STORAGE_KEYS: Record<SlotKey | "active" | "palette" | "position", string> 
   mono: "atelier-lab-mono",
   palette: "atelier-lab-palette",
   position: "atelier-lab-position",
+  customPresets: "atelier-lab-custom-presets",
 };
 
 type LabPosition = "bl" | "br";
@@ -375,6 +379,9 @@ type Preset = {
   byline: string;
   fonts: Record<SlotKey, string>;
   palette: string;
+  /** Custom (user-saved) presets are persisted to localStorage and
+   *  rendered with a × delete button. Curated ones are immutable. */
+  custom?: boolean;
 };
 
 const PRESETS: readonly Preset[] = [
@@ -588,6 +595,12 @@ export default function DesignLab() {
    *  injected into a dedicated <style> tag — slot-wide swaps still
    *  fire, but overrides win because they use !important. */
   const [overrides, setOverrides] = useState<Override[]>([]);
+  /** User-saved presets, persisted to localStorage. Live alongside
+   *  the six curated presets in the same grid. */
+  const [customPresets, setCustomPresets] = useState<Preset[]>([]);
+  /** When true, the inline "name your preset" form is showing. */
+  const [savingPreset, setSavingPreset] = useState(false);
+  const [presetDraftName, setPresetDraftName] = useState("");
 
   /** Latest state kept in refs so document-level handlers can read
    *  fresh values without forcing a listener re-bind every render. */
@@ -619,7 +632,26 @@ export default function DesignLab() {
     setPalette(localStorage.getItem(STORAGE_KEYS.palette) ?? "default");
     const storedPos = localStorage.getItem(STORAGE_KEYS.position);
     if (storedPos === "br" || storedPos === "bl") setPosition(storedPos);
+    // Load custom presets — guarded against malformed JSON.
+    try {
+      const rawPresets = localStorage.getItem(STORAGE_KEYS.customPresets);
+      if (rawPresets) {
+        const parsed = JSON.parse(rawPresets);
+        if (Array.isArray(parsed)) setCustomPresets(parsed as Preset[]);
+      }
+    } catch {
+      // Corrupt entry — wipe it so future loads start clean.
+      localStorage.removeItem(STORAGE_KEYS.customPresets);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    localStorage.setItem(
+      STORAGE_KEYS.customPresets,
+      JSON.stringify(customPresets),
+    );
+  }, [active, customPresets]);
 
   useEffect(() => {
     if (!active) return;
@@ -1127,12 +1159,12 @@ export default function DesignLab() {
     setPickedTarget(null);
   }
 
-  /** Apply one of the curated presets — sets every slot and the
-   *  palette in one beat, and clears any per-element overrides
-   *  (presets are holistic looks; lingering overrides would fight
-   *  the new direction). */
+  /** Apply a preset (curated or custom) — sets every slot and the
+   *  palette in one beat, and clears any per-element overrides. */
   function applyPreset(presetId: string) {
-    const preset = PRESETS.find((p) => p.id === presetId);
+    const preset =
+      PRESETS.find((p) => p.id === presetId) ??
+      customPresets.find((p) => p.id === presetId);
     if (!preset) return;
     setSelections({ ...preset.fonts });
     setPalette(preset.palette);
@@ -1141,11 +1173,11 @@ export default function DesignLab() {
   }
 
   /** Detect which preset (if any) the current state matches, so
-   *  the active preset chip can be highlighted. Returns null when
-   *  the user has drifted off-preset (custom font swap or palette
-   *  change). */
+   *  the active preset card can be highlighted. Searches custom
+   *  presets first so user-saved looks win when curated overlap. */
   function activePresetId(): string | null {
-    for (const preset of PRESETS) {
+    const all = [...customPresets, ...PRESETS];
+    for (const preset of all) {
       if (preset.palette !== palette) continue;
       const match = (Object.keys(preset.fonts) as SlotKey[]).every(
         (k) => preset.fonts[k] === selections[k],
@@ -1153,6 +1185,42 @@ export default function DesignLab() {
       if (match) return preset.id;
     }
     return null;
+  }
+
+  /** Build a short composer-credit-style byline from the current
+   *  font selections — used when saving a custom preset. */
+  function buildBylineFromSelections(): string {
+    const parts = [
+      SERIFS.find((f) => f.id === selections.display)?.label,
+      SANS.find((f) => f.id === selections.body)?.label,
+      MONOS.find((f) => f.id === selections.mono)?.label,
+    ].filter(Boolean);
+    return parts.join(" · ");
+  }
+
+  function commitCustomPreset() {
+    const trimmed = presetDraftName.trim();
+    if (!trimmed) return;
+    const newPreset: Preset = {
+      id: `custom-${Date.now()}`,
+      label: trimmed,
+      byline: buildBylineFromSelections(),
+      fonts: { ...selections },
+      palette,
+      custom: true,
+    };
+    setCustomPresets((prev) => [...prev, newPreset]);
+    setSavingPreset(false);
+    setPresetDraftName("");
+  }
+
+  function cancelSavePreset() {
+    setSavingPreset(false);
+    setPresetDraftName("");
+  }
+
+  function deleteCustomPreset(id: string) {
+    setCustomPresets((prev) => prev.filter((p) => p.id !== id));
   }
 
   if (!active) return null;
@@ -1255,21 +1323,94 @@ export default function DesignLab() {
 
       {view === "type" && (() => {
         const active = activePresetId();
+        const allPresets: Preset[] = [...PRESETS, ...customPresets];
         return (
           <div className="design-lab__presets" role="region" aria-label="Design presets">
-            <span className="design-lab__presets-label">Presets</span>
+            <div className="design-lab__presets-head">
+              <span className="design-lab__presets-label">Presets</span>
+              {!savingPreset ? (
+                <button
+                  type="button"
+                  className="design-lab__preset-save"
+                  onClick={() => {
+                    setPresetDraftName(`My preset ${customPresets.length + 1}`);
+                    setSavingPreset(true);
+                  }}
+                  title="Save the current font + palette mix as a preset"
+                >
+                  + Save current
+                </button>
+              ) : (
+                <span className="design-lab__preset-saving" aria-hidden>
+                  Naming…
+                </span>
+              )}
+            </div>
+
+            {savingPreset && (
+              <form
+                className="design-lab__preset-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  commitCustomPreset();
+                }}
+              >
+                <input
+                  className="design-lab__preset-input"
+                  type="text"
+                  value={presetDraftName}
+                  onChange={(e) => setPresetDraftName(e.target.value)}
+                  placeholder="Preset name"
+                  autoFocus
+                  maxLength={48}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") cancelSavePreset();
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="design-lab__preset-save design-lab__preset-save--commit"
+                  disabled={!presetDraftName.trim()}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="design-lab__preset-cancel"
+                  onClick={cancelSavePreset}
+                  aria-label="Cancel"
+                >
+                  ×
+                </button>
+              </form>
+            )}
+
             <ul className="design-lab__presets-list">
-              {PRESETS.map((p) => (
-                <li key={p.id}>
+              {allPresets.map((p) => (
+                <li key={p.id} className={p.custom ? "design-lab__preset-li--custom" : ""}>
                   <button
                     type="button"
-                    className={`design-lab__preset${active === p.id ? " design-lab__preset--on" : ""}`}
+                    className={`design-lab__preset${active === p.id ? " design-lab__preset--on" : ""}${p.custom ? " design-lab__preset--custom" : ""}`}
                     onClick={() => applyPreset(p.id)}
                     title={p.byline}
                   >
                     <span className="design-lab__preset-name">{p.label}</span>
                     <span className="design-lab__preset-byline">{p.byline}</span>
                   </button>
+                  {p.custom && (
+                    <button
+                      type="button"
+                      className="design-lab__preset-delete"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteCustomPreset(p.id);
+                      }}
+                      aria-label={`Delete preset ${p.label}`}
+                      title="Delete this saved preset"
+                    >
+                      ×
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

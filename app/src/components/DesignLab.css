@@ -517,12 +517,103 @@
   border-radius: 10px;
 }
 
+.design-lab__presets-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
 .design-lab__presets-label {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(255, 252, 242, 0.6);
+}
+
+.design-lab__preset-save {
+  height: 22px;
+  padding: 0 10px;
+  background: rgba(212, 163, 115, 0.18);
+  color: #f1d8b5;
+  border: 1px solid rgba(212, 163, 115, 0.45);
+  border-radius: 11px;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.design-lab__preset-save:hover {
+  background: rgba(212, 163, 115, 0.28);
+  border-color: rgba(212, 163, 115, 0.65);
+}
+.design-lab__preset-save--commit {
+  background: #d4a373;
+  color: #1f1d1a;
+  border-color: #d4a373;
+}
+.design-lab__preset-save--commit:hover {
+  background: #c8956b;
+  border-color: #c8956b;
+}
+.design-lab__preset-save--commit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.design-lab__preset-saving {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 242, 0.5);
+}
+
+.design-lab__preset-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.design-lab__preset-input {
+  height: 26px;
+  padding: 0 10px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 252, 242, 0.18);
+  border-radius: 7px;
+  color: rgba(255, 252, 242, 0.96);
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.design-lab__preset-input:focus {
+  outline: none;
+  border-color: rgba(212, 163, 115, 0.65);
+}
+
+.design-lab__preset-cancel {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 252, 242, 0.2);
+  color: rgba(255, 252, 242, 0.7);
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.design-lab__preset-cancel:hover {
+  background: rgba(255, 100, 100, 0.18);
+  border-color: rgba(255, 100, 100, 0.45);
+  color: #ffd4d4;
 }
 
 .design-lab__presets-list {
@@ -581,6 +672,45 @@
   text-transform: none;
   line-height: 1.3;
   word-break: break-word;
+}
+
+/* Custom (user-saved) preset card — slightly different look so the
+   user can tell their own saves from the curated set. The list
+   item becomes a positioning wrapper for the floating × button. */
+.design-lab__preset-li--custom {
+  position: relative;
+}
+
+.design-lab__preset--custom {
+  border-style: dashed;
+  border-color: rgba(212, 163, 115, 0.4);
+  padding-right: 22px;
+}
+.design-lab__preset--custom:hover {
+  border-color: rgba(212, 163, 115, 0.7);
+}
+
+.design-lab__preset-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  color: rgba(255, 252, 242, 0.45);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.design-lab__preset-delete:hover {
+  background: rgba(255, 100, 100, 0.22);
+  color: #ffd4d4;
 }
 
 /* ============================================================
