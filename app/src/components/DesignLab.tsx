@@ -1025,6 +1025,11 @@ export default function DesignLab() {
       mono: SLOT_TARGETS.mono.defaultId,
     });
     setPalette("default");
+    // Also clear every per-element override and any open
+    // fine-tune panel — Reset should mean "everything back to
+    // factory defaults", not just the slot dropdowns.
+    setOverrides([]);
+    setPickedTarget(null);
   }
 
   if (!active) return null;
