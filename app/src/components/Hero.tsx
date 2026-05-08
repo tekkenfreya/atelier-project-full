@@ -62,7 +62,7 @@ export default function Hero() {
       </div>
 
       <div className="hero-v__mark">
-        <span>Kyrill</span>
+        <span>Atelier Rusalka</span>
         <span className="hero-v__mark-sep" aria-hidden>
           ·
         </span>

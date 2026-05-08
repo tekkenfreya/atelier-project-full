@@ -77,11 +77,11 @@ export default function Navbar() {
         type="button"
         className="nav__logo"
         onClick={() => router.push("/")}
-        aria-label="Kyrill home"
+        aria-label="Atelier Rusalka home"
       >
         <span className="nav__logo-mark" aria-hidden />
         <span className="nav__logo-text">
-          <em>kyrill</em>
+          Atelier <em>Rusalka</em>
         </span>
       </button>
 
@@ -231,7 +231,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link href="/gift" onClick={() => setMenuOpen(false)}>
-                Gift Kyrill
+                Gift Rusalka
               </Link>
             </li>
             <li>
