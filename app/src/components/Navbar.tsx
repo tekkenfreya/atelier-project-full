@@ -79,7 +79,13 @@ export default function Navbar() {
         onClick={() => router.push("/")}
         aria-label="Atelier Rusalka home"
       >
-        <span className="nav__logo-mark" aria-hidden />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="nav__logo-img"
+          src="/atelier-rusalka-logo.png"
+          alt=""
+          aria-hidden
+        />
         <span className="nav__logo-text">
           Atelier <em>Rusalka</em>
         </span>

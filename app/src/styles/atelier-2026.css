@@ -181,14 +181,25 @@
   padding: 0;
   cursor: pointer;
 }
-.nav__logo-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-blob);
-  background: linear-gradient(135deg, var(--rose), var(--amber));
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.5),
-              0 4px 12px -4px var(--rose-deep);
-  animation: atelier-morph 14s ease-in-out infinite;
+/* The morphing gradient blob (.nav__logo-mark) was the temporary
+   stand-in for a real brand mark. The actual Atelier Rusalka logo
+   — a rusalka figure framed by botanical leaves and water drops,
+   teal + gold on a transparent ground — now lives on /public and
+   renders as an <img> with class nav__logo-img. The legacy
+   .nav__logo-mark class is intentionally removed from atelier-2026.css;
+   the JSX no longer references it. */
+
+.nav__logo-img {
+  width: 36px;
+  height: 36px;
+  display: block;
+  flex-shrink: 0;
+  /* The PNG was generated from a JPEG so the alpha edges have a
+     slight halo. mix-blend-mode: multiply collapses any residual
+     near-white pixels into the cream nav surface; the dark teal
+     + gold marks stay opaque. */
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 .nav__logo em {
   font-style: italic;
