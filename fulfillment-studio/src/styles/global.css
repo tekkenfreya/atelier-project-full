@@ -1038,11 +1038,21 @@ button:focus {
   color: var(--text-3);
 }
 
-/* Per-card "Print this label" button — quiet at rest, gold on hover.
-   Only rendered when the card has an assigned GTIN. */
-.fs-card__print {
+/* Action row at the bottom of an assigned card — Print + XML
+   buttons share the same restrained pill shape, side by side. */
+.fs-card__actions {
   margin-top: 0.85rem;
-  padding: 0.55rem 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+/* Per-card "Print this label" button — quiet at rest, gold on hover.
+   Only rendered when the card has an assigned GTIN. The matching
+   "Download XML" button shares the same baseline styling. */
+.fs-card__print,
+.fs-card__xml {
+  padding: 0.55rem 0.65rem;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 3px;
@@ -1055,13 +1065,15 @@ button:focus {
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
-.fs-card__print:hover:not(:disabled) {
+.fs-card__print:hover:not(:disabled),
+.fs-card__xml:hover:not(:disabled) {
   color: var(--gold);
   border-color: var(--gold-edge);
   background: var(--gold-wash);
 }
 
-.fs-card__print:disabled {
+.fs-card__print:disabled,
+.fs-card__xml:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }

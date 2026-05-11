@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { renderBarcodeToCanvas } from "../lib/barcode";
 import type { FulfilledItem, OrderItem } from "../lib/engine";
+import { downloadInciXml } from "../lib/inciXml";
 
 interface ProductCardProps {
   index: number;
@@ -88,16 +89,29 @@ export default function ProductCard({
         )}
       </div>
 
-      {state === "assigned" && assigned && onPrint && (
-        <button
-          type="button"
-          className="fs-card__print"
-          onClick={() => onPrint(assigned)}
-          disabled={printDisabled}
-          aria-label={`Print label for ${sourceItem.productName ?? sourceItem.category}`}
-        >
-          Print this label →
-        </button>
+      {state === "assigned" && assigned && (
+        <div className="fs-card__actions">
+          {onPrint && (
+            <button
+              type="button"
+              className="fs-card__print"
+              onClick={() => onPrint(assigned)}
+              disabled={printDisabled}
+              aria-label={`Print label for ${sourceItem.productName ?? sourceItem.category}`}
+            >
+              Print this label →
+            </button>
+          )}
+          <button
+            type="button"
+            className="fs-card__xml"
+            onClick={() => downloadInciXml(assigned, sourceItem)}
+            aria-label={`Download INCI Beauty XML for ${sourceItem.productName ?? sourceItem.category}`}
+            title="Download INCI Beauty XML (for inci.com import)"
+          >
+            Download XML
+          </button>
+        </div>
       )}
     </article>
   );
