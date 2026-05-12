@@ -39,14 +39,17 @@ import type { FulfilledItem, OrderItem } from "./engine";
 const BRAND = "Atelier Rusalka";
 
 /** Placeholder product image — Rose Bulgare bottle render. Lives at
- *  /public/products/placeholder-rose-bulgare.webp in the main Next.js
- *  app, so the deployed URL becomes <SITE>/products/...
+ *  /public/products/placeholder-rose-bulgare.jpg in the main Next.js
+ *  app, so the deployed URL becomes <SITE>/products/... The file is
+ *  served as JPEG (not WebP) because INCI Beauty's ingest does not
+ *  accept WebP and silently rejects products whose <image_product>
+ *  resolves to one.
  *
  *  Override per-environment via VITE_INCI_IMAGE_URL — set it to the
  *  Supabase Storage URL once each product has its own real photograph. */
 export const DEFAULT_PRODUCT_IMAGE_URL =
   (import.meta.env.VITE_INCI_IMAGE_URL as string | undefined) ??
-  "https://atelier-rusalka.vercel.app/products/placeholder-rose-bulgare.webp";
+  "https://atelier-rusalka.vercel.app/products/placeholder-rose-bulgare.jpg";
 
 function escapeXml(value: string): string {
   return value
