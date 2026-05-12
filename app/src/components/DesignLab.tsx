@@ -325,8 +325,21 @@ type Palette = {
  *  are auto-derived from these via simple darken / lighten /
  *  alpha math, so the user doesn't have to manage 14 inputs. */
 type PaletteColors = {
+  /** SURFACE — what the page sits on and what cards sit on. */
   bg: string;
+  surfaceCard: string;
+  /** INK — primary text colour. ink-soft / ink-mute / ink-faint
+   *  are still auto-derived from this for hierarchy. */
   ink: string;
+  /** ACTION — primary CTA background + foreground (button text)
+   *  and border / divider colour. Decoupling these from ink lets
+   *  the user paint buttons + lines independently of body text. */
+  ctaBg: string;
+  ctaFg: string;
+  line: string;
+  /** BRAND ACCENTS — the three botanical ambient tones (moss /
+   *  rose / amber) that drive the page-level radial blooms and
+   *  small surface decorations (dots, badges, hovers). */
   accent1: string;
   accent2: string;
   accent3: string;
@@ -341,49 +354,79 @@ type PaletteColors = {
 const CURATED_PALETTE_COLORS: Record<string, PaletteColors> = {
   default: {
     bg: "#f3ecdf",
+    surfaceCard: "#ffffff",
     ink: "#1f1d1a",
+    ctaBg: "#1f1d1a",
+    ctaFg: "#f8f2e6",
+    line: "#d6cfbd",
     accent1: "#a3a05e",
     accent2: "#d4a373",
     accent3: "#caa15a",
   },
   "alt-1": {
     bg: "#e9e6e0",
+    surfaceCard: "#ffffff",
     ink: "#1a1d1f",
+    ctaBg: "#1a1d1f",
+    ctaFg: "#f1eee8",
+    line: "#c9c5bd",
     accent1: "#7a8d6a",
     accent2: "#a99175",
     accent3: "#caa15a",
   },
   "alt-2": {
     bg: "#f6f1ea",
+    surfaceCard: "#ffffff",
     ink: "#2a1f17",
+    ctaBg: "#2a1f17",
+    ctaFg: "#fcf7ee",
+    line: "#d6ccbc",
     accent1: "#9aa48a",
     accent2: "#c87c52",
     accent3: "#caa15a",
   },
   "alt-3": {
+    /* Dark palette — CTAs invert to cream-on-dark for legibility. */
     bg: "#0f1218",
+    surfaceCard: "#1a1f27",
     ink: "#f4ead7",
+    ctaBg: "#f4ead7",
+    ctaFg: "#0f1218",
+    line: "#2c3038",
     accent1: "#7d8a5c",
     accent2: "#caa15a",
     accent3: "#caa15a",
   },
   "alt-4": {
     bg: "#faf6ed",
+    surfaceCard: "#ffffff",
     ink: "#322d23",
+    ctaBg: "#322d23",
+    ctaFg: "#fffaf0",
+    line: "#dcd5c4",
     accent1: "#8a7a4f",
     accent2: "#b58a5d",
     accent3: "#caa15a",
   },
   "alt-5": {
     bg: "#eee8db",
+    surfaceCard: "#ffffff",
     ink: "#1c2118",
+    ctaBg: "#1c2118",
+    ctaFg: "#f7f1e3",
+    line: "#cdc7b7",
     accent1: "#6e8064",
     accent2: "#c66c4f",
     accent3: "#caa15a",
   },
   "alt-6": {
+    /* Dark palette — CTAs invert to gilt-on-charcoal. */
     bg: "#1a1813",
+    surfaceCard: "#2a261d",
     ink: "#ece4d3",
+    ctaBg: "#ece4d3",
+    ctaFg: "#1a1813",
+    line: "#3a352c",
     accent1: "#a39156",
     accent2: "#d9b06e",
     accent3: "#caa15a",
@@ -428,18 +471,32 @@ function withAlpha(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-/** Build the CSS rule body for a palette — the five user
- *  colours plus their auto-derived supporting tokens. */
+/** Build the CSS rule body for a palette — nine user-controlled
+ *  colours plus their auto-derived supporting tokens.
+ *
+ *  The rule sets both .atelier-scoped tokens and the cross-scope
+ *  --surface-card / --cta-bg / --cta-fg / --line on the html
+ *  element directly, so cards + buttons on inner pages (cart,
+ *  checkout, results) read the same palette as the homepage. */
 function buildPaletteRule(id: string, colors: PaletteColors): string {
-  return `html[data-palette="${id}"] .atelier {
+  return `html[data-palette="${id}"] {
+    --surface-card: ${colors.surfaceCard};
+    --cta-bg: ${colors.ctaBg};
+    --cta-fg: ${colors.ctaFg};
+    --line: ${colors.line};
+  }
+  html[data-palette="${id}"] .atelier {
     --bg: ${colors.bg};
     --bg-deep: ${darkenHex(colors.bg, 0.05)};
     --bg-tint: ${lightenHex(colors.bg, 0.04)};
+    --surface-card: ${colors.surfaceCard};
     --ink: ${colors.ink};
     --ink-soft: ${lightenHex(colors.ink, 0.18)};
     --ink-mute: ${withAlpha(colors.ink, 0.62)};
     --ink-faint: ${withAlpha(colors.ink, 0.38)};
-    --line: ${withAlpha(colors.ink, 0.14)};
+    --line: ${colors.line};
+    --cta-bg: ${colors.ctaBg};
+    --cta-fg: ${colors.ctaFg};
     --moss: ${colors.accent1};
     --moss-deep: ${darkenHex(colors.accent1, 0.22)};
     --rose: ${colors.accent2};
@@ -2469,16 +2526,43 @@ export default function DesignLab() {
                   </button>
                 ) : (
                   <div className="design-lab__palette-editor">
+                    <span className="design-lab__palette-group">Surface</span>
                     <PaletteSwatchInput
-                      label="Background"
+                      label="Page background"
                       value={draft.bg}
                       onChange={(v) => updatePaletteDraft("bg", v)}
                     />
                     <PaletteSwatchInput
-                      label="Ink (text)"
+                      label="Card surface"
+                      value={draft.surfaceCard}
+                      onChange={(v) => updatePaletteDraft("surfaceCard", v)}
+                    />
+
+                    <span className="design-lab__palette-group">Ink</span>
+                    <PaletteSwatchInput
+                      label="Primary text"
                       value={draft.ink}
                       onChange={(v) => updatePaletteDraft("ink", v)}
                     />
+
+                    <span className="design-lab__palette-group">Action</span>
+                    <PaletteSwatchInput
+                      label="Button background"
+                      value={draft.ctaBg}
+                      onChange={(v) => updatePaletteDraft("ctaBg", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Button text"
+                      value={draft.ctaFg}
+                      onChange={(v) => updatePaletteDraft("ctaFg", v)}
+                    />
+                    <PaletteSwatchInput
+                      label="Border / divider"
+                      value={draft.line}
+                      onChange={(v) => updatePaletteDraft("line", v)}
+                    />
+
+                    <span className="design-lab__palette-group">Brand accents</span>
                     <PaletteSwatchInput
                       label="Accent A · Moss"
                       value={draft.accent1}

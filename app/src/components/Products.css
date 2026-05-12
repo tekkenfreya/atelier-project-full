@@ -14,7 +14,7 @@
 
 .atelier .featured__panel {
   position: relative;
-  background: var(--bg-deep);
+  background: var(--surface-card);
   border-radius: var(--card-radius);
   padding: 96px 80px 96px;
   /* overflow: visible by default — bottle visual extends above the
@@ -326,8 +326,8 @@
   height: 40px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--bg-tint);
+  background: var(--cta-bg, var(--ink));
+  color: var(--cta-fg, var(--bg-tint));
   border: none;
   display: grid;
   place-items: center;

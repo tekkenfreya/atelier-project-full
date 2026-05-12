@@ -82,8 +82,8 @@
 
 .lux-sub__card {
   padding: 2rem 2rem 2.25rem;
-  background: #ffffff;
-  border: 1px solid rgba(61, 58, 46, 0.08);
+  background: var(--surface-card);
+  border: 1px solid var(--line);
   border-radius: var(--card-radius);
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);

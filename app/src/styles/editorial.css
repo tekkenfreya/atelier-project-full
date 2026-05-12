@@ -46,6 +46,23 @@
      site swaps between sharp, subtle, soft, rounded, and
      pillowy corners in one beat. */
   --card-radius: 16px;
+
+  /* Modular surface + action tokens — these are the tokens the
+     design lab's expanded palette editor controls independently
+     of bg / ink / accents:
+       --surface-card  paints every visible card (featured panel,
+                       subscription cards, all cart cards, checkout
+                       review, results product cards).
+       --cta-bg        primary CTA background (nav CTA, cart
+                       checkout, checkout pay button).
+       --cta-fg        text colour on those CTAs.
+     The defaults below match the warm-botanical palette so the
+     out-of-the-box look is unchanged. Curated palettes override
+     these in DesignLab.css and custom palettes inject them via
+     the lab's <style> tag. */
+  --surface-card: #ffffff;
+  --cta-bg: #1f1d1a;
+  --cta-fg: #f8f2e6;
 }
 
 /* --------------------------------------------------------------------

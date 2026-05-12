@@ -12,11 +12,14 @@
   --bg: #f3ecdf;
   --bg-deep: #ebe2cf;
   --bg-tint: #f8f2e6;
+  --surface-card: #ffffff;
   --ink: #1f1d1a;
   --ink-soft: #3a352d;
   --ink-mute: rgba(31, 29, 26, 0.62);
   --ink-faint: rgba(31, 29, 26, 0.38);
   --line: rgba(31, 29, 26, 0.14);
+  --cta-bg: #1f1d1a;
+  --cta-fg: #f8f2e6;
 
   /* Botanical accents — share chroma ~0.06, lightness ~0.65 */
   --moss: oklch(0.62 0.06 130);
@@ -285,8 +288,10 @@
 .nav__cta {
   position: relative;
   padding: 11px 20px 11px 22px;
-  background: var(--ink);
-  color: var(--bg-tint);
+  /* CTA tokens — palette-controlled, override --ink fallback so
+     legacy contexts still render reasonably. */
+  background: var(--cta-bg, var(--ink));
+  color: var(--cta-fg, var(--bg-tint));
   border: none;
   border-radius: 100px;
   font-family: var(--sans);
