@@ -40,16 +40,23 @@ const BRAND = "Atelier Rusalka";
 
 /** Placeholder product image — Rose Bulgare bottle render. Lives at
  *  /public/products/placeholder-rose-bulgare.jpg in the main Next.js
- *  app, so the deployed URL becomes <SITE>/products/... The file is
- *  served as JPEG (not WebP) because INCI Beauty's ingest does not
- *  accept WebP and silently rejects products whose <image_product>
- *  resolves to one.
+ *  app and is served by the production deployment at
+ *  https://atelier-rusalka-ten.vercel.app/products/... — the URL
+ *  was verified as HTTP 200 with content-type image/jpeg and an
+ *  open CORS policy, so INCI Beauty's ingest can fetch it without
+ *  any extra configuration.
  *
- *  Override per-environment via VITE_INCI_IMAGE_URL — set it to the
- *  Supabase Storage URL once each product has its own real photograph. */
+ *  Served as JPEG (not WebP) because INCI Beauty's ingest does
+ *  not accept WebP and silently rejects products whose
+ *  <image_product> resolves to one.
+ *
+ *  Long-term, every product will have its own photograph stored
+ *  in the database (Supabase Storage); flip this constant — or
+ *  set VITE_INCI_IMAGE_URL in the fulfillment-studio env — to
+ *  that public URL once products carry their own image_url field. */
 export const DEFAULT_PRODUCT_IMAGE_URL =
   (import.meta.env.VITE_INCI_IMAGE_URL as string | undefined) ??
-  "https://atelier-rusalka.vercel.app/products/placeholder-rose-bulgare.jpg";
+  "https://atelier-rusalka-ten.vercel.app/products/placeholder-rose-bulgare.jpg";
 
 function escapeXml(value: string): string {
   return value
