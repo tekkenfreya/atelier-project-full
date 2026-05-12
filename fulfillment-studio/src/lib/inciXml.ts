@@ -38,25 +38,25 @@ import type { FulfilledItem, OrderItem } from "./engine";
 /** Brand string written to every <brand> tag. */
 const BRAND = "Atelier Rusalka";
 
-/** Placeholder product image — Rose Bulgare bottle render. Lives at
- *  /public/products/placeholder-rose-bulgare.jpg in the main Next.js
- *  app and is served by the production deployment at
- *  https://atelier-rusalka-ten.vercel.app/products/... — the URL
- *  was verified as HTTP 200 with content-type image/jpeg and an
- *  open CORS policy, so INCI Beauty's ingest can fetch it without
- *  any extra configuration.
+/** Placeholder product image — Rose Bulgare bottle render. Now
+ *  served from Supabase Storage (bucket `products`, public) at a
+ *  permanent URL that is independent of Vercel redeploys. URL
+ *  verified as HTTP 200 with content-type image/jpeg + open CORS,
+ *  so INCI Beauty's ingest can fetch it without extra config.
  *
  *  Served as JPEG (not WebP) because INCI Beauty's ingest does
  *  not accept WebP and silently rejects products whose
  *  <image_product> resolves to one.
  *
- *  Long-term, every product will have its own photograph stored
- *  in the database (Supabase Storage); flip this constant — or
- *  set VITE_INCI_IMAGE_URL in the fulfillment-studio env — to
- *  that public URL once products carry their own image_url field. */
+ *  As products gain their own photographs, switch the source per
+ *  product or set VITE_INCI_IMAGE_URL per environment. Convention:
+ *  one object per GTIN inside the same `products` bucket
+ *  (e.g. <PROJECT>.supabase.co/storage/v1/object/public/products/
+ *  <gtin>.jpg). The bucket is public, so the URL pattern stays
+ *  predictable. */
 export const DEFAULT_PRODUCT_IMAGE_URL =
   (import.meta.env.VITE_INCI_IMAGE_URL as string | undefined) ??
-  "https://atelier-rusalka-ten.vercel.app/products/placeholder-rose-bulgare.jpg";
+  "https://epbyhiagcnbyznvmbebj.supabase.co/storage/v1/object/public/products/placeholder-rose-bulgare.jpg";
 
 function escapeXml(value: string): string {
   return value
