@@ -1,0 +1,315 @@
+{
+  "$schema_note": "Edit this file to add sections / pages / tasks. Re-run `python3 docs/generate-sitemap.py` to regenerate the .xlsx. Status edits made in Excel are NOT round-tripped back here — treat Excel as the working tracker once the file exists.",
+  "metadata": {
+    "project": "Atelier Rusalka",
+    "owner": "Edson",
+    "status_values": ["Todo", "In progress", "Done", "Blocked", "Skipped", "N/A"],
+    "priority_values": ["P0 critical", "P1 high", "P2 medium", "P3 low"]
+  },
+  "sections": [
+    {
+      "name": "Marketing flow",
+      "pages": [
+        {
+          "label": "Home",
+          "path": "/",
+          "description": "Hero · featured · subscription · footer",
+          "tasks": [
+            { "name": "Promo bar (Exclusive welcome offer)", "status": "Done", "priority": "P1 high" },
+            { "name": "Nav with kyrill / Atelier Rusalka wordmark + logo", "status": "Done", "priority": "P1 high" },
+            { "name": "Hero — single video (carousel removed)", "status": "Done", "priority": "P1 high" },
+            { "name": "Hero — asymmetric CTA, narrower radius, fluid width", "status": "Done", "priority": "P1 high" },
+            { "name": "Featured section — halo badge + trust anchors", "status": "Done", "priority": "P1 high" },
+            { "name": "Featured CTA — 'Compose your formula'", "status": "Done", "priority": "P2 medium" },
+            { "name": "Subscription section — 3-card grid", "status": "Done", "priority": "P1 high" },
+            { "name": "Footer — fluid layout", "status": "Done", "priority": "P2 medium" },
+            { "name": "Mobile hamburger menu", "status": "Done", "priority": "P1 high" },
+            { "name": "Fluid scaling on 1920+ monitors", "status": "Done", "priority": "P1 high" },
+            { "name": "Imagination-gap photo on featured section", "status": "Blocked", "priority": "P2 medium", "notes": "Needs real product photo asset" }
+          ]
+        },
+        {
+          "label": "Consultation Quiz",
+          "path": "/quiz",
+          "description": "Multi-step form (~31 questions)",
+          "tasks": [
+            { "name": "31-question flow", "status": "Done", "priority": "P0 critical", "notes": "Existed before recent rebrand" },
+            { "name": "Mobile responsive per question step", "status": "Todo", "priority": "P1 high", "notes": "Needs audit at 375px" },
+            { "name": "Typography pass per question (readability, not mono)", "status": "Todo", "priority": "P1 high" },
+            { "name": "Deep-link to specific step (?step=N)", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Fragrance picker — visual swatch + tooltip (per UX video)", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Conversion optimisation pass per step", "status": "Todo", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "Results",
+          "path": "/results",
+          "description": "Recommended formula + regimen",
+          "tasks": [
+            { "name": "Trust-anchor strip under header", "status": "Done", "priority": "P2 medium" },
+            { "name": "Ingredient progressive disclosure (click to expand)", "status": "Done", "priority": "P1 high" },
+            { "name": "3D botanical scene", "status": "Done", "priority": "P2 medium", "notes": "ProductScene component, dynamic-imported" },
+            { "name": "Side-by-side plan selector", "status": "Done", "priority": "P1 high" },
+            { "name": "Mobile responsive", "status": "Todo", "priority": "P1 high", "notes": "Needs audit on 375px and 414px" },
+            { "name": "Error / empty state design", "status": "Todo", "priority": "P2 medium" }
+          ]
+        },
+        {
+          "label": "Cart",
+          "path": "/cart",
+          "description": "Plan selection · trust strip",
+          "tasks": [
+            { "name": "3-card subscription plan grid", "status": "Done", "priority": "P0 critical" },
+            { "name": "Bi-monthly default + 'Most Popular' tag", "status": "Done", "priority": "P0 critical" },
+            { "name": "Reassurance copy inside each card", "status": "Done", "priority": "P1 high" },
+            { "name": "Trust strip under primary CTA", "status": "Done", "priority": "P1 high" },
+            { "name": "Card surfaces follow palette tokens", "status": "Done", "priority": "P2 medium" },
+            { "name": "Empty-cart state — 'Begin the consultation'", "status": "Done", "priority": "P2 medium" },
+            { "name": "Mobile responsive (3-col → 1-col at 720px)", "status": "Done", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "Checkout",
+          "path": "/checkout",
+          "description": "Stripe redirect",
+          "tasks": [
+            { "name": "Stripe checkout session creation", "status": "Done", "priority": "P0 critical", "notes": "Existing" },
+            { "name": "Trust strip under Pay button", "status": "Done", "priority": "P1 high" },
+            { "name": "CTAs follow palette tokens", "status": "Done", "priority": "P2 medium" },
+            { "name": "Subscription recurring note copy", "status": "Done", "priority": "P2 medium" },
+            { "name": "Error state styling", "status": "Todo", "priority": "P2 medium" }
+          ]
+        },
+        {
+          "label": "Confirmation",
+          "path": "/confirmation?session_id=…",
+          "description": "Post-payment screen — verifies Stripe session",
+          "tasks": [
+            { "name": "Stripe session verification (server-side)", "status": "Done", "priority": "P0 critical" },
+            { "name": "Webhook auto-fulfill on payment success", "status": "Done", "priority": "P0 critical" },
+            { "name": "Order details + next-steps copy", "status": "Todo", "priority": "P1 high" },
+            { "name": "Tracking link surfaced (once Direx integration lands)", "status": "Todo", "priority": "P1 high" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Customer area",
+      "pages": [
+        {
+          "label": "Account",
+          "path": "/account",
+          "description": "Dashboard · orders · settings",
+          "tasks": [
+            { "name": "Auth + sign-in flow", "status": "Done", "priority": "P0 critical", "notes": "Supabase auth, existing" },
+            { "name": "Dashboard layout", "status": "Done", "priority": "P1 high", "notes": "Editorial styling" },
+            { "name": "Order history view", "status": "Todo", "priority": "P1 high" },
+            { "name": "Active subscription management", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Quiz answer retake from account", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Profile / shipping address editor", "status": "Todo", "priority": "P1 high" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reference pages",
+      "pages": [
+        {
+          "label": "Ingredients",
+          "path": "/ingredients",
+          "description": "Botanical glossary",
+          "tasks": [
+            { "name": "Ingredient list pulled from Supabase", "status": "Done", "priority": "P1 high" },
+            { "name": "Filter by function / botanical type", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Per-ingredient detail page (origin, function, scientific name)", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Editorial typography pass", "status": "Todo", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "Skin Analysis",
+          "path": "/analysis",
+          "description": "Skin profile breakdown",
+          "tasks": [
+            { "name": "Profile data render", "status": "Done", "priority": "P1 high" },
+            { "name": "Visual breakdown of concerns + priorities", "status": "Todo", "priority": "P1 high" },
+            { "name": "Compare against last quiz result (trend)", "status": "Todo", "priority": "P3 low" }
+          ]
+        },
+        {
+          "label": "Detailed Report",
+          "path": "/report",
+          "description": "Long-form regimen explanation",
+          "tasks": [
+            { "name": "Regimen rationale per product", "status": "Done", "priority": "P1 high" },
+            { "name": "Print-friendly stylesheet", "status": "Todo", "priority": "P2 medium" },
+            { "name": "PDF export option", "status": "Todo", "priority": "P3 low" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin tools",
+      "pages": [
+        {
+          "label": "Fulfillment Studio",
+          "path": "fulfillment-studio/ (separate Vite app)",
+          "description": "Order list · GTIN assignment · label print · INCI XML export",
+          "tasks": [
+            { "name": "Admin auth gate (user_roles table)", "status": "Done", "priority": "P0 critical" },
+            { "name": "Order list with status filter", "status": "Done", "priority": "P0 critical" },
+            { "name": "Fulfill order — assigns GTINs from pool", "status": "Done", "priority": "P0 critical" },
+            { "name": "Print label per card + bulk print", "status": "Done", "priority": "P0 critical" },
+            { "name": "GS1 EAN-13 100% target barcode rendering", "status": "Done", "priority": "P1 high" },
+            { "name": "INCI Beauty XML download per product", "status": "Done", "priority": "P1 high" },
+            { "name": "Order cancel + test-delete actions", "status": "Done", "priority": "P2 medium" },
+            { "name": "Direx 'Create shipment' button per order", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Direx 'Close manifest + schedule pickup' batch action", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Auto-deploy to Vercel (currently manual)", "status": "Todo", "priority": "P2 medium" }
+          ]
+        },
+        {
+          "label": "Barcode Studio",
+          "path": "barcode-studio/ (separate Vite app)",
+          "description": "GTIN issuance + Excel import",
+          "tasks": [
+            { "name": "GTIN issuer management", "status": "Done", "priority": "P0 critical" },
+            { "name": "Prefix-based GTIN generation (deprecated)", "status": "Done", "priority": "P2 medium" },
+            { "name": "Excel import for GTIN pool", "status": "Done", "priority": "P0 critical" },
+            { "name": "Live preview at GS1 spec scale", "status": "Done", "priority": "P1 high" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "pages": [
+        {
+          "label": "Stripe",
+          "path": "—",
+          "description": "Payment + subscription billing",
+          "tasks": [
+            { "name": "Checkout session creation API route", "status": "Done", "priority": "P0 critical" },
+            { "name": "Webhook handler — auto-fulfill on success", "status": "Done", "priority": "P0 critical" },
+            { "name": "Webhook 500 fixes (subtotal NOT NULL, service-role admin)", "status": "Done", "priority": "P0 critical" },
+            { "name": "Subscription billing cycle handling", "status": "Done", "priority": "P0 critical", "notes": "Bi-monthly + annual plans" },
+            { "name": "Failed payment retry policy", "status": "Todo", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "Supabase",
+          "path": "—",
+          "description": "Database + auth + storage",
+          "tasks": [
+            { "name": "products + ingredients tables", "status": "Done", "priority": "P0 critical" },
+            { "name": "customer_orders + quiz_results tables", "status": "Done", "priority": "P0 critical" },
+            { "name": "gtin_pool + gtin_product_records tables", "status": "Done", "priority": "P0 critical" },
+            { "name": "user_roles table for admin gating", "status": "Done", "priority": "P0 critical" },
+            { "name": "Storage bucket 'products' (public)", "status": "Done", "priority": "P1 high", "notes": "Holds placeholder rose bulgare jpg" },
+            { "name": "Per-product photo upload pipeline (1 jpg per GTIN)", "status": "Todo", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "INCI Beauty XML",
+          "path": "—",
+          "description": "Per-product XML export for inci.com import",
+          "tasks": [
+            { "name": "XML generator (schema-compliant)", "status": "Done", "priority": "P1 high" },
+            { "name": "Download button in fulfillment studio", "status": "Done", "priority": "P1 high" },
+            { "name": "Placeholder image hosted on Supabase Storage", "status": "Done", "priority": "P1 high" },
+            { "name": "Per-product image URL derivation by GTIN", "status": "Todo", "priority": "P1 high" },
+            { "name": "End-to-end import test on INCI Beauty platform", "status": "Todo", "priority": "P0 critical" }
+          ]
+        },
+        {
+          "label": "Direx Courier",
+          "path": "—",
+          "description": "Bulgarian parcel-delivery API integration",
+          "tasks": [
+            { "name": "Phase 0 — Token plumbing + env vars + sender registration", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Phase 1 — Shipment create button + label fetch", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Phase 2 — Manifest close-out + pickup scheduling", "status": "Todo", "priority": "P0 critical" },
+            { "name": "Phase 3 — Tracking polling cron (6h cadence)", "status": "Todo", "priority": "P1 high" },
+            { "name": "Phase 4 — Customer-facing tracking timeline in /account", "status": "Todo", "priority": "P1 high" },
+            { "name": "Phase 5 — 'Shipped' email + tracking link", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Confirm Kyrill warehouse sender ID at my.direx.bg", "status": "Todo", "priority": "P0 critical", "notes": "Operational prerequisite" },
+            { "name": "Decide BG-only vs international shipping scope", "status": "Todo", "priority": "P1 high" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Design system",
+      "pages": [
+        {
+          "label": "Design Lab (?lab=1)",
+          "path": "—",
+          "description": "Floating dev tool for live A/B-ing typography, palette, card corners",
+          "tasks": [
+            { "name": "5 typography slots (display, ed-display, body, ed-body, mono)", "status": "Done", "priority": "P1 high" },
+            { "name": "~70-font catalog with Google Fonts dynamic loading", "status": "Done", "priority": "P1 high" },
+            { "name": "Picker mode — click any text to identify slot", "status": "Done", "priority": "P1 high" },
+            { "name": "Per-element override panel (B / I / U / colour)", "status": "Done", "priority": "P1 high" },
+            { "name": "6 curated presets + custom save/load", "status": "Done", "priority": "P1 high" },
+            { "name": "6 brand-inspired presets (Aesop, Le Labo, Glossier, etc.)", "status": "Done", "priority": "P2 medium" },
+            { "name": "7 curated palettes + custom hex editor", "status": "Done", "priority": "P1 high" },
+            { "name": "Card radius selector (5 presets)", "status": "Done", "priority": "P2 medium" },
+            { "name": "Modular palette tokens (Card surface, CTA bg/fg, line)", "status": "Done", "priority": "P1 high" },
+            { "name": "Collapsible sections + Expand all toggle", "status": "Done", "priority": "P2 medium" },
+            { "name": "Sitemap Map tab (deprecated — moved to Excel)", "status": "Done", "priority": "P3 low", "notes": "Could remove the tab now that Excel tracker exists" }
+          ]
+        },
+        {
+          "label": "Design tokens",
+          "path": "—",
+          "description": "Site-wide CSS variables in editorial.css + atelier-2026.css",
+          "tasks": [
+            { "name": "Type tokens at :root (--serif, --sans, --mono, --ed-display, --ed-body)", "status": "Done", "priority": "P1 high" },
+            { "name": "Palette tokens (bg, surface-card, ink, cta-bg, cta-fg, line, moss/rose/amber)", "status": "Done", "priority": "P1 high" },
+            { "name": "Card-radius token (--card-radius)", "status": "Done", "priority": "P2 medium" },
+            { "name": "Refactor all literal font-family declarations to vars", "status": "Done", "priority": "P1 high", "notes": "~390 declarations across 14 CSS files" },
+            { "name": "Refactor inner-page (editorial.css) cards to use --surface-card", "status": "Todo", "priority": "P2 medium", "notes": "Quiz / account pages still on --bg-cream" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cross-cutting concerns",
+      "pages": [
+        {
+          "label": "Brand",
+          "path": "—",
+          "description": "Wordmark, logo, voice",
+          "tasks": [
+            { "name": "Final logo design (currently using rusalka illustration as PNG)", "status": "In progress", "priority": "P0 critical", "notes": "Real designer brief outstanding" },
+            { "name": "Favicon update from rusalka mark", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Open Graph / social card image", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Brand voice guidelines doc", "status": "Todo", "priority": "P2 medium" }
+          ]
+        },
+        {
+          "label": "Accessibility",
+          "path": "—",
+          "description": "ARIA, contrast, keyboard nav",
+          "tasks": [
+            { "name": "Audit colour contrast across curated palettes (WCAG AA)", "status": "Todo", "priority": "P1 high" },
+            { "name": "Keyboard navigation through quiz", "status": "Todo", "priority": "P1 high" },
+            { "name": "Screen reader pass on results page (3D scene needs alt content)", "status": "Todo", "priority": "P1 high" },
+            { "name": "Focus rings on all interactive elements", "status": "Todo", "priority": "P1 high" }
+          ]
+        },
+        {
+          "label": "Performance",
+          "path": "—",
+          "description": "Bundle size, load speed, image optimisation",
+          "tasks": [
+            { "name": "Hero video preload strategy", "status": "Done", "priority": "P1 high" },
+            { "name": "Migrate hero video to optimised codec (av1 / hevc)", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Next.js Image component for product photos", "status": "Todo", "priority": "P1 high" },
+            { "name": "Font subset / preload optimisation", "status": "Todo", "priority": "P2 medium" },
+            { "name": "Lighthouse audit + remediation", "status": "Todo", "priority": "P1 high" }
+          ]
+        }
+      ]
+    }
+  ]
+}
