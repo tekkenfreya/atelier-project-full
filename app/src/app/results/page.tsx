@@ -302,6 +302,7 @@ export default function ResultsPage() {
         skinType: scored.product.skin_type,
         fragranceOption,
         price: PRODUCT_PRICES[cat],
+        matchedConcerns: scored.matchedConcerns,
       });
     }
 

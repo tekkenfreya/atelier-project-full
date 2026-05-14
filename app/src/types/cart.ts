@@ -1,4 +1,4 @@
-import type { FragranceOption, ProductCategory } from "@/features/consultation/types";
+import type { Concern, FragranceOption, ProductCategory } from "@/features/consultation/types";
 
 export interface CartItem {
   productId: string;
@@ -7,6 +7,7 @@ export interface CartItem {
   skinType: string;
   fragranceOption: FragranceOption;
   price: number;
+  matchedConcerns?: Concern[];
 }
 
 export type SubscriptionPlan = "one-time" | "bi-monthly" | "annual";

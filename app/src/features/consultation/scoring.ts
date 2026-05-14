@@ -214,7 +214,7 @@ export function scoreProduct(
   return { product, score, matchedConcerns, reasons };
 }
 
-function formatConcern(concern: Concern): string {
+export function formatConcern(concern: Concern): string {
   const labels: Record<Concern, string> = {
     acne: "breakouts & blemishes",
     hyperpigmentation: "dark spots",

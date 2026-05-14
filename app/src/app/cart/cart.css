@@ -1,0 +1,300 @@
+/* ─── Routine summary panel ─── */
+.cart-routine-summary {
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--line, var(--border));
+  border-radius: var(--card-radius);
+  background-color: var(--surface-card);
+}
+
+.cart-routine-greeting {
+  font-family: var(--ed-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.cart-routine-headline {
+  font-family: var(--ed-display);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+  line-height: 1.2;
+}
+
+.cart-routine-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cart-routine-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cart-routine-row-label {
+  flex-shrink: 0;
+  width: 92px;
+  font-family: var(--ed-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding-top: 0.35rem;
+}
+
+.cart-routine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.cart-routine-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line, var(--border));
+  border-radius: 100px;
+  background-color: var(--bg-cream, transparent);
+  font-family: var(--ed-body);
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.cart-routine-tag.accent {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(139, 125, 60, 0.08);
+}
+
+/* ─── Numbered routine steps ─── */
+.cart-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cart-step {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line, var(--border));
+  border-radius: var(--card-radius);
+  background-color: var(--surface-card);
+  align-items: start;
+}
+
+.cart-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--mono, var(--ed-body));
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.cart-step-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.cart-step-cat {
+  font-family: var(--ed-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cart-step-name {
+  font-family: var(--ed-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cart-step-reason {
+  font-family: var(--ed-body);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0.15rem 0 0;
+}
+
+.cart-step-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.cart-step-price {
+  font-family: var(--ed-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+@media (max-width: 540px) {
+  .cart-step {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "num info"
+      "right right";
+    gap: 0.85rem 1rem;
+  }
+  .cart-step-num { grid-area: num; }
+  .cart-step-info { grid-area: info; }
+  .cart-step-right {
+    grid-area: right;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--line, var(--border));
+  }
+}
+
+/* ─── Subscription nudge banner (shown when one-time selected) ─── */
+.cart-encourage-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--card-radius);
+  background-color: rgba(139, 125, 60, 0.08);
+  margin-top: 0.5rem;
+}
+
+.cart-encourage-text {
+  font-family: var(--ed-body);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.cart-encourage-text strong {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cart-encourage-btn {
+  flex-shrink: 0;
+  font-family: var(--ed-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cta-fg, #fff);
+  background-color: var(--cta-bg, var(--accent));
+  border: none;
+  padding: 0.7rem 1.1rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.25s ease;
+}
+
+.cart-encourage-btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .cart-encourage-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cart-encourage-btn {
+    width: 100%;
+  }
+}
+
+/* ─── Plan option pricing additions ─── */
+.cart-plan-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: 0.15rem;
+  flex-wrap: wrap;
+}
+
+.cart-plan-price {
+  font-family: var(--ed-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.cart-plan-price-suffix {
+  font-family: var(--ed-body);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.cart-plan-price-strike {
+  font-family: var(--ed-body);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.cart-plan-savings {
+  font-family: var(--mono, var(--ed-body));
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 0.18rem 0.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 100px;
+  background-color: rgba(139, 125, 60, 0.08);
+  line-height: 1.2;
+}
+
+/* ─── Summary column subscription note ─── */
+.cart-summary-continuity {
+  margin-top: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--card-radius);
+  background-color: rgba(139, 125, 60, 0.06);
+  font-family: var(--ed-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  text-align: left;
+}
+
+.cart-summary-continuity strong {
+  color: var(--accent);
+  font-weight: 600;
+}
