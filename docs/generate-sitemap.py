@@ -296,7 +296,7 @@ def add_summary_sheet(wb: Workbook, data: dict) -> None:
     label_font = Font(name="Helvetica", size=10, bold=True, color="555555")
     value_font = Font(name="Helvetica", size=14, color=COLORS["section_bg"])
 
-    ws.cell(row=1, column=1, value="Atelier Rusalka — Sitemap Tracker").font = title_font
+    ws.cell(row=1, column=1, value="Atelier Rusalka Sitemap Tracker").font = title_font
     ws.cell(row=2, column=1, value=f"Generated {datetime.now().strftime('%Y-%m-%d %H:%M')}").font = Font(
         name="Helvetica", size=9, italic=True, color="888888",
     )
@@ -332,7 +332,7 @@ def add_summary_sheet(wb: Workbook, data: dict) -> None:
         row += 1
 
     row += 1
-    ws.cell(row=row, column=1, value="By section (Done / Total)").font = label_font
+    ws.cell(row=row, column=1, value="By section (Done out of Total)").font = label_font
     row += 1
     for sname, status_counts in by_section.items():
         section_total = sum(status_counts.values())
