@@ -147,6 +147,11 @@ def build_workbook(data: dict) -> Workbook:
     priority_values = metadata.get(
         "priority_values", ["P0 critical", "P1 high", "P2 medium", "P3 low"],
     )
+    base_url = metadata.get("base_url", "").rstrip("/")
+    link_font = Font(
+        name="Helvetica", size=10, bold=True,
+        color="0563C1", underline="single",
+    )
 
     # Data validation — status column (E) and priority column (F).
     # openpyxl quotes the comma-separated list as a literal source.
@@ -189,7 +194,13 @@ def build_workbook(data: dict) -> Workbook:
             # Page summary row — merged "Task" cell carries description
             ws.cell(row=row, column=1, value=section_name).fill = page_fill_obj
             ws.cell(row=row, column=2, value=label).fill = page_fill_obj
-            ws.cell(row=row, column=3, value=path).fill = page_fill_obj
+            path_cell = ws.cell(row=row, column=3, value=path)
+            path_cell.fill = page_fill_obj
+            # Make in-app paths clickable. Skip non-routes like
+            # "fulfillment-studio (separate dashboard)".
+            if base_url and path.startswith("/"):
+                path_cell.hyperlink = f"{base_url}{path}"
+                path_cell.font = link_font
             ws.cell(row=row, column=4, value=description).fill = page_fill_obj
             ws.cell(row=row, column=5, value="").fill = page_fill_obj
             ws.cell(row=row, column=6, value="").fill = page_fill_obj
@@ -198,7 +209,10 @@ def build_workbook(data: dict) -> Workbook:
             ws.cell(row=row, column=9, value="").fill = page_fill_obj
             for col_idx in range(1, len(COLUMNS) + 1):
                 cell = ws.cell(row=row, column=col_idx)
-                if col_idx in (1, 2):
+                if col_idx == 3 and cell.hyperlink is not None:
+                    # Keep the link font we already set above.
+                    pass
+                elif col_idx in (1, 2):
                     cell.font = page_font
                 else:
                     cell.font = body_font
