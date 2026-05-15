@@ -148,10 +148,24 @@ def build_workbook(data: dict) -> Workbook:
         "priority_values", ["P0 critical", "P1 high", "P2 medium", "P3 low"],
     )
     base_url = metadata.get("base_url", "").rstrip("/")
+    preview_query: dict[str, str] = metadata.get("preview_query", {}) or {}
     link_font = Font(
         name="Helvetica", size=10, bold=True,
         color="0563C1", underline="single",
     )
+
+    def build_link(path: str) -> str | None:
+        """Compose the full URL for a route path, appending any preview
+        query string when the path falls under a configured prefix. The
+        preview map exists so guarded routes (the quiz, which redirects
+        when sessionStorage is empty) can be opened directly from the
+        tracker without bouncing back to the start."""
+        if not base_url or not path.startswith("/"):
+            return None
+        for prefix, q in preview_query.items():
+            if path == prefix or path.startswith(prefix.rstrip("/") + "/"):
+                return f"{base_url}{path}?{q}"
+        return f"{base_url}{path}"
 
     # Data validation — status column (E) and priority column (F).
     # openpyxl quotes the comma-separated list as a literal source.
@@ -198,8 +212,9 @@ def build_workbook(data: dict) -> Workbook:
             path_cell.fill = page_fill_obj
             # Make in-app paths clickable. Skip non-routes like
             # "fulfillment-studio (separate dashboard)".
-            if base_url and path.startswith("/"):
-                path_cell.hyperlink = f"{base_url}{path}"
+            link = build_link(path)
+            if link:
+                path_cell.hyperlink = link
                 path_cell.font = link_font
             ws.cell(row=row, column=4, value=description).fill = page_fill_obj
             ws.cell(row=row, column=5, value="").fill = page_fill_obj

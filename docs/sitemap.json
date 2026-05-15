@@ -4,6 +4,9 @@
     "project": "Atelier Rusalka",
     "owner": "Edson",
     "base_url": "https://atelier-rusalka-ten.vercel.app",
+    "preview_query": {
+      "/quiz": "preview=true"
+    },
     "status_values": [
       "Todo",
       "In progress",
