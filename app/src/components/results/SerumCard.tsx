@@ -1,5 +1,6 @@
 import type { ScoredProduct, FragranceOption, ProductCategory } from "@/features/consultation/types";
 import { PRODUCT_PRICES } from "@/types/cart";
+import { DEFAULT_CURRENCY, getCurrencySymbol } from "@/lib/regions";
 
 interface SerumCardProps {
   result: ScoredProduct;
@@ -31,7 +32,8 @@ export default function SerumCard({
 }: SerumCardProps) {
   const { product, reasons } = result;
   const category = getCategoryFromProduct(product);
-  const price = PRODUCT_PRICES[category];
+  const price = PRODUCT_PRICES[DEFAULT_CURRENCY][category];
+  const symbol = getCurrencySymbol(DEFAULT_CURRENCY);
 
   const activeIngredients = product.ingredients.filter(
     (i) =>
@@ -77,7 +79,7 @@ export default function SerumCard({
       <p className="results-card-skin">For {product.skin_type}</p>
 
       {showSelection && (
-        <p className="results-card-price">€{price}</p>
+        <p className="results-card-price">{symbol}{price}</p>
       )}
 
       <div className="results-card-actives">

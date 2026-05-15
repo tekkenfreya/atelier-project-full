@@ -1,4 +1,6 @@
 import type { Concern, FragranceOption, ProductCategory } from "@/features/consultation/types";
+import type { CurrencyCode } from "@/lib/regions";
+import { DEFAULT_CURRENCY } from "@/lib/regions";
 
 export interface CartItem {
   productId: string;
@@ -7,6 +9,7 @@ export interface CartItem {
   skinType: string;
   fragranceOption: FragranceOption;
   price: number;
+  currency?: CurrencyCode;
   matchedConcerns?: Concern[];
 }
 
@@ -18,6 +21,7 @@ export interface OrderData {
   subtotal: number;
   discount: number;
   total: number;
+  currency: CurrencyCode;
   shipping: ShippingInfo;
 }
 
@@ -31,29 +35,51 @@ export interface ShippingInfo {
   postalCode: string;
 }
 
-export const PRODUCT_PRICES: Record<ProductCategory, number> = {
-  Cleanser: 23,
-  Serum: 50,
-  Moisturizer: 41,
+export const PRODUCT_PRICES: Record<CurrencyCode, Record<ProductCategory, number>> = {
+  EUR: { Cleanser: 23, Serum: 50, Moisturizer: 41 },
+  USD: { Cleanser: 26, Serum: 55, Moisturizer: 46 },
+  GBP: { Cleanser: 20, Serum: 44, Moisturizer: 36 },
 };
 
-export const BUNDLE_PRICE = 115;
-export const SUBSCRIPTION_DISCOUNT = 0.2;
-export const BIMONTHLY_BUNDLE_PRICE = 92;
-export const ANNUAL_BUNDLE_PRICE = 552;
+export const BUNDLE_PRICE: Record<CurrencyCode, number> = {
+  EUR: 115,
+  USD: 129,
+  GBP: 99,
+};
 
-export function calculateSubtotal(items: CartItem[]): number {
-  if (items.length === 3) {
-    return BUNDLE_PRICE;
-  }
+export const SUBSCRIPTION_DISCOUNT = 0.2;
+
+export const BIMONTHLY_BUNDLE_PRICE: Record<CurrencyCode, number> = {
+  EUR: 92,
+  USD: 103,
+  GBP: 79,
+};
+
+export const ANNUAL_BUNDLE_PRICE: Record<CurrencyCode, number> = {
+  EUR: 552,
+  USD: 619,
+  GBP: 475,
+};
+
+function resolveCurrency(items: CartItem[], explicit?: CurrencyCode): CurrencyCode {
+  if (explicit) return explicit;
+  const fromItems = items.find((i) => i.currency)?.currency;
+  return fromItems ?? DEFAULT_CURRENCY;
+}
+
+export function calculateSubtotal(items: CartItem[], currency?: CurrencyCode): number {
+  const c = resolveCurrency(items, currency);
+  if (items.length === 3) return BUNDLE_PRICE[c];
   return items.reduce((sum, item) => sum + item.price, 0);
 }
 
 export function calculateTotal(
   items: CartItem[],
-  plan: SubscriptionPlan
+  plan: SubscriptionPlan,
+  currency?: CurrencyCode
 ): { subtotal: number; discount: number; total: number } {
-  const subtotal = calculateSubtotal(items);
+  const c = resolveCurrency(items, currency);
+  const subtotal = calculateSubtotal(items, c);
 
   if (plan === "one-time") {
     return { subtotal, discount: 0, total: subtotal };
@@ -61,9 +87,11 @@ export function calculateTotal(
 
   if (items.length === 3) {
     if (plan === "bi-monthly") {
-      return { subtotal, discount: subtotal - BIMONTHLY_BUNDLE_PRICE, total: BIMONTHLY_BUNDLE_PRICE };
+      const total = BIMONTHLY_BUNDLE_PRICE[c];
+      return { subtotal, discount: subtotal - total, total };
     }
-    return { subtotal, discount: subtotal - (ANNUAL_BUNDLE_PRICE / 6), total: ANNUAL_BUNDLE_PRICE / 6 };
+    const total = ANNUAL_BUNDLE_PRICE[c] / 6;
+    return { subtotal, discount: subtotal - total, total };
   }
 
   const discount = subtotal * SUBSCRIPTION_DISCOUNT;

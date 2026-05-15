@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
@@ -16,6 +16,12 @@ import type {
 import type { AnswerValue } from "@/data/quizQuestions";
 import type { CartItem } from "@/types/cart";
 import { PRODUCT_PRICES, BUNDLE_PRICE, calculateTotal } from "@/types/cart";
+import {
+  DEFAULT_COUNTRY,
+  getCurrencyForCountry,
+  getCurrencySymbol,
+  isSupportedCountry,
+} from "@/lib/regions";
 import { supabase } from "@/lib/supabase";
 import BotanicalCard from "@/components/results/BotanicalCard";
 import type { BotanicalItem } from "@/components/results/ProductScene";
@@ -149,6 +155,7 @@ export default function ResultsPage() {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("analysis");
   const [expandedIng, setExpandedIng] = useState<string | null>(null);
+  const [shipToCountry, setShipToCountry] = useState<string>(DEFAULT_COUNTRY);
 
   const savedQuizRef = useRef(false);
   const tabContentRef = useRef<HTMLDivElement>(null);
@@ -200,6 +207,11 @@ export default function ResultsPage() {
       if (!stored) {
         router.push("/quiz");
         return;
+      }
+
+      const savedCountry = sessionStorage.getItem("shipToCountry");
+      if (savedCountry && isSupportedCountry(savedCountry)) {
+        setShipToCountry(savedCountry);
       }
 
       try {
@@ -282,6 +294,10 @@ export default function ResultsPage() {
     setSelected((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
+  const currency = useMemo(() => getCurrencyForCountry(shipToCountry), [shipToCountry]);
+  const prices = useMemo(() => PRODUCT_PRICES[currency], [currency]);
+  const symbol = useMemo(() => getCurrencySymbol(currency), [currency]);
+
   const getSelectedItems = useCallback((): CartItem[] => {
     if (!recommendation) return [];
 
@@ -301,13 +317,14 @@ export default function ResultsPage() {
         category: cat,
         skinType: scored.product.skin_type,
         fragranceOption,
-        price: PRODUCT_PRICES[cat],
+        price: prices[cat],
+        currency,
         matchedConcerns: scored.matchedConcerns,
       });
     }
 
     return items;
-  }, [recommendation, selected, fragranceOption]);
+  }, [recommendation, selected, fragranceOption, prices, currency]);
 
   /* ─── Checkout ─── */
 
@@ -322,7 +339,7 @@ export default function ResultsPage() {
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, plan }),
+        body: JSON.stringify({ items, plan, currency, shipToCountry }),
       });
 
       if (!res.ok) throw new Error("Failed to create checkout session");
@@ -333,14 +350,15 @@ export default function ResultsPage() {
       setCheckoutError(err instanceof Error ? err.message : "Checkout failed");
       setCheckoutLoading(false);
     }
-  }, [getSelectedItems, plan]);
+  }, [getSelectedItems, plan, currency, shipToCountry]);
 
   const handleContinueToCart = useCallback(() => {
     const items = getSelectedItems();
     if (items.length === 0) return;
     sessionStorage.setItem("cartItems", JSON.stringify(items));
+    sessionStorage.setItem("shipToCountry", shipToCountry);
     go("/cart");
-  }, [getSelectedItems, go]);
+  }, [getSelectedItems, go, shipToCountry]);
 
   /* ─── Loading / Error ─── */
 
@@ -396,9 +414,9 @@ export default function ResultsPage() {
 
   const selectedItems = getSelectedItems();
   const selectedCount = selectedItems.length;
-  const { subtotal } = calculateTotal(selectedItems, "one-time");
-  const { total: subscriptionTotal } = calculateTotal(selectedItems, "bi-monthly");
-  const { total: currentTotal, discount } = calculateTotal(selectedItems, plan);
+  const { subtotal } = calculateTotal(selectedItems, "one-time", currency);
+  const { total: subscriptionTotal } = calculateTotal(selectedItems, "bi-monthly", currency);
+  const { total: currentTotal, discount } = calculateTotal(selectedItems, plan, currency);
   const isBundle = selectedCount === 3;
 
   const PLAN_OPTIONS = [
@@ -523,7 +541,7 @@ export default function ResultsPage() {
                         <h3 className="rd-product-name">{product.name}</h3>
                         <p className="rd-product-skin">For {product.skin_type}</p>
                       </div>
-                      <span className="rd-product-price">&euro;{PRODUCT_PRICES[cat]}</span>
+                      <span className="rd-product-price">{symbol}{prices[cat]}</span>
                     </div>
 
                     <div className="rd-product-actives">
@@ -619,7 +637,7 @@ export default function ResultsPage() {
                     <span className="rd-order-item-name">{scored.product.name}</span>
                   </div>
                   <span className={`rd-order-item-price${!selected[key] ? " rd-order-item-price-off" : ""}`}>
-                    &euro;{PRODUCT_PRICES[cat]}
+                    {symbol}{prices[cat]}
                   </span>
                 </div>
               );
@@ -632,16 +650,16 @@ export default function ResultsPage() {
               <div className="rd-order-pricing">
                 <div className="rd-price-row">
                   <span>{isBundle ? "Full Routine" : `${selectedCount} product${selectedCount > 1 ? "s" : ""}`}</span>
-                  <span className="rd-price-val">&euro;{subtotal}</span>
+                  <span className="rd-price-val">{symbol}{subtotal}</span>
                 </div>
                 {isBundle && (
                   <p className="rd-price-save">
-                    Bundle saves &euro;{(PRODUCT_PRICES.Cleanser + PRODUCT_PRICES.Serum + PRODUCT_PRICES.Moisturizer) - BUNDLE_PRICE}
+                    Bundle saves {symbol}{(prices.Cleanser + prices.Serum + prices.Moisturizer) - BUNDLE_PRICE[currency]}
                   </p>
                 )}
                 <div className="rd-price-row rd-price-sub">
                   <span>With subscription</span>
-                  <span>&euro;{subscriptionTotal}<small> / shipment</small></span>
+                  <span>{symbol}{subscriptionTotal}<small> / shipment</small></span>
                 </div>
               </div>
 
@@ -668,12 +686,12 @@ export default function ResultsPage() {
                 {discount > 0 && (
                   <div className="rd-price-row">
                     <span>Discount</span>
-                    <span className="rd-discount">-&euro;{discount.toFixed(2)}</span>
+                    <span className="rd-discount">-{symbol}{discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="rd-price-row rd-total-row">
                   <span>Total</span>
-                  <span className="rd-total-val">&euro;{currentTotal}</span>
+                  <span className="rd-total-val">{symbol}{currentTotal}</span>
                 </div>
               </div>
 

@@ -6,6 +6,7 @@ import { formatShortDate } from "../format";
 import { supabase } from "@/lib/supabase";
 import { PRODUCT_PRICES, type CartItem } from "@/types/cart";
 import type { FragranceOption, ProductCategory } from "@/features/consultation/types";
+import { DEFAULT_COUNTRY, getCurrencyForCountry, isSupportedCountry } from "@/lib/regions";
 
 interface OverviewProps {
   latestQuiz: QuizResult;
@@ -71,8 +72,12 @@ export default function Overview({
       const fragrance = (latestQuiz.fragrance_choice ?? "F0") as FragranceOption;
       const skinType = latestQuiz.skin_type ?? "Normal";
 
+      const savedCountry = sessionStorage.getItem("shipToCountry");
+      const country = savedCountry && isSupportedCountry(savedCountry) ? savedCountry : DEFAULT_COUNTRY;
+      const currency = getCurrencyForCountry(country);
+
       const cart: CartItem[] = recommendations
-        .map((r) => {
+        .map((r): CartItem | null => {
           const id = idByName.get(r.name);
           if (!id) return null;
           return {
@@ -81,8 +86,9 @@ export default function Overview({
             category: r.category,
             skinType,
             fragranceOption: fragrance,
-            price: PRODUCT_PRICES[r.category],
-          } satisfies CartItem;
+            price: PRODUCT_PRICES[currency][r.category],
+            currency,
+          };
         })
         .filter((c): c is CartItem => c !== null);
 

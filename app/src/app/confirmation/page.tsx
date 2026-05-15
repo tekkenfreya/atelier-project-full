@@ -2,6 +2,10 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getCurrencySymbol } from "@/lib/regions";
+import type { CurrencyCode } from "@/lib/regions";
+
+const KNOWN_CURRENCIES = new Set<CurrencyCode>(["EUR", "USD", "GBP"]);
 
 interface VerifiedLineItem {
   name: string;
@@ -97,7 +101,12 @@ function ConfirmationContent() {
     );
   }
 
-  const totalEuros = session.amountTotal !== null ? (session.amountTotal / 100).toFixed(2) : "0.00";
+  const upperCurrency = session.currency?.toUpperCase();
+  const currency: CurrencyCode = upperCurrency && KNOWN_CURRENCIES.has(upperCurrency as CurrencyCode)
+    ? (upperCurrency as CurrencyCode)
+    : "EUR";
+  const symbol = getCurrencySymbol(currency);
+  const totalDisplay = session.amountTotal !== null ? (session.amountTotal / 100).toFixed(2) : "0.00";
 
   return (
     <div className="confirmation-container">
@@ -134,7 +143,7 @@ function ConfirmationContent() {
                 <span className="confirmation-item-name">{item.name}</span>
               </div>
               <span className="confirmation-item-price">
-                €{(item.amountTotal / 100).toFixed(2)}
+                {symbol}{(item.amountTotal / 100).toFixed(2)}
               </span>
             </div>
           ))}
@@ -162,7 +171,7 @@ function ConfirmationContent() {
         <div className="confirmation-totals">
           <div className="confirmation-detail-row confirmation-total">
             <span>Total</span>
-            <span>€{totalEuros}</span>
+            <span>{symbol}{totalDisplay}</span>
           </div>
         </div>
       </div>

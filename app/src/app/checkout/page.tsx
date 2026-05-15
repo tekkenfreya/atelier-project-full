@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan } from "@/types/cart";
 import { calculateTotal } from "@/types/cart";
 import { supabase } from "@/lib/supabase";
 import TrustStrip from "@/components/TrustStrip";
+import {
+  DEFAULT_COUNTRY,
+  getCurrencyForCountry,
+  getCurrencySymbol,
+  isSupportedCountry,
+} from "@/lib/regions";
 
 const PLAN_LABELS: Record<SubscriptionPlan, string> = {
   "one-time": "One-Time Purchase",
@@ -17,6 +23,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
   const [plan, setPlan] = useState<SubscriptionPlan>("one-time");
+  const [shipToCountry, setShipToCountry] = useState<string>(DEFAULT_COUNTRY);
   const [loaded, setLoaded] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +31,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const storedItems = sessionStorage.getItem("cartItems");
     const storedPlan = sessionStorage.getItem("subscriptionPlan");
+    const storedCountry = sessionStorage.getItem("shipToCountry");
 
     if (!storedItems) {
       router.push("/cart");
@@ -46,8 +54,15 @@ export default function CheckoutPage() {
       setPlan(storedPlan);
     }
 
+    if (storedCountry && isSupportedCountry(storedCountry)) {
+      setShipToCountry(storedCountry);
+    }
+
     setLoaded(true);
   }, [router]);
+
+  const currency = useMemo(() => getCurrencyForCountry(shipToCountry), [shipToCountry]);
+  const symbol = useMemo(() => getCurrencySymbol(currency), [currency]);
 
   const handlePayWithStripe = useCallback(async () => {
     if (redirecting) return;
@@ -73,8 +88,11 @@ export default function CheckoutPage() {
             price: item.price,
             skinType: item.skinType,
             fragranceOption: item.fragranceOption,
+            currency: item.currency,
           })),
           plan,
+          currency,
+          shipToCountry,
           email,
           userId,
           customerName,
@@ -97,7 +115,7 @@ export default function CheckoutPage() {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setRedirecting(false);
     }
-  }, [items, plan, redirecting]);
+  }, [items, plan, currency, shipToCountry, redirecting]);
 
   if (!loaded) {
     return (
@@ -107,7 +125,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const { subtotal, discount, total } = calculateTotal(items, plan);
+  const { subtotal, discount, total } = calculateTotal(items, plan, currency);
 
   return (
     <div className="checkout-container">
@@ -124,7 +142,7 @@ export default function CheckoutPage() {
                 <span className="checkout-review-item-category">{item.category}</span>
                 <span className="checkout-review-item-name">{item.productName}</span>
               </div>
-              <span className="checkout-review-item-price">€{item.price}</span>
+              <span className="checkout-review-item-price">{symbol}{item.price}</span>
             </div>
           ))}
         </div>
@@ -141,25 +159,25 @@ export default function CheckoutPage() {
         <div className="checkout-sidebar-totals">
           <div className="checkout-sidebar-row">
             <span>Subtotal</span>
-            <span>€{subtotal}</span>
+            <span>{symbol}{subtotal}</span>
           </div>
           {discount > 0 && (
             <div className="checkout-sidebar-row checkout-sidebar-discount">
               <span>Subscription discount (20%)</span>
-              <span>-€{discount.toFixed(2)}</span>
+              <span>-{symbol}{discount.toFixed(2)}</span>
             </div>
           )}
           <div className="checkout-sidebar-row checkout-sidebar-total">
             <span>Total</span>
-            <span>€{total.toFixed(2)}</span>
+            <span>{symbol}{total.toFixed(2)}</span>
           </div>
         </div>
 
         {plan !== "one-time" && (
           <p className="checkout-recurring-note">
             {plan === "bi-monthly"
-              ? `You will be charged €${total.toFixed(2)} every 2 months.`
-              : `You will be charged €${total.toFixed(2)} annually.`}
+              ? `You will be charged ${symbol}${total.toFixed(2)} every 2 months.`
+              : `You will be charged ${symbol}${total.toFixed(2)} annually.`}
           </p>
         )}
 

@@ -5,10 +5,18 @@ import { useRouter } from "next/navigation";
 import type { CartItem, SubscriptionPlan } from "@/types/cart";
 import type { AnswerValue } from "@/data/quizQuestions";
 import type { ProductCategory, SkinType } from "@/features/consultation/types";
-import { calculateTotal } from "@/types/cart";
+import { calculateTotal, PRODUCT_PRICES } from "@/types/cart";
 import { normalizeSkinType } from "@/features/consultation/filters";
 import { formatConcern } from "@/features/consultation/scoring";
 import TrustStrip from "@/components/TrustStrip";
+import {
+  REGIONS,
+  DEFAULT_COUNTRY,
+  getCurrencyForCountry,
+  getCurrencySymbol,
+  getCountryEntry,
+  isSupportedCountry,
+} from "@/lib/regions";
 import "./cart.css";
 
 const PLAN_OPTIONS: {
@@ -97,12 +105,15 @@ export default function CartPage() {
   const [plan, setPlan] = useState<SubscriptionPlan>("bi-monthly");
   const [answers, setAnswers] = useState<Record<number, AnswerValue> | null>(null);
   const [customerName, setCustomerName] = useState<string | null>(null);
+  const [shipToCountry, setShipToCountry] = useState<string>(DEFAULT_COUNTRY);
+  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let nextItems: CartItem[] = [];
     let nextAnswers: Record<number, AnswerValue> | null = null;
     let nextName: string | null = null;
+    let nextCountry: string = DEFAULT_COUNTRY;
 
     const stored = sessionStorage.getItem("cartItems");
     if (stored) {
@@ -126,11 +137,46 @@ export default function CartPage() {
     const name = sessionStorage.getItem("customerName");
     if (name && name.trim().length > 0) nextName = name.trim();
 
+    const savedCountry = sessionStorage.getItem("shipToCountry");
+    if (savedCountry && isSupportedCountry(savedCountry)) {
+      nextCountry = savedCountry;
+    } else if (nextItems[0]?.currency) {
+      const region = REGIONS.find((r) => r.currency === nextItems[0].currency);
+      if (region) nextCountry = region.countries[0].code;
+    }
+
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot sessionStorage hydration on mount
     setItems(nextItems);
     setAnswers(nextAnswers);
     setCustomerName(nextName);
+    setShipToCountry(nextCountry);
     setLoaded(true);
+  }, []);
+
+  const currency = useMemo(() => getCurrencyForCountry(shipToCountry), [shipToCountry]);
+  const symbol = useMemo(() => getCurrencySymbol(currency), [currency]);
+  const currentCountryEntry = useMemo(
+    () => getCountryEntry(shipToCountry),
+    [shipToCountry]
+  );
+
+  const changeShipToCountry = useCallback((country: string) => {
+    if (!isSupportedCountry(country)) return;
+    setShipToCountry(country);
+    setCountryMenuOpen(false);
+    sessionStorage.setItem("shipToCountry", country);
+
+    const newCurrency = getCurrencyForCountry(country);
+    setItems((prev) => {
+      if (prev.length === 0) return prev;
+      const repriced = prev.map((item) => ({
+        ...item,
+        currency: newCurrency,
+        price: PRODUCT_PRICES[newCurrency][item.category],
+      }));
+      sessionStorage.setItem("cartItems", JSON.stringify(repriced));
+      return repriced;
+    });
   }, []);
 
   const removeItem = useCallback((productId: string) => {
@@ -160,11 +206,11 @@ export default function CartPage() {
       return { "one-time": 0, "bi-monthly": 0, annual: 0 } as Record<SubscriptionPlan, number>;
     }
     return {
-      "one-time": calculateTotal(items, "one-time").total,
-      "bi-monthly": calculateTotal(items, "bi-monthly").total,
-      annual: calculateTotal(items, "annual").total,
+      "one-time": calculateTotal(items, "one-time", currency).total,
+      "bi-monthly": calculateTotal(items, "bi-monthly", currency).total,
+      annual: calculateTotal(items, "annual", currency).total,
     };
-  }, [items]);
+  }, [items, currency]);
 
   if (!loaded) {
     return (
@@ -212,7 +258,7 @@ export default function CartPage() {
     );
   }
 
-  const { subtotal, discount, total } = calculateTotal(items, plan);
+  const { subtotal, discount, total } = calculateTotal(items, plan, currency);
   const isBundle = items.length === 3;
   const biMonthlySavings = planTotals["one-time"] - planTotals["bi-monthly"];
   const annualSavingsPerShipment = planTotals["one-time"] - planTotals.annual;
@@ -224,6 +270,59 @@ export default function CartPage() {
         <h1 className="cart-title">
           {customerName ? `Composed for ${customerName}` : "Your routine"}
         </h1>
+
+        {/* ─── Ship-to country selector ─── */}
+        <div className="cart-shipto">
+          <span className="cart-shipto-label">Ship to</span>
+          <button
+            type="button"
+            className="cart-shipto-pill"
+            onClick={() => setCountryMenuOpen((v) => !v)}
+            aria-expanded={countryMenuOpen}
+            aria-haspopup="listbox"
+          >
+            <span className="cart-shipto-flag" aria-hidden>
+              {currentCountryEntry?.flag ?? "🌍"}
+            </span>
+            <span className="cart-shipto-name">
+              {currentCountryEntry?.name ?? shipToCountry}
+            </span>
+            <span className="cart-shipto-currency">({currency})</span>
+            <span className="cart-shipto-caret" aria-hidden>▾</span>
+          </button>
+
+          {countryMenuOpen && (
+            <>
+              <div
+                className="cart-shipto-backdrop"
+                onClick={() => setCountryMenuOpen(false)}
+                aria-hidden
+              />
+              <div className="cart-shipto-menu" role="listbox">
+                {REGIONS.map((region) => (
+                  <div key={region.id} className="cart-shipto-group">
+                    <span className="cart-shipto-group-label">
+                      {region.label} ({region.currency})
+                    </span>
+                    {region.countries.map((c) => (
+                      <button
+                        key={c.code}
+                        type="button"
+                        role="option"
+                        aria-selected={c.code === shipToCountry}
+                        className={`cart-shipto-option${c.code === shipToCountry ? " selected" : ""}`}
+                        onClick={() => changeShipToCountry(c.code)}
+                      >
+                        <span className="cart-shipto-flag" aria-hidden>{c.flag}</span>
+                        <span className="cart-shipto-option-name">{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="cart-layout">
@@ -290,7 +389,7 @@ export default function CartPage() {
                   <p className="cart-step-reason">{buildReasonLine(item)}</p>
                 </div>
                 <div className="cart-step-right">
-                  <span className="cart-step-price">€{item.price}</span>
+                  <span className="cart-step-price">{symbol}{item.price}</span>
                   <button
                     type="button"
                     className="cart-item-remove"
@@ -315,7 +414,7 @@ export default function CartPage() {
             <div className="cart-encourage-banner" role="region" aria-label="Subscription savings">
               <div className="cart-encourage-text">
                 Switch to bi-monthly and save{" "}
-                <strong>€{biMonthlySavings.toFixed(0)}</strong> on every shipment —
+                <strong>{symbol}{biMonthlySavings.toFixed(0)}</strong> on every shipment —
                 skip or cancel anytime.
               </div>
               <button
@@ -357,19 +456,19 @@ export default function CartPage() {
 
                       <span className="cart-plan-price-row">
                         <span className="cart-plan-price">
-                          €{planTotal.toFixed(0)}
+                          {symbol}{planTotal.toFixed(0)}
                         </span>
                         {priceSuffix && (
                           <span className="cart-plan-price-suffix">{priceSuffix}</span>
                         )}
                         {showStrike && (
                           <span className="cart-plan-price-strike">
-                            €{planTotals["one-time"].toFixed(0)}
+                            {symbol}{planTotals["one-time"].toFixed(0)}
                           </span>
                         )}
                         {savings > 0 && (
                           <span className="cart-plan-savings">
-                            Save €{savings.toFixed(0)}
+                            Save {symbol}{savings.toFixed(0)}
                           </span>
                         )}
                       </span>
@@ -393,13 +492,13 @@ export default function CartPage() {
           <div className="cart-summary-rows">
             <div className="cart-summary-row">
               <span>Subtotal ({items.length} item{items.length > 1 ? "s" : ""})</span>
-              <span>€{subtotal}</span>
+              <span>{symbol}{subtotal}</span>
             </div>
 
             {discount > 0 && (
               <div className="cart-summary-row cart-summary-discount">
                 <span>Subscription discount</span>
-                <span>-€{discount.toFixed(2)}</span>
+                <span>-{symbol}{discount.toFixed(2)}</span>
               </div>
             )}
 
@@ -412,12 +511,12 @@ export default function CartPage() {
 
             <div className="cart-summary-row cart-summary-total">
               <span>Total</span>
-              <span>€{total.toFixed(2)}</span>
+              <span>{symbol}{total.toFixed(2)}</span>
             </div>
 
             {plan === "annual" && items.length === 3 && (
               <p className="cart-summary-annual-note">
-                Billed as €552 annually (6 shipments)
+                Billed as {symbol}{(planTotals.annual * 6).toFixed(0)} annually (6 shipments)
               </p>
             )}
 
@@ -430,7 +529,7 @@ export default function CartPage() {
 
             {plan === "one-time" && annualSavingsPerShipment > 0 && (
               <p className="cart-summary-continuity">
-                You&apos;d save <strong>€{(annualSavingsPerShipment * 6).toFixed(0)}</strong>{" "}
+                You&apos;d save <strong>{symbol}{(annualSavingsPerShipment * 6).toFixed(0)}</strong>{" "}
                 in the first year by subscribing.
               </p>
             )}
