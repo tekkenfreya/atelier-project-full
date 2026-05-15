@@ -3,8 +3,20 @@
   "metadata": {
     "project": "Atelier Rusalka",
     "owner": "Edson",
-    "status_values": ["Todo", "In progress", "Done", "Blocked", "Skipped", "N/A"],
-    "priority_values": ["P0 critical", "P1 high", "P2 medium", "P3 low"]
+    "status_values": [
+      "Todo",
+      "In progress",
+      "Done",
+      "Blocked",
+      "Skipped",
+      "N/A"
+    ],
+    "priority_values": [
+      "P0 critical",
+      "P1 high",
+      "P2 medium",
+      "P3 low"
+    ]
   },
   "sections": [
     {
@@ -15,17 +27,62 @@
           "path": "/",
           "description": "The landing page (hero video, featured section, subscription cards, footer)",
           "tasks": [
-            { "name": "Top promo bar with welcome offer", "status": "Done", "priority": "P1 high" },
-            { "name": "Site nav with logo and wordmark", "status": "Done", "priority": "P1 high" },
-            { "name": "Hero with single looping video", "status": "Done", "priority": "P1 high" },
-            { "name": "Hero CTA button placed bottom right", "status": "Done", "priority": "P1 high" },
-            { "name": "Featured section with halo badge and trust line", "status": "Done", "priority": "P1 high" },
-            { "name": "Compose your formula button copy", "status": "Done", "priority": "P2 medium" },
-            { "name": "Subscription section with three cards", "status": "Done", "priority": "P1 high" },
-            { "name": "Footer that scales with the page", "status": "Done", "priority": "P2 medium" },
-            { "name": "Mobile menu (hamburger)", "status": "Done", "priority": "P1 high" },
-            { "name": "Layout scales to large external monitors", "status": "Done", "priority": "P1 high" },
-            { "name": "Real product photo for featured section", "status": "Blocked", "priority": "P2 medium", "notes": "Waiting on photography assets" }
+            {
+              "name": "Top promo bar with welcome offer",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Site nav with logo and wordmark",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Hero with single looping video",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Hero CTA button placed bottom right",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Featured section with halo badge and trust line",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Compose your formula button copy",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Subscription section with three cards",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Footer that scales with the page",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Mobile menu (hamburger)",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Layout scales to large external monitors",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Real product photo for featured section",
+              "status": "Blocked",
+              "priority": "P2 medium",
+              "notes": "Waiting on photography assets"
+            }
           ]
         }
       ]
@@ -38,259 +95,405 @@
           "path": "/quiz",
           "description": "The quiz is a single page that walks the customer through 31 questions one at a time. Each question below shares the same URL but is tracked separately so we can polish each step.",
           "tasks": [
-            { "name": "Quiz framework working end to end", "status": "Done", "priority": "P0 critical" },
-            { "name": "Each question reachable by a step number in the URL", "status": "Todo", "priority": "P2 medium", "notes": "Currently you have to walk the form. Future improvement." },
-            { "name": "Save partial answers if customer drops off", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Polish quiz typography across all questions", "status": "Todo", "priority": "P1 high", "notes": "Headings and body text feel too small or mono on some steps" },
-            { "name": "Mobile usability check on every question", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Quiz framework working end to end",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Each question reachable by a step number in the URL",
+              "status": "In progress",
+              "priority": "P2 medium",
+              "notes": "Refactoring quiz from single-page screen state to per-route pages (/quiz/q/[id]). Designers can deep-link any question."
+            },
+            {
+              "name": "Save partial answers if customer drops off",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Polish quiz typography across all questions",
+              "status": "Todo",
+              "priority": "P1 high",
+              "notes": "Headings and body text feel too small or mono on some steps"
+            },
+            {
+              "name": "Mobile usability check on every question",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         },
         {
           "label": "Step 1 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/1",
           "description": "About You: How old are you?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 2 of 31",
-          "path": "/quiz",
+          "path": "/quiz/sex",
           "description": "About You: What is your biological sex?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 3 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/3",
           "description": "About You: Where do you live?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 4 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/4",
           "description": "About You: How would you describe your environment?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 5 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/5",
           "description": "About You: How much water do you drink daily?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 6 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/6",
           "description": "About You: How many hours of sleep do you typically get?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 7 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/7",
           "description": "About You: How would you rate your daily stress level?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 8 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/8",
           "description": "About You: How would you describe your diet?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 9 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/9",
           "description": "About You: How much daily sun exposure do you get?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 10 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/10",
           "description": "About You: Are you currently pregnant or breastfeeding?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 11 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/11",
           "description": "Your Skin: How would you describe your skin type?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 12 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/12",
           "description": "Your Skin: What are your biggest skin concerns right now?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 13 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/13",
           "description": "Your Skin: How sensitive is your skin to the sun?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 14 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/14",
           "description": "Your Skin: How does your skin feel after cleansing with just water?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 15 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/15",
           "description": "Your Skin: How often do you experience breakouts?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 16 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/16",
           "description": "Your Skin: Do you experience any of the following?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 17 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/17",
           "description": "Your Skin: How visible are your pores?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 18 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/18",
           "description": "Your Skin: How would you describe your skin tone?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 19 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/19",
           "description": "Your Skin: Rate the following about your skin right now.",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 20 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/20",
           "description": "Your Skin: Have you ever had an allergic reaction to a skincare product?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 21 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/21",
           "description": "Routine and Preferences: How many steps is your current skincare routine?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 22 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/22",
           "description": "Routine and Preferences: What texture do you prefer in a moisturiser?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 23 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/23",
           "description": "Routine and Preferences: What type of cleanser do you prefer?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 24 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/24",
           "description": "Routine and Preferences: Rank these skincare priorities from most to least important.",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 25 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/25",
           "description": "Routine and Preferences: Which ingredient philosophies matter to you?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 26 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/26",
           "description": "Routine and Preferences: How adventurous are you with skincare ingredients?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 27 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/27",
           "description": "Routine and Preferences: Have you used retinol or retinoids before?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 28 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/28",
           "description": "Routine and Preferences: How much time do you spend on your skincare routine?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 29 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/29",
           "description": "Routine and Preferences: Is there anything you would like to avoid in your products?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 30 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/30",
           "description": "Routine and Preferences: Do you have any known skin allergies?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
           "label": "Step 31 of 31",
-          "path": "/quiz",
+          "path": "/quiz/q/31",
           "description": "Routine and Preferences: Would you like fragrance in your products?",
           "tasks": [
-            { "name": "Design and copy polish for this step", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Design and copy polish for this step",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         }
       ]
@@ -303,12 +506,36 @@
           "path": "/results",
           "description": "The page that shows the customer their personalised products and the regimen we recommend",
           "tasks": [
-            { "name": "Trust line near the top", "status": "Done", "priority": "P2 medium" },
-            { "name": "Ingredient cards expand when clicked to show details", "status": "Done", "priority": "P1 high" },
-            { "name": "3D botanical scene shows alongside the recommendation", "status": "Done", "priority": "P2 medium" },
-            { "name": "Subscription plan picker is side by side", "status": "Done", "priority": "P1 high" },
-            { "name": "Mobile usability check", "status": "Todo", "priority": "P1 high" },
-            { "name": "Empty state and error state designs", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Trust line near the top",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Ingredient cards expand when clicked to show details",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "3D botanical scene shows alongside the recommendation",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Subscription plan picker is side by side",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Mobile usability check",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Empty state and error state designs",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
@@ -316,9 +543,21 @@
           "path": "/analysis",
           "description": "A breakdown of the customer's skin profile from their quiz answers",
           "tasks": [
-            { "name": "Show the profile information clearly", "status": "Done", "priority": "P1 high" },
-            { "name": "Visual breakdown of concerns and priorities", "status": "Todo", "priority": "P1 high" },
-            { "name": "Compare with their previous quiz if they retake it", "status": "Todo", "priority": "P3 low" }
+            {
+              "name": "Show the profile information clearly",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Visual breakdown of concerns and priorities",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Compare with their previous quiz if they retake it",
+              "status": "Todo",
+              "priority": "P3 low"
+            }
           ]
         },
         {
@@ -326,9 +565,21 @@
           "path": "/report",
           "description": "A longer page that explains the customer's regimen in depth",
           "tasks": [
-            { "name": "Explain the rationale behind each product", "status": "Done", "priority": "P1 high" },
-            { "name": "Make it look right when printed", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Add a download as PDF option", "status": "Todo", "priority": "P3 low" }
+            {
+              "name": "Explain the rationale behind each product",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Make it look right when printed",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Add a download as PDF option",
+              "status": "Todo",
+              "priority": "P3 low"
+            }
           ]
         }
       ]
@@ -341,13 +592,81 @@
           "path": "/cart",
           "description": "The customer's bag and where they pick their subscription plan",
           "tasks": [
-            { "name": "Three subscription plan cards side by side", "status": "Done", "priority": "P0 critical" },
-            { "name": "Bi-monthly plan selected by default with 'Most Popular' tag", "status": "Done", "priority": "P0 critical" },
-            { "name": "Reassurance copy inside each plan card", "status": "Done", "priority": "P1 high" },
-            { "name": "Trust strip under the checkout button", "status": "Done", "priority": "P1 high" },
-            { "name": "Card colours follow the palette", "status": "Done", "priority": "P2 medium" },
-            { "name": "Empty cart screen invites them to start the quiz", "status": "Done", "priority": "P2 medium" },
-            { "name": "Stacks to one column on mobile", "status": "Done", "priority": "P1 high" }
+            {
+              "name": "Three subscription plan cards side by side",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Bi-monthly plan selected by default with 'Most Popular' tag",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Reassurance copy inside each plan card",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Trust strip under the checkout button",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Card colours follow the palette",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Empty cart screen invites them to start the quiz",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Stacks to one column on mobile",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Routine summary panel with name, skin type, concerns, fragrance",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Numbered routine steps (Cleanser → Serum → Moisturizer)",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Per-item 'Selected for {concerns}' microcopy from the matching engine",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Subscription nudge banner with one-tap switch to bi-monthly",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Per-plan inline price with savings chip and strikethrough anchor",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Ship-to country selector with grouped region dropdown",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Multi-currency pricing (EUR / GBP / USD) repriced live on country change",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "'Edit responses' link returns to results to adjust the formula",
+              "status": "Done",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
@@ -355,11 +674,36 @@
           "path": "/checkout",
           "description": "The handoff to Stripe where the customer enters card details",
           "tasks": [
-            { "name": "Hand off to Stripe for payment", "status": "Done", "priority": "P0 critical" },
-            { "name": "Trust strip under the pay button", "status": "Done", "priority": "P1 high" },
-            { "name": "Buttons follow the palette", "status": "Done", "priority": "P2 medium" },
-            { "name": "Recurring charge note for subscription plans", "status": "Done", "priority": "P2 medium" },
-            { "name": "Error message styling when payment fails", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Hand off to Stripe for payment",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Trust strip under the pay button",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Buttons follow the palette",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Recurring charge note for subscription plans",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Error message styling when payment fails",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Currency-aware totals match the chosen ship-to country",
+              "status": "Done",
+              "priority": "P0 critical"
+            }
           ]
         },
         {
@@ -367,10 +711,31 @@
           "path": "/confirmation",
           "description": "The thank you page after a successful payment",
           "tasks": [
-            { "name": "Verify the Stripe session and confirm the order", "status": "Done", "priority": "P0 critical" },
-            { "name": "Auto-create the order in our system after payment", "status": "Done", "priority": "P0 critical" },
-            { "name": "Show order details and next steps", "status": "Todo", "priority": "P1 high" },
-            { "name": "Show tracking link once the courier integration is live", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Verify the Stripe session and confirm the order",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Auto-create the order in our system after payment",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Show order details and next steps",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Show tracking link once the courier integration is live",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Currency symbol comes from Stripe session, not hardcoded",
+              "status": "Done",
+              "priority": "P1 high"
+            }
           ]
         }
       ]
@@ -383,12 +748,42 @@
           "path": "/account",
           "description": "Where the customer manages their orders, subscription, and profile",
           "tasks": [
-            { "name": "Sign in works end to end", "status": "Done", "priority": "P0 critical" },
-            { "name": "Dashboard layout looks right", "status": "Done", "priority": "P1 high" },
-            { "name": "Past orders view", "status": "Todo", "priority": "P1 high" },
-            { "name": "Subscription management (pause, cancel, change plan)", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Retake the quiz from inside the account", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Edit profile and shipping address", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Sign in works end to end",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Dashboard layout looks right",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Past orders view",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Subscription management (pause, cancel, change plan)",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Retake the quiz from inside the account",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Edit profile and shipping address",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "'Manage payment & billing' button → opens Stripe Customer Portal",
+              "status": "Todo",
+              "priority": "P0 critical",
+              "notes": "Customer Portal handles add/remove/update cards, invoices, subscription pause/cancel, failed-payment recovery."
+            }
           ]
         }
       ]
@@ -401,10 +796,26 @@
           "path": "/ingredients",
           "description": "A glossary of all the botanicals we use",
           "tasks": [
-            { "name": "Show every ingredient from the database", "status": "Done", "priority": "P1 high" },
-            { "name": "Filter by function or type", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Detail page per ingredient (origin, function, scientific name)", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Type and layout polish", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Show every ingredient from the database",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Filter by function or type",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Detail page per ingredient (origin, function, scientific name)",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Type and layout polish",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         }
       ]
@@ -417,16 +828,56 @@
           "path": "fulfillment-studio (separate dashboard)",
           "description": "The operations dashboard for picking, packing, printing labels, and exporting product data",
           "tasks": [
-            { "name": "Only admins can sign in", "status": "Done", "priority": "P0 critical" },
-            { "name": "List of pending and fulfilled orders with filters", "status": "Done", "priority": "P0 critical" },
-            { "name": "Assign barcodes when an order is fulfilled", "status": "Done", "priority": "P0 critical" },
-            { "name": "Print one or all labels at once", "status": "Done", "priority": "P0 critical" },
-            { "name": "Barcodes printed at GS1 standard size", "status": "Done", "priority": "P1 high" },
-            { "name": "Download an XML file per product for INCI Beauty", "status": "Done", "priority": "P1 high" },
-            { "name": "Cancel an order or delete a test order", "status": "Done", "priority": "P2 medium" },
-            { "name": "Create a shipment with the Direx courier", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Close the daily manifest and schedule a pickup", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Auto deploy this dashboard when we push (currently manual)", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Only admins can sign in",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "List of pending and fulfilled orders with filters",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Assign barcodes when an order is fulfilled",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Print one or all labels at once",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Barcodes printed at GS1 standard size",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Download an XML file per product for INCI Beauty",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Cancel an order or delete a test order",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Create a shipment with the Direx courier",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Close the daily manifest and schedule a pickup",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Auto deploy this dashboard when we push (currently manual)",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
@@ -434,9 +885,21 @@
           "path": "barcode-studio (separate dashboard)",
           "description": "Where we manage our pool of product barcodes",
           "tasks": [
-            { "name": "Manage which company prefix we issue from", "status": "Done", "priority": "P0 critical" },
-            { "name": "Bulk import barcodes from an Excel file", "status": "Done", "priority": "P0 critical" },
-            { "name": "Live preview at the actual print size", "status": "Done", "priority": "P1 high" }
+            {
+              "name": "Manage which company prefix we issue from",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Bulk import barcodes from an Excel file",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Live preview at the actual print size",
+              "status": "Done",
+              "priority": "P1 high"
+            }
           ]
         }
       ]
@@ -449,10 +912,53 @@
           "path": "—",
           "description": "How we charge customers and run subscriptions",
           "tasks": [
-            { "name": "Send the customer to Stripe to pay", "status": "Done", "priority": "P0 critical" },
-            { "name": "Automatically create the order when Stripe confirms payment", "status": "Done", "priority": "P0 critical" },
-            { "name": "Subscription billing (bi-monthly and annual)", "status": "Done", "priority": "P0 critical" },
-            { "name": "Plan for what happens when a recurring charge fails", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Send the customer to Stripe to pay",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Automatically create the order when Stripe confirms payment",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Subscription billing (bi-monthly and annual)",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Plan for what happens when a recurring charge fails",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Multi-currency Checkout Session (EUR / GBP / USD)",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Expanded allowed_countries to all Phase-1 shipping regions",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Enable country-specific payment methods in Stripe Dashboard (iDEAL, Bancontact, SEPA, BACS, ACH, Apple/Google Pay, Klarna, Link)",
+              "status": "Todo",
+              "priority": "P0 critical",
+              "notes": "Code path is ready — Stripe auto-displays methods when payment_method_types is omitted. Just needs dashboard enablement."
+            },
+            {
+              "name": "Stripe Customer Portal for saved payment methods + invoices + subscription pause",
+              "status": "Todo",
+              "priority": "P1 high",
+              "notes": "Requires stripe_customer_id column on customers and a /api/billing-portal-session route."
+            },
+            {
+              "name": "Save stripe_customer_id from checkout.session.completed webhook",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         },
         {
@@ -460,12 +966,36 @@
           "path": "—",
           "description": "Where customer data, products, and images live",
           "tasks": [
-            { "name": "Products and ingredients data set up", "status": "Done", "priority": "P0 critical" },
-            { "name": "Customer orders and quiz results data set up", "status": "Done", "priority": "P0 critical" },
-            { "name": "Barcode pool and product records data set up", "status": "Done", "priority": "P0 critical" },
-            { "name": "Admin role check so only the right people can use the dashboard", "status": "Done", "priority": "P0 critical" },
-            { "name": "Public product image storage (the bucket called products)", "status": "Done", "priority": "P1 high" },
-            { "name": "Upload one real product photo per barcode", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Products and ingredients data set up",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Customer orders and quiz results data set up",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Barcode pool and product records data set up",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Admin role check so only the right people can use the dashboard",
+              "status": "Done",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Public product image storage (the bucket called products)",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Upload one real product photo per barcode",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         },
         {
@@ -473,11 +1003,54 @@
           "path": "—",
           "description": "External cosmetic ingredient database where our products get listed",
           "tasks": [
-            { "name": "Generate the XML file from each product", "status": "Done", "priority": "P1 high" },
-            { "name": "Download button inside the fulfillment dashboard", "status": "Done", "priority": "P1 high" },
-            { "name": "Placeholder image hosted publicly", "status": "Done", "priority": "P1 high" },
-            { "name": "Use a different image per product", "status": "Todo", "priority": "P1 high" },
-            { "name": "Try a real import on INCI Beauty and confirm it works", "status": "Todo", "priority": "P0 critical" }
+            {
+              "name": "Generate the XML file from each product",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Download button inside the fulfillment dashboard",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Placeholder image hosted publicly",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Use a different image per product",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Try a real import on INCI Beauty and confirm it works",
+              "status": "In progress",
+              "priority": "P0 critical",
+              "notes": "First two imports rejected — invalid INCI ingredient names, wrong <info> usage, image mismatch. INCI Beauty deployed a fix for the image-ignored bug on their side. Test XML drafted for BOV to re-test the upload pipeline."
+            },
+            {
+              "name": "Fix <info> field — emit self-closing instead of stuffing net_content",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Per-product images served from /products/{gtin}.jpg with placeholder fallback",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "ingredients.inci_name column + COSING-validated names for every ingredient",
+              "status": "Todo",
+              "priority": "P0 critical",
+              "notes": "Blocker for INCI Beauty acceptance — current ingredient names ('pH adjuster', 'Emulgade 1000 NI') are functional descriptors, not INCI."
+            },
+            {
+              "name": "Update GS1 Verified portal entry for each GTIN we submit",
+              "status": "Todo",
+              "priority": "P1 high",
+              "notes": "Operational — not technical. Ensures GS1 registry matches what we ship to INCI."
+            }
           ]
         },
         {
@@ -485,14 +1058,47 @@
           "path": "—",
           "description": "The courier that picks up parcels from our warehouse and delivers them",
           "tasks": [
-            { "name": "Get our login working with their system", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Register the warehouse as a sender on their portal", "status": "Todo", "priority": "P0 critical", "notes": "Operational, not technical" },
-            { "name": "Confirm whether we ship Bulgaria only, or international too", "status": "Todo", "priority": "P1 high" },
-            { "name": "Add a Create Shipment button per order with label download", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Close manifest and schedule pickup actions", "status": "Todo", "priority": "P0 critical" },
-            { "name": "Automatic tracking updates every 6 hours", "status": "Todo", "priority": "P1 high" },
-            { "name": "Customer can see tracking from their account", "status": "Todo", "priority": "P1 high" },
-            { "name": "Shipped email with tracking link", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Get our login working with their system",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Register the warehouse as a sender on their portal",
+              "status": "Todo",
+              "priority": "P0 critical",
+              "notes": "Operational, not technical"
+            },
+            {
+              "name": "Confirm whether we ship Bulgaria only, or international too",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Add a Create Shipment button per order with label download",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Close manifest and schedule pickup actions",
+              "status": "Todo",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Automatic tracking updates every 6 hours",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Customer can see tracking from their account",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Shipped email with tracking link",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         }
       ]
@@ -505,17 +1111,61 @@
           "path": "—",
           "description": "The floating dev panel for trying different fonts, palettes, and card styles live on the page",
           "tasks": [
-            { "name": "Five font slots (headlines, inner pages, body, inner body, captions and buttons)", "status": "Done", "priority": "P1 high" },
-            { "name": "Roughly 70 fonts to choose from", "status": "Done", "priority": "P1 high" },
-            { "name": "Picker mode: click any text to see what controls it", "status": "Done", "priority": "P1 high" },
-            { "name": "Per element override panel with bold, italic, underline, colour", "status": "Done", "priority": "P1 high" },
-            { "name": "Six built-in design directions plus your own saved ones", "status": "Done", "priority": "P1 high" },
-            { "name": "Six brand inspired directions (Aesop, Le Labo, Glossier, etc.)", "status": "Done", "priority": "P2 medium" },
-            { "name": "Seven built-in palettes plus your own hex picker", "status": "Done", "priority": "P1 high" },
-            { "name": "Card corner style picker", "status": "Done", "priority": "P2 medium" },
-            { "name": "Modular palette: card surface, button background and text, borders, accents", "status": "Done", "priority": "P1 high" },
-            { "name": "Each section can collapse or expand", "status": "Done", "priority": "P2 medium" },
-            { "name": "Sitemap tab inside the panel (still there for quick navigation)", "status": "Done", "priority": "P3 low" }
+            {
+              "name": "Five font slots (headlines, inner pages, body, inner body, captions and buttons)",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Roughly 70 fonts to choose from",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Picker mode: click any text to see what controls it",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Per element override panel with bold, italic, underline, colour",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Six built-in design directions plus your own saved ones",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Six brand inspired directions (Aesop, Le Labo, Glossier, etc.)",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Seven built-in palettes plus your own hex picker",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Card corner style picker",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Modular palette: card surface, button background and text, borders, accents",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Each section can collapse or expand",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Sitemap tab inside the panel (still there for quick navigation)",
+              "status": "Done",
+              "priority": "P3 low"
+            }
           ]
         },
         {
@@ -523,11 +1173,31 @@
           "path": "—",
           "description": "The shared colour and font variables that the whole site reads from",
           "tasks": [
-            { "name": "Font tokens applied across the site", "status": "Done", "priority": "P1 high" },
-            { "name": "Palette tokens (background, card, ink, button, line, accents)", "status": "Done", "priority": "P1 high" },
-            { "name": "Card radius token", "status": "Done", "priority": "P2 medium" },
-            { "name": "Refactor all old hardcoded fonts to use the tokens", "status": "Done", "priority": "P1 high" },
-            { "name": "Refactor inner pages (quiz, account) to use the same card token", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Font tokens applied across the site",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Palette tokens (background, card, ink, button, line, accents)",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Card radius token",
+              "status": "Done",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Refactor all old hardcoded fonts to use the tokens",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Refactor inner pages (quiz, account) to use the same card token",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         }
       ]
@@ -540,10 +1210,26 @@
           "path": "—",
           "description": "Logo, favicon, brand voice",
           "tasks": [
-            { "name": "Final logo design (currently using the rusalka illustration)", "status": "In progress", "priority": "P0 critical" },
-            { "name": "Favicon that matches the brand", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Preview image used when sharing on social media", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Written guide for brand voice and tone", "status": "Todo", "priority": "P2 medium" }
+            {
+              "name": "Final logo design (currently using the rusalka illustration)",
+              "status": "In progress",
+              "priority": "P0 critical"
+            },
+            {
+              "name": "Favicon that matches the brand",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Preview image used when sharing on social media",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Written guide for brand voice and tone",
+              "status": "Todo",
+              "priority": "P2 medium"
+            }
           ]
         },
         {
@@ -551,10 +1237,26 @@
           "path": "—",
           "description": "Making the site usable by people with disabilities",
           "tasks": [
-            { "name": "Check colour contrast on every palette", "status": "Todo", "priority": "P1 high" },
-            { "name": "Make the quiz fully navigable with the keyboard", "status": "Todo", "priority": "P1 high" },
-            { "name": "Make the results page work for screen readers", "status": "Todo", "priority": "P1 high" },
-            { "name": "Make sure every clickable thing shows a focus ring", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Check colour contrast on every palette",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Make the quiz fully navigable with the keyboard",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Make the results page work for screen readers",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Make sure every clickable thing shows a focus ring",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         },
         {
@@ -562,11 +1264,31 @@
           "path": "—",
           "description": "Making the site fast to load",
           "tasks": [
-            { "name": "Hero video set up to load quickly", "status": "Done", "priority": "P1 high" },
-            { "name": "Re-encode hero video to a smaller modern format", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Use Next.js optimised image component for product photos", "status": "Todo", "priority": "P1 high" },
-            { "name": "Load only the font weights we actually use", "status": "Todo", "priority": "P2 medium" },
-            { "name": "Run a Google speed test and fix the worst issues", "status": "Todo", "priority": "P1 high" }
+            {
+              "name": "Hero video set up to load quickly",
+              "status": "Done",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Re-encode hero video to a smaller modern format",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Use Next.js optimised image component for product photos",
+              "status": "Todo",
+              "priority": "P1 high"
+            },
+            {
+              "name": "Load only the font weights we actually use",
+              "status": "Todo",
+              "priority": "P2 medium"
+            },
+            {
+              "name": "Run a Google speed test and fix the worst issues",
+              "status": "Todo",
+              "priority": "P1 high"
+            }
           ]
         }
       ]

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product>
+    <ean>3800502630029</ean>
+    <brand>Atelier Rusalka</brand>
+    <title>BOV</title>
+    <category>Serum</category>
+    <compositions>
+      <composition>
+        <label/>
+        <inci>AQUA</inci>
+        <info/>
+      </composition>
+    </compositions>
+    <price>50.00</price>
+    <currency>eur</currency>
+    <image_product>https://epbyhiagcnbyznvmbebj.supabase.co/storage/v1/object/public/products/placeholder-rose-bulgare.jpg</image_product>
+  </product>
+</products>

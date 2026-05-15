@@ -21,7 +21,6 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
 from pathlib import Path
 
 try:
@@ -283,71 +282,7 @@ def build_workbook(data: dict) -> Workbook:
             ),
         )
 
-    # --- Summary sheet ------------------------------------------------- #
-    add_summary_sheet(wb, data)
-
     return wb
-
-
-def add_summary_sheet(wb: Workbook, data: dict) -> None:
-    ws = wb.create_sheet("Summary", 0)  # first tab
-
-    title_font = Font(name="Helvetica", size=16, bold=True, color=COLORS["section_bg"])
-    label_font = Font(name="Helvetica", size=10, bold=True, color="555555")
-    value_font = Font(name="Helvetica", size=14, color=COLORS["section_bg"])
-
-    ws.cell(row=1, column=1, value="Atelier Rusalka Sitemap Tracker").font = title_font
-    ws.cell(row=2, column=1, value=f"Generated {datetime.now().strftime('%Y-%m-%d %H:%M')}").font = Font(
-        name="Helvetica", size=9, italic=True, color="888888",
-    )
-
-    # Tally
-    counts: dict[str, int] = {}
-    total = 0
-    by_section: dict[str, dict[str, int]] = {}
-    for section in data.get("sections", []):
-        sname = section.get("name", "")
-        by_section.setdefault(sname, {})
-        for page in section.get("pages", []):
-            for task in page.get("tasks", []):
-                status = task.get("status", "Todo") or "Todo"
-                counts[status] = counts.get(status, 0) + 1
-                by_section[sname][status] = by_section[sname].get(status, 0) + 1
-                total += 1
-
-    ws.cell(row=4, column=1, value="Total tasks").font = label_font
-    ws.cell(row=4, column=2, value=total).font = value_font
-
-    row = 6
-    ws.cell(row=row, column=1, value="By status").font = label_font
-    row += 1
-    for status in ["Done", "In progress", "Todo", "Blocked", "Skipped"]:
-        n = counts.get(status, 0)
-        ws.cell(row=row, column=1, value=status).font = Font(name="Helvetica", size=10)
-        c = ws.cell(row=row, column=2, value=n)
-        c.font = value_font
-        sf = status_fill(status)
-        if sf:
-            ws.cell(row=row, column=1).fill = sf
-        row += 1
-
-    row += 1
-    ws.cell(row=row, column=1, value="By section (Done out of Total)").font = label_font
-    row += 1
-    for sname, status_counts in by_section.items():
-        section_total = sum(status_counts.values())
-        done = status_counts.get("Done", 0)
-        ws.cell(row=row, column=1, value=sname).font = Font(name="Helvetica", size=10)
-        ws.cell(row=row, column=2, value=f"{done} / {section_total}").font = Font(
-            name="Helvetica", size=10, color=COLORS["section_bg"],
-        )
-        row += 1
-
-    # Column widths
-    ws.column_dimensions["A"].width = 32
-    ws.column_dimensions["B"].width = 18
-
-    ws.sheet_view.showGridLines = False
 
 
 # ---------- Entry point --------------------------------------------------- #
